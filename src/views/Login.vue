@@ -19,27 +19,43 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { login } from '@/api/user'
 
 const form = reactive({
-  account: 'admin',
-  password: '123456',
+  account: 'xx',
+  password: '1234',
 })
 
 const formRef = ref<FormInstance>()
 
 const router = useRouter()
+const route = useRoute()
+
+const { type } = route.query
+
+// 注册
+if (type === 'register') {
+  form.account = '',
+    form.password = ''
+}
 
 const submitForm = (formEl: FormInstance) => {
   if (!formEl) return
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      console.log('submit!')
+      const { token } = await login({
+        username: form.account,
+        password: form.password,
+      })
 
-      console.log(useRouter)
+      if (token) {
+        localStorage.setItem('token', token)
 
-      // 跳转到首页
-      router.push('/home')
+        // 跳转到首页
+        router.push('/')
+      }
+
     } else {
       console.log('error submit!')
       return false

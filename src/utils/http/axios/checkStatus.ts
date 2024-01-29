@@ -1,9 +1,11 @@
 import type { ErrorMessageMode } from '/#/axios';
 import { useMessage } from '@/hooks/web/useMessage';
 import { useI18n } from '@/hooks/web/useI18n';
+import { useRouter } from 'vue-router'
 
 const { createMessage, createErrorModal } = useMessage();
 const error = createMessage.error!;
+const router = useRouter();
 
 export function checkStatus(
   status: number,
@@ -17,11 +19,9 @@ export function checkStatus(
     case 400:
       errMessage = `${msg}`;
       break;
-    // 401: Not logged in
-    // Jump to the login page if not logged in, and carry the path of the current page
-    // Return to the current page after successful login. This step needs to be operated on the login page.
+    // 401 未授权，跳转登录页面
     case 401:
-    
+      router.push({ path: '/login', query: { type: 'login' } })
       break;
     case 403:
       errMessage = t('sys.api.errMsg403');
