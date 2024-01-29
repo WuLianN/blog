@@ -5,6 +5,7 @@ import { router, setupRouter } from './router/index.ts'
 import { setupRouterGuard } from '@/router/guard'
 import { setupStore } from '@/store'
 import { setupI18n } from '@/locales/setupI18n'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 
 const app = createApp(App)
 

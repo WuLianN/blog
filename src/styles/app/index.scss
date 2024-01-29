@@ -1,0 +1,9 @@
+html {
+  --app-bg-color: #f5f5f5;
+  --app-header-bg-color: #ffffff;
+}
+
+html.dark {
+  --app-bg-color: #181818;
+  --app-header-bg-color: #181818;
+}
