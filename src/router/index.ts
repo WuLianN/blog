@@ -4,11 +4,14 @@ import { type App } from 'vue'
 const Login = () => import("@/views/Login.vue")
 const Home = () => import("@/views/Home.vue")
 const CreateCenter = () => import("@/views/CreateCenter.vue")
+const Editor = () => import("@/views/Editor.vue")
 
 const routes = [
   { path: '/', name: 'home', component: Home },
   { path: '/login', name: "login", component: Login },
-  { path: '/createCenter', name:'createCenter', conponent: CreateCenter }
+  { path: '/user/:id', name: 'user', component: Home },
+  { path: '/createCenter', name: 'createCenter', component: CreateCenter },
+  { path: '/drafts/:id', name: 'drafts', component: Editor }
 ]
 
 export const router = createRouter({
