@@ -1,7 +1,7 @@
 <template>
   <div class="container" @click="handleClick">
     <el-container>
-      <el-header>
+      <el-header class="header">
         <Header />
       </el-header>
       <el-container>
@@ -11,7 +11,7 @@
           </div>
         </el-aside>
         <el-main>
-          
+          <Main />
         </el-main>
       </el-container>
     </el-container>
@@ -35,6 +35,13 @@ function handleClick(e: Event) {
   width: 100%;
   min-height: 100vh;
   background-color: var(--app-bg-color);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 9999;
 }
 
 .aside {
