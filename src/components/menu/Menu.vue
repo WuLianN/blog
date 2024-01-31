@@ -13,6 +13,7 @@
 import { ref } from 'vue'
 import { getMenuList } from '@/api/menu'
 import { useRoute, type LocationQueryValue } from 'vue-router'
+import { getUserId } from '@/utils/auth'
 
 const isCollapse = ref(false)
 
@@ -37,24 +38,11 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
 
   defaultActive.value = result[0].path
 }
-
-function getUserId(): (LocationQueryValue | LocationQueryValue[]) {
-  const route = useRoute()
-  const { path } = route
-  const regexp = /\/user\/([a-zA-Z0-9]+)/
-  const match = path.match(regexp)
-
-  if (match) {
-    return match?.[1]
-  }
-
-  return null
-}
 </script>
 
 <style>
 .el-menu-vertical {
-  margin-top: 30px;
+  margin-top: 20px;
   border: 1px solid #ebeef5;
 }
 

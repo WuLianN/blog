@@ -9,7 +9,7 @@
     <menu-item v-for="(ele, index) in item.children" :item="ele" :key="index" />
   </el-sub-menu>
 
-  <el-menu-item v-else :index="item.path" @click="jump(item.path)">
+  <el-menu-item v-else :index="item.path" @click="getCateList(item.id)">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       {{ item.name }}
@@ -19,8 +19,20 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { getRecommendList } from '@/api/base'
+import { useUserStore } from '@/store/modules/user'
+import { useHomeStore } from '@/store/modules/home'
+import { getExcerpt } from '@/utils/three_party'
 
 const router = useRouter()
+const userStore = useUserStore()
+const homeStore = useHomeStore()
+const query = {
+  userId: userStore.user.id,
+  categoryId: null,
+  page: 1,
+  pageSize: 10
+}
 
 defineProps({
   item: {
@@ -34,8 +46,14 @@ defineOptions({
 })
 
 
-function jump(path: string) {
-  router.push(path)
+async function getCateList(categoryId: number) {
+  query.categoryId = categoryId
+
+  const list = await getRecommendList(query)
+
+  list.map(item => item.excerpt = getExcerpt(item.content))
+
+  homeStore.setRecommendList(list)
 }
 </script>
 

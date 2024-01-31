@@ -20,13 +20,19 @@
 
 <script setup lang="ts">
 import { useHomeStore } from '@/store/modules/home';
+import { useUserStore } from '@/store/modules/user';
+import { getUserId } from '@/utils/auth'
 
-const store = useHomeStore()
+const homeStore = useHomeStore()
+const userStore = useUserStore()
+
+const userId = getUserId()
+userId && userStore.setUser({ id: userId })
 
 function handleClick(e: Event) {
   e.stopPropagation();
 
-  store.setLoginCardStatus(false)
+  homeStore.setLoginCardStatus(false)
 }
 </script>
 
