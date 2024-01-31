@@ -1,20 +1,21 @@
-## Vue Ts template
-Vue + Ts 模板
+## 博客
 
-## 技术栈
-| 名称 | 版本 |
-| ---  | --- |
-| Vue  | ^3.4.15  |
-| TypeScript  | ^5.2.2 |
-| Vite  | ^5.0.8  |
-| Element Plus  | ^2.5.2  |
-| Sass  | ^1.70.0  |
-| pinia | ^2.1.7 |
-| vue-router | ^4.2.5 |
-| axios | ^1.6.5  |
+## 使用 gray-matter 的注意点
 
-> 提示
+> ReferenceError: Buffer is not defined
 >
-> axios 的封装采用[vue vben admin](https://github.com/anncwb/vue-vben-admin)
->
-> [vue vben admin 文档](https://doc.vvbin.cn/guide/introduction.html)
+> https://github.com/jonschlinkert/gray-matter/issues/143
+
+### 解决方案
+`vite.config.js` 使用 `vite-plugin-node-polyfills`
+```js
+plugins: [
+  nodePolyfills(
+    {
+      globals: {
+        Buffer: true, // can also be 'build', 'dev', or false
+      },
+    }
+  )  
+]
+```
