@@ -1,11 +1,10 @@
 import type { ErrorMessageMode } from '/#/axios';
 import { useMessage } from '@/hooks/web/useMessage';
 import { useI18n } from '@/hooks/web/useI18n';
-import { useRouter } from 'vue-router'
+import { router } from '@/router'
 
 const { createMessage, createErrorModal } = useMessage();
 const error = createMessage.error!;
-const router = useRouter();
 
 export function checkStatus(
   status: number,
@@ -21,6 +20,7 @@ export function checkStatus(
       break;
     // 401 未授权，跳转登录页面
     case 401:
+      localStorage.removeItem('token')
       router.push({ path: '/login', query: { type: 'login' } })
       break;
     case 403:

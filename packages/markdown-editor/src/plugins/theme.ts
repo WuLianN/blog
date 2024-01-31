@@ -1,5 +1,6 @@
 import type { BytemdPlugin } from 'bytemd'
 import themesMap from 'juejin-markdown-themes'
+import { isRef } from 'vue'
 
 function removeOldStyle() {
   const styleList = document.querySelectorAll('style')
@@ -7,7 +8,7 @@ function removeOldStyle() {
   index !== -1 && styleList[index].remove()
 }
 
-function setStyle(style: string) {
+function updateStyle(style: string) {
   removeOldStyle()
   const $style = document.createElement('style');
   $style.setAttribute('data-themes', "1")
@@ -43,9 +44,16 @@ export default function themes(): BytemdPlugin {
 
   return {
     viewerEffect({ file }) {
-      // @ts-ignore
-      const style = themesMap[file.frontmatter?.theme]?.style ?? themesMap.juejin.style;
-      setStyle(style)
+      let style
+      if (isRef(file)) {
+         // @ts-ignore
+        style = themesMap[file.value?.frontmatter?.theme]?.style ?? themesMap.juejin.style;
+      } else {
+        // @ts-ignore
+        style = themesMap[file.frontmatter?.theme]?.style ?? themesMap.juejin.style;
+      }
+
+      updateStyle(style)
     },
     remark: (processor) =>
       // @ts-ignore
@@ -109,7 +117,7 @@ export default function themes(): BytemdPlugin {
             handler: {
               type: 'action',
               click({ editor }) {
-                setStyle(style)
+                updateStyle(style)
 
                 const v = editor.getValue()
                 const { start, end } = info.position
