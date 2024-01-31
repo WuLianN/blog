@@ -18,6 +18,7 @@ import { ref, watch } from 'vue'
 import { debounce } from 'lodash-es'
 import { saveDraft, getDraft } from '@/api/drafts'
 import { uploadFile } from '@/api/upload'
+import { useNavigateTo } from '@/hooks/web/useNavigate'
 
 const title = ref('')
 const content = ref('')
@@ -66,7 +67,9 @@ async function save(title: string, content: string) {
   }
 }
 
-function goDraftBox() { }
+function goDraftBox() {
+  useNavigateTo('/draftBox')
+}
 
 function publish() { }
 
