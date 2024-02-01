@@ -8,7 +8,9 @@
     <div>{{ item.excerpt }}</div>
     <template #footer>
       <div class="footer">
-        <div></div>
+        <div>
+          <el-tag v-for="tag in item.tags" :key="tag.id">{{ tag.name }}</el-tag>  
+        </div>
         <div>{{ item.update_time }}</div>
       </div>
     </template>
@@ -40,5 +42,9 @@ function jump(id) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+:deep(.el-tag + .el-tag) {
+  margin-left: 10px;
 }
 </style>

@@ -9,7 +9,7 @@
     <menu-item v-for="(ele, index) in item.children" :item="ele" :key="index" />
   </el-sub-menu>
 
-  <el-menu-item v-else :index="item.path" @click="getCateList(item.id)">
+  <el-menu-item v-else :index="item.path" @click="getTagList(item.meta?.tag_id)">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       {{ item.name }}
@@ -29,7 +29,7 @@ const userStore = useUserStore()
 const homeStore = useHomeStore()
 const query = {
   userId: userStore.user.id,
-  categoryId: null,
+  tagId: null,
   page: 1,
   pageSize: 10
 }
@@ -46,8 +46,8 @@ defineOptions({
 })
 
 
-async function getCateList(categoryId: number) {
-  query.categoryId = categoryId
+async function getTagList(tagId: number) {
+  query.tagId = tagId
 
   const list = await getRecommendList(query)
 
