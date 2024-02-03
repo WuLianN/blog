@@ -1,0 +1,277 @@
+<template>
+  <div class="menu">
+    <div class="custom-tree-container">
+      <el-tree :data="dataSource" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false"
+        @nodeClick="nodeClick">
+        <template #default="{ node, data }">
+          <span class="custom-tree-node">
+            <span>{{ node.label }}</span>
+            <span>
+              <el-button type="success" size="small" :icon="Plus" circle @click="append(data, $event)" />
+              <el-button type="danger" size="small" :icon="Delete" circle @click="remove(node, data, $event)" />
+            </span>
+          </span>
+        </template>
+
+        <template #empty>
+          <el-button type="primary" @click="appendTree">添加分类</el-button>
+        </template>
+      </el-tree>
+    </div>
+
+    <div v-if="dataSource.length > 0">
+      <el-button type="primary" @click="appendTree">添加分类</el-button>
+    </div>
+
+    <div>
+      <el-dialog v-model="dialogVisible" title="编辑" width="30%">
+        <div>
+          <el-input v-model="dialogCategoryName" placeholder="请输入分类名称" />
+        </div>
+
+        <div class="tags-container">
+          <Tags :tags="tags" :isPost="false" :dialogVisible="dialogVisible" @getSelectedTags="getSelectedTags" />
+        </div>
+
+        <template #footer>
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogSubmit">确 定</el-button>
+        </template>
+
+      </el-dialog>
+    </div>
+
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+import type Node from 'element-plus/es/components/tree/src/model/node'
+import {
+  Plus,
+  Delete,
+} from '@element-plus/icons-vue'
+import { getMenuList } from '@/api/menu'
+import { getTagList, bindTag2Menu } from '@/api/tags'
+import { addMenuItem } from '@/api/menu'
+
+interface Tree {
+  id: number
+  label: string
+  children?: Tree[]
+}
+
+let id = 1000
+
+const dialogVisible = ref(false)
+const dialogCategoryName = ref('')
+
+const tags = ref([])
+const currentNode = ref('')
+const currentTreeNode = ref('')
+const dataSource = ref<Tree[]>([])
+let unPostSelectedTags = [] // 未创建的标签
+
+getTreeList()
+
+const append = (data: Tree, event: Event) => {
+  event.stopPropagation()
+
+  const newChild = { id: id++, label: '标题', children: [] }
+  if (!data.children) {
+    data.children = []
+  }
+  data.children.push(newChild)
+  dataSource.value = [...dataSource.value]
+}
+
+const remove = (node: Node, data: Tree, event: Event) => {
+  event.stopPropagation()
+
+  const parent = node.parent
+  const children: Tree[] = parent.data.children || parent.data
+  const index = children.findIndex((d) => d.id === data.id)
+  children.splice(index, 1)
+  dataSource.value = [...dataSource.value]
+}
+
+function appendTree() {
+  const node = {
+    id: id++,
+    label: '分类' + String(id).slice(3),
+    children: []
+  }
+  dataSource.value.push(node)
+}
+
+async function getTreeList() {
+  const result = await getMenuList()
+
+  dataSource.value = [...result]
+}
+
+async function nodeClick(node, treeNode) {
+  dialogVisible.value = true
+
+  dialogCategoryName.value = node.label
+
+  tags.value = []
+
+  const tagList = await getTags(node.id)
+
+  tags.value.push(...tagList)
+
+  currentNode.value = node
+  currentTreeNode.value = treeNode
+}
+
+async function getTags(id): Array<any> {
+  return await getTagList({ menu_id: id })
+}
+
+async function dialogSubmit() {
+  const { id: currentNodeId, parent_id: currentParentId } = currentNode.value // 点击的当前节点 +添加的节点没有parent
+  const level1Node = getLevel_1_Node(currentTreeNode.value) // level1节点 也就是当前节点的根节点
+  const { category_id: categoryId } = level1Node
+
+  const { id: currentTreeNodeId, level: currentTreeNodeLevel } = currentTreeNode.value
+
+  const ids = getIds(currentTreeNode.value, currentTreeNodeLevel).reverse() // 1 -> 2 -> 3
+
+  // 当前节点的父节点id 用于绑定父-子关系 存储于数据库的id
+  let parentId = 0
+
+  if (currentParentId) {
+    parentId = currentParentId
+  } else {
+    if (currentTreeNode.value.parent.level === 0) {
+      parentId = 0
+    } else {
+      parentId = currentTreeNode.value.parent.data.id
+    }
+  }
+
+  const data = {
+    name: dialogCategoryName.value,
+    parent_id: parentId,
+    category_id: categoryId
+  }
+
+  // 存在currentParentId，说明是已存在的分类
+  if (currentParentId) {
+    // 更新
+    // 同步标签
+    syncMenu(dataSource.value, ids)
+  } else {
+    // 新增
+    const menuItem = await addMenuItem(data)
+    // 同步标签、后端返回的id
+    syncMenu(dataSource.value, ids, menuItem)
+  }
+
+  // 绑定标签
+  bindTag2Menu({
+    menu_id: currentNodeId,
+    tags: unPostSelectedTags
+  })
+
+  dialogVisible.value = false
+  dialogCategoryName.value = ''
+}
+
+function getSelectedTags(data) {
+  unPostSelectedTags = data.filter(item => item.id === undefined)
+}
+
+function getLevel_1_Node(node) {
+  if (node.level !== 1) {
+    return getLevel_1_Node(node.parent)
+  }
+  return node
+}
+
+function getNodeByLevel(node, level) {
+  if (node.level === level) {
+    return node
+  } else {
+    return getNodeByLevel(node.parent, level)
+  }
+}
+
+// 3 -> 2 -> 1
+function getIds(treeNode, level): Array<number> {
+  const ids = []
+  for (let i = level; i <= level && i > 0; i--) {
+    const node = getNodeByLevel(treeNode, i)
+    const id = node.data.id
+    ids.push(id)
+  }
+  return ids
+}
+
+// 同步菜单
+function syncMenu(list, ids, menuItem) {
+  const node = list.find(item => ids.includes(item.id))
+  if (node) {
+    const length = ids.length
+    if (ids[length - 1] === node.id) {
+      node.label = dialogCategoryName.value
+
+      // 更换为后端返回的id, 方便给当前分类添加额外功能
+      if (menuItem?.id >= 0) {
+        node.id = menuItem.id
+      }
+      if (menuItem?.parent_id >= 0) {
+        node.parent_id = menuItem.parent_id
+      }
+    }
+    return syncMenu(node.children, ids, menuItem)
+  }
+
+  return
+}
+
+</script>
+
+<style>
+.custom-tree-container {
+  width: 500px;
+  padding: 20px 0;
+}
+
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+}
+
+.menu {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-tree-node__content {
+  margin-bottom: 10px;
+}
+
+.tags-container {
+  margin-top: 20px;
+}
+
+.button-tag,
+.el-input {
+  margin-left: 0 !important;
+}
+
+.el-tag+.button-tag,
+.el-tag+.el-input {
+  margin-left: 10px !important;
+}
+</style>
