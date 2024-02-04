@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, toRefs, unref } from 'vue'
 import { createTag, deleteTag } from '@/api/tags'
+import { useMessage } from '@/hooks/web/useMessage'
 
 const props = defineProps({
   tags: {
@@ -75,8 +76,16 @@ const showInput = () => {
   })
 }
 
-const handleInputConfirm = async () => {
+const handleInputConfirm = async (): void => {
   if (inputValue.value) {
+    const isDuplicate = checkIsDuplicate(list.value, inputValue.value)
+
+    if (isDuplicate) {
+      inputValue.value = ''
+      useMessage().createMessage.warning('标签已存在')
+      return
+    }
+
     list.value.push({ name: inputValue.value })
     inputVisible.value = false
 
@@ -100,6 +109,17 @@ const handleInputConfirm = async () => {
 
 const exposeSelectedTags = () => {
   emit('getSelectedTags', list.value)
+}
+
+function checkIsDuplicate(list: Array<any>, checkValue: string): Boolean {
+  const index = list.findIndex((item) => item.name === checkValue)
+
+  if (index !== -1) {
+    // 有重复的
+    return true
+  }
+
+  return false
 }
 </script>
 
