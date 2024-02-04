@@ -4,7 +4,8 @@ import type { LocationQueryValue } from 'vue-router'
 
 enum Api {
   GetMenuList = '/getMenuList',
-  AddMenuItem = '/addMenuItem'
+  AddMenuItem = '/addMenuItem',
+  DeleteMenuItem = '/deleteMenuItem'
 }
 
 /**
@@ -17,4 +18,8 @@ export const getMenuList = (id: LocationQueryValue | LocationQueryValue[]) => {
 
 export const addMenuItem = (data: any) => {
   return defHttp.post<any>({ url: Api.AddMenuItem, data });
+};
+
+export const deleteMenuItem = (id: number) => {
+  return defHttp.post<any>({ url: Api.DeleteMenuItem, params: { id } });
 };
