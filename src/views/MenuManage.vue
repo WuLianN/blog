@@ -109,7 +109,9 @@ function appendTree() {
 async function getTreeList() {
   const result = await getMenuList()
 
-  dataSource.value = [...result]
+  if (result) {
+    dataSource.value = [...result]
+  }
 }
 
 async function nodeClick(node, treeNode) {
