@@ -52,7 +52,7 @@ import {
   Delete,
 } from '@element-plus/icons-vue'
 import { getMenuList } from '@/api/menu'
-import { getTagList, bindTag2Menu } from '@/api/tags'
+import { getTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
 import { addMenuItem } from '@/api/menu'
 
 interface Tree {
@@ -70,7 +70,9 @@ const tags = ref([])
 const currentNode = ref('')
 const currentTreeNode = ref('')
 const dataSource = ref<Tree[]>([])
-let unPostSelectedTags = [] // 未创建的标签
+let newSelectedTags = [] // 选中的未创建的标签
+let selectedTags = [] // 选中的所有标签
+let originTags = [] // 原有的标签
 
 getTreeList()
 
@@ -121,6 +123,8 @@ async function nodeClick(node, treeNode) {
 
   tags.value.push(...tagList)
 
+  originTags = tagList
+
   currentNode.value = node
   currentTreeNode.value = treeNode
 }
@@ -169,18 +173,38 @@ async function dialogSubmit() {
     syncMenu(dataSource.value, ids, menuItem)
   }
 
+  // 比对原来的标签 - 用于 删除
+  const selectedIdList = selectedTags.reduce((acc, cur) => {
+    if (cur.id) {
+      acc.push(cur.id)
+    }
+    return acc
+  }, [])
+
+  // 解绑标签
+  const deleteTags = originTags.filter(item => !selectedIdList.includes(item.id))
+  if (deleteTags.length > 0) {
+    unbindTag2Menu({
+      menu_id: currentNodeId,
+      tags: deleteTags
+    })
+  }
+
   // 绑定标签
-  bindTag2Menu({
-    menu_id: currentNodeId,
-    tags: unPostSelectedTags
-  })
+  if (newSelectedTags.length > 0) {
+    bindTag2Menu({
+      menu_id: currentNode.value.id, // 去拿syncMenu同步后的菜单id。注意：不要用上边解构的currentNodeId，已丢失绑定。
+      tags: newSelectedTags
+    })
+  }
 
   dialogVisible.value = false
   dialogCategoryName.value = ''
 }
 
 function getSelectedTags(data) {
-  unPostSelectedTags = data.filter(item => item.id === undefined)
+  selectedTags = data
+  newSelectedTags = data.filter(item => item.id === undefined)
 }
 
 function getLevel_1_Node(node) {

@@ -6,6 +6,7 @@ enum Api {
   deleteTag = '/deleteTag',
   updateTag = '/updateTag',
   bindTag2Menu = '/bindTag2Menu',
+  unbindTag2Menu = '/unbindTag2Menu',
 }
 
 export const getTagList = (data?: any) => {
@@ -26,4 +27,8 @@ export const updateTag = (data: any) => {
 
 export const bindTag2Menu = (data: any) => {
   return defHttp.post<any>({ url: Api.bindTag2Menu, data });
+}
+
+export const unbindTag2Menu = (data: any) => {
+  return defHttp.post<any>({ url: Api.unbindTag2Menu, data });
 }
