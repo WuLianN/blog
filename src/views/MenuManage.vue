@@ -53,7 +53,7 @@ import {
 } from '@element-plus/icons-vue'
 import { getMenuList } from '@/api/menu'
 import { getTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
-import { addMenuItem } from '@/api/menu'
+import { addMenuItem, deleteMenuItem } from '@/api/menu'
 
 interface Tree {
   id: number
@@ -87,7 +87,7 @@ const append = (data: Tree, event: Event) => {
   dataSource.value = [...dataSource.value]
 }
 
-const remove = (node: Node, data: Tree, event: Event) => {
+const remove = async (node: Node, data: Tree, event: Event) => {
   event.stopPropagation()
 
   const parent = node.parent
@@ -95,6 +95,8 @@ const remove = (node: Node, data: Tree, event: Event) => {
   const index = children.findIndex((d) => d.id === data.id)
   children.splice(index, 1)
   dataSource.value = [...dataSource.value]
+
+  await deleteMenuItem(data.id)
 }
 
 function appendTree() {
@@ -126,6 +128,7 @@ async function nodeClick(node, treeNode) {
   tags.value.push(...tagList)
 
   originTags = tagList
+  newSelectedTags = []
 
   currentNode.value = node
   currentTreeNode.value = treeNode
@@ -136,7 +139,7 @@ async function getTags(id): Array<any> {
 }
 
 async function dialogSubmit() {
-  const { id: currentNodeId, parent_id: currentParentId } = currentNode.value // 点击的当前节点 +添加的节点没有parent
+  const { id: currentNodeId, parent_id: currentParentId } = currentNode.value // 点击的当前节点 +添加的节点没有parent_id 注：parent_id=0为一级节点
   const level1Node = getLevel_1_Node(currentTreeNode.value) // level1节点 也就是当前节点的根节点
   const { category_id: categoryId } = level1Node
 
@@ -147,7 +150,7 @@ async function dialogSubmit() {
   // 当前节点的父节点id 用于绑定父-子关系 存储于数据库的id
   let parentId = 0
 
-  if (currentParentId) {
+  if (currentParentId || currentParentId === 0) {
     parentId = currentParentId
   } else {
     if (currentTreeNode.value.parent.level === 0) {
@@ -164,7 +167,7 @@ async function dialogSubmit() {
   }
 
   // 存在currentParentId，说明是已存在的分类
-  if (currentParentId) {
+  if (currentParentId || currentParentId === 0) {
     // 更新
     // 同步标签
     syncMenu(dataSource.value, ids)
