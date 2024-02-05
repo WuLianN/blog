@@ -13,6 +13,7 @@ import { getDraftList } from '@/api/drafts';
 const query = ref({
   page: 1,
   pageSize: 10,
+  status: 2 // 草稿
 });
 
 const list = ref([])

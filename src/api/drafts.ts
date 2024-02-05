@@ -20,5 +20,5 @@ export const getDraft = (data: any) => {
 };
 
 export const getDraftList = (data: any) => {
-  return defHttp.get<any>({ url: Api.getDraftList, params: { page: data.page, page_size: data.pageSize } });
+  return defHttp.get<any>({ url: Api.getDraftList, params: { status: data.status, page: data.page, page_size: data.pageSize } });
 };
