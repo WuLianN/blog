@@ -54,6 +54,9 @@ import {
 import { getMenuList } from '@/api/menu'
 import { getTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
 import { addMenuItem, deleteMenuItem } from '@/api/menu'
+import { useMessage } from '@/hooks/web/useMessage'
+
+const { createMessage } = useMessage()
 
 interface Tree {
   id: number
@@ -139,11 +142,14 @@ async function getTags(id): Array<any> {
 }
 
 async function dialogSubmit() {
+  const checkStatus = check()
+  if (!checkStatus) {
+    return
+  }
   const { id: currentNodeId, parent_id: currentParentId } = currentNode.value // 点击的当前节点 +添加的节点没有parent_id 注：parent_id=0为一级节点
   const level1Node = getLevel_1_Node(currentTreeNode.value) // level1节点 也就是当前节点的根节点
   const { category_id: categoryId } = level1Node
-
-  const { id: currentTreeNodeId, level: currentTreeNodeLevel } = currentTreeNode.value
+  const { level: currentTreeNodeLevel } = currentTreeNode.value
 
   const ids = getIds(currentTreeNode.value, currentTreeNodeLevel).reverse() // 1 -> 2 -> 3
 
@@ -260,6 +266,19 @@ function syncMenu(list, ids, menuItem) {
   return
 }
 
+function check() {
+  const { level, parent } = currentTreeNode.value
+  const { parent_id: parentId } = parent.data
+
+  // level > 1, 不是初始的父级节点
+  if (level > 1 && parentId === undefined) {
+    dialogVisible.value = false
+    createMessage.error('请先创建父级分类')
+    return false
+  }
+
+  return true
+}
 </script>
 
 <style>
