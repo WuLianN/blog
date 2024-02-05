@@ -108,7 +108,7 @@ const handleInputConfirm = async (): void => {
 }
 
 const exposeSelectedTags = () => {
-  emit('getSelectedTags', list.value)
+  emit('selectedTags', list.value)
 }
 
 function checkIsDuplicate(list: Array<any>, checkValue: string): Boolean {

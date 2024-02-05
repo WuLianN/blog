@@ -29,9 +29,7 @@
           <el-input v-model="dialogCategoryName" placeholder="请输入分类名称" />
         </div>
 
-        <div class="tags-container">
-          <Tags :tags="tags" :isPost="false" :dialogVisible="dialogVisible" @getSelectedTags="getSelectedTags" />
-        </div>
+        <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
 
         <template #footer>
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -74,8 +72,8 @@ const currentNode = ref('')
 const currentTreeNode = ref('')
 const dataSource = ref<Tree[]>([])
 let newSelectedTags = [] // 选中的未创建的标签
-let selectedTags = [] // 选中的所有标签
-let originTags = [] // 原有的标签
+let deleteSelectedTags = [] // 需要删除(解绑)的标签
+const originTags = ref([]) // 原有的标签
 
 getTreeList()
 
@@ -125,13 +123,13 @@ async function nodeClick(node, treeNode) {
   dialogCategoryName.value = node.label
 
   tags.value = []
+  originTags.value = []
+  newSelectedTags = []
 
   const tagList = await getTags(node.id)
 
   tags.value.push(...tagList)
-
-  originTags = tagList
-  newSelectedTags = []
+  originTags.value.push(...tagList)
 
   currentNode.value = node
   currentTreeNode.value = treeNode
@@ -184,20 +182,11 @@ async function dialogSubmit() {
     syncMenu(dataSource.value, ids, menuItem)
   }
 
-  // 比对原来的标签 - 用于 删除
-  const selectedIdList = selectedTags.reduce((acc, cur) => {
-    if (cur.id) {
-      acc.push(cur.id)
-    }
-    return acc
-  }, [])
-
   // 解绑标签
-  const deleteTags = originTags.filter(item => !selectedIdList.includes(item.id))
-  if (deleteTags.length > 0) {
+  if (deleteSelectedTags.length > 0) {
     unbindTag2Menu({
       menu_id: currentNodeId,
-      tags: deleteTags
+      tags: deleteSelectedTags
     })
   }
 
@@ -213,9 +202,10 @@ async function dialogSubmit() {
   dialogCategoryName.value = ''
 }
 
-function getSelectedTags(data) {
-  selectedTags = data
-  newSelectedTags = data.filter(item => item.id === undefined)
+function tagsChange(data) {
+  const { newSelectedTags: newTagsList, oldSelectedTags: oldTagsList } = data
+  newSelectedTags = newTagsList
+  deleteSelectedTags = oldTagsList
 }
 
 function getLevel_1_Node(node) {
