@@ -50,7 +50,7 @@ import {
   Delete,
 } from '@element-plus/icons-vue'
 import { getMenuList } from '@/api/menu'
-import { getTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
+import { getMenuTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
 import { addMenuItem, deleteMenuItem } from '@/api/menu'
 import { useMessage } from '@/hooks/web/useMessage'
 
@@ -125,6 +125,7 @@ async function nodeClick(node, treeNode) {
   tags.value = []
   originTags.value = []
   newSelectedTags = []
+  deleteSelectedTags = []
 
   const tagList = await getTags(node.id)
 
@@ -136,7 +137,7 @@ async function nodeClick(node, treeNode) {
 }
 
 async function getTags(id): Array<any> {
-  return await getTagList({ menu_id: id })
+  return await getMenuTagList({ menu_id: id })
 }
 
 async function dialogSubmit() {
@@ -200,6 +201,9 @@ async function dialogSubmit() {
 
   dialogVisible.value = false
   dialogCategoryName.value = ''
+
+  newSelectedTags = []
+  deleteSelectedTags = []
 }
 
 function tagsChange(data) {

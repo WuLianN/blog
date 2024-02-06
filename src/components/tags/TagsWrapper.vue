@@ -5,6 +5,8 @@
 </template>
 
 <script setup lang="ts">
+import { toRefs } from 'vue'
+
 const props = defineProps({
   tags: {
     type: Array,
@@ -25,7 +27,7 @@ const props = defineProps({
   }
 })
 
-const { originTags } = props
+const { originTags } = toRefs(props)
 
 const emits = defineEmits(['change'])
 
@@ -36,7 +38,7 @@ const selectedTags = (data) => {
     }
     return acc
   }, [])
-  const oldSelectedTags = originTags.filter(item => !selectedIds.includes(item.id))
+  const oldSelectedTags = originTags.value.filter(item => !selectedIds.includes(item.id))
   const newSelectedTags = data.filter(item => item.id === undefined)
 
   const tagsInfo = {

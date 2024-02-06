@@ -5,6 +5,7 @@ enum Api {
   saveDraft = '/saveDraft',
   getDraft = '/getDraft',
   getDraftList = '/getDraftList',
+  deleteDraft = '/deleteDraft'
 }
 
 export const createDraft = () => {
@@ -21,4 +22,8 @@ export const getDraft = (data: any) => {
 
 export const getDraftList = (data: any) => {
   return defHttp.get<any>({ url: Api.getDraftList, params: { status: data.status, page: data.page, page_size: data.pageSize } });
+};
+
+export const deleteDraft = (id: number) => {
+  return defHttp.post<any>({ url: Api.deleteDraft, data: { id } });
 };
