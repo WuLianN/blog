@@ -1,21 +1,23 @@
 <template>
   <div class="container" @click="handleClick">
-    <el-container>
-      <el-header class="header">
-        <Header />
-      </el-header>
-      <el-container>
-        <el-aside class="aside aside-left">
+    <el-header class="header">
+      <Header />
+    </el-header>
+    <el-main class="container-main__wrapper">
+      <div class="container-main">
+        <div class="aside aside-left">
           <Menu />
-        </el-aside>
-        <el-main class="main">
+        </div>
+
+        <div class="main">
           <Main />
-        </el-main>
-        <el-aside class="aside aside-right">
-          
-        </el-aside>
-      </el-container>
-    </el-container>
+        </div>
+
+        <div class="aside aside-right">
+          <Menu />
+        </div>
+      </div>
+    </el-main>
   </div>
 </template>
 
@@ -39,36 +41,41 @@ function handleClick(e: Event) {
 
 <style scoped lang="scss">
 .container {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   background-color: var(--app-bg-color);
+  box-sizing: border-box;
 }
 
 .header {
+  width: 100vw;
   position: sticky;
   top: 0;
   left: 0;
   z-index: 9999;
 }
 
-.aside {
+.container-main__wrapper {
   display: flex;
   flex-flow: row nowrap;
+  justify-content: center;
+}
 
-  &-left {
-    justify-content: flex-end;
-  }
+.container-main {
+  max-width: 1200px;
+  display: flex;
+  flex-flow: row nowrap;
+}
 
-  &-right {
-    justify-content: flex-start;
-  }
+.aside {
+  padding: 20px;
 }
 
 .main {
+  width: 720px;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: flex-start;
-  align-items: center;
+  padding: 20px;
 }
 
 :deep(.el-header) {
@@ -85,7 +92,6 @@ function handleClick(e: Event) {
 @media screen and (min-width: 768px) and (max-width: 992px) {
   .aside-left {
     width: auto;
-    margin-left: 20px;
   }
 
   .aside-right {
@@ -96,7 +102,6 @@ function handleClick(e: Event) {
 @media screen and (min-width: 992px) and (max-width: 1200px) {
   .aside-left {
     width: auto;
-    margin-left: 50px;
   }
 
   .aside-right {
@@ -104,17 +109,10 @@ function handleClick(e: Event) {
   }
 }
 
-@media screen and (min-width: 1200px) and (max-width: 1300px) {
-  .aside {
-    width: 200px;
-  }
-
-  .aside-left {
-    margin-left: 50px;
-  }
-
-  .aside-right {
-    margin-right: 50px;
+// 最大992px 宽度自适应
+@media screen and (max-width: 992px) {
+  .main {
+    width: auto;
   }
 }
 </style>

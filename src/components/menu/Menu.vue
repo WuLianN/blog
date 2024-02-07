@@ -42,7 +42,6 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
 
 <style>
 .el-menu-vertical {
-  margin-top: 20px;
   border: 1px solid #ebeef5;
 }
 

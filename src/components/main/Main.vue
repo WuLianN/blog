@@ -1,7 +1,5 @@
 <template>
-  <div class="main">
-    <Card :list="recommendList" />
-  </div>
+  <Card :list="recommendList" />
 </template>
 
 <script setup lang="ts">
@@ -41,14 +39,5 @@ async function getList() {
 </script>
 
 <style scoped lang="scss">
-.main {
-  width: 650px;
-}
 
-// 最大992px 宽度自适应
-@media screen and (max-width: 992px) {
-  .main {
-    width: auto;
-  }
-}
 </style>
