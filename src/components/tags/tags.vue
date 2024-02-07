@@ -82,7 +82,7 @@ const handleInputConfirm = async (): void => {
 
     if (isDuplicate) {
       inputValue.value = ''
-      useMessage().createMessage.warning('标签已存在')
+      ElMessage.warning('标签已存在')
       return
     }
 

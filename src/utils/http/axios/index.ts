@@ -8,7 +8,6 @@ import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
 import { VAxios } from './Axios';
 import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '@/hooks/setting';
-import { useMessage } from '@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum';
 import { isString, isUnDef, isNull, isEmpty } from '@/utils/is';
 import { getToken } from '@/utils/auth';
@@ -20,7 +19,6 @@ import axios from 'axios';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
-const { createMessage, createErrorModal, createSuccessModal } = useMessage();
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -61,9 +59,9 @@ const transform: AxiosTransform = {
       }
 
       if (options.successMessageMode === 'modal') {
-        createSuccessModal(successMsg, t('sys.api.successTip'));
+        ElMessageBox.confirm(successMsg, t('sys.api.successTip'), { type: 'success' });
       } else if (options.successMessageMode === 'message') {
-        createMessage.success(successMsg);
+        ElMessage.success(successMsg);
       }
       return result;
     }
@@ -72,6 +70,9 @@ const transform: AxiosTransform = {
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = '';
     switch (code) {
+      case ResultEnum.WARNING:
+        ElMessage.warning(message);
+        return;
       case ResultEnum.TIMEOUT:
         timeoutMsg = t('sys.api.timeoutMessage');
         break;
@@ -84,9 +85,9 @@ const transform: AxiosTransform = {
     // errorMessageMode='modal'的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (options.errorMessageMode === 'modal') {
-      createErrorModal(timeoutMsg, t('sys.api.errorTip'));
+      ElMessageBox.confirm(timeoutMsg, t('sys.api.errorTip'), { type: "error" });
     } else if (options.errorMessageMode === 'message') {
-      createMessage.error(timeoutMsg);
+      ElMessage.error(timeoutMsg);
     }
 
     throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'));
@@ -192,9 +193,9 @@ const transform: AxiosTransform = {
 
       if (errMessage) {
         if (errorMessageMode === 'modal') {
-          createErrorModal(errMessage,t('sys.api.errorTip'));
+          ElMessageBox.confirm(errMessage, t('sys.api.errorTip'), { type: "error" });
         } else if (errorMessageMode === 'message') {
-          createMessage.error(errMessage);
+          ElMessage.error(errMessage);
         }
         return Promise.reject(error);
       }

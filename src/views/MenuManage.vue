@@ -52,9 +52,6 @@ import {
 import { getMenuList } from '@/api/menu'
 import { getMenuTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
 import { addMenuItem, deleteMenuItem } from '@/api/menu'
-import { useMessage } from '@/hooks/web/useMessage'
-
-const { createMessage } = useMessage()
 
 interface Tree {
   id: number

@@ -1,10 +1,6 @@
 import type { ErrorMessageMode } from '/#/axios';
-import { useMessage } from '@/hooks/web/useMessage';
 import { useI18n } from '@/hooks/web/useI18n';
 import { router } from '@/router'
-
-const { createMessage, createErrorModal } = useMessage();
-const error = createMessage.error!;
 
 export function checkStatus(
   status: number,
@@ -59,9 +55,9 @@ export function checkStatus(
 
   if (errMessage) {
     if (errorMessageMode === 'modal') {
-      createErrorModal(errMessage, t('sys.api.errorTip'));
+      ElMessageBox.confirm(errMessage, t('sys.api.errorTip'), { type: "error"});
     } else if (errorMessageMode === 'message') {
-      error({ message: errMessage });
+      ElMessage.error(errMessage);
     }
   }
 }
