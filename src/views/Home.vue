@@ -50,7 +50,7 @@ function handleClick(e: Event) {
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .container-main__wrapper {

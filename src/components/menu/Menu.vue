@@ -1,6 +1,6 @@
 <template>
   <template v-if="menuList && menuList.length > 0">
-    <el-menu :default-active="defaultActive" class="el-menu-vertical" :collapse="isCollapse" @open="handleOpen"
+    <el-menu :defaultActive="defaultActive" :defaultOpeneds="defaultOpeneds" class="el-menu-vertical" :collapse="isCollapse" @open="handleOpen"
       @close="handleClose">
       <template v-for="(child, index) in menuList" :key="index">
         <menu-item :item="child" />
@@ -26,6 +26,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 
 const menuList = ref([])
 const defaultActive = ref('')
+const defaultOpeneds = ref([])
 
 const userId = getUserId()
 
@@ -36,7 +37,8 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
 
   menuList.value = result
 
-  defaultActive.value = result[0].path
+  defaultActive.value = result[0].id
+  defaultOpeneds.value = [result[0].id]
 }
 </script>
 

@@ -1,15 +1,15 @@
 <template>
-  <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.path">
+  <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.id">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       {{ item.name }}
     </template>
 
     <!-- 组件自调 -->
-    <menu-item v-for="(ele, index) in item.children" :item="ele" :key="index" />
+    <menu-item v-for="(ele, index) in item.children" :item="ele" :key="ele.id" />
   </el-sub-menu>
 
-  <el-menu-item v-else :index="item.path" @click="getTagList(item.id)">
+  <el-menu-item v-else :index="item.id" @click="getTagList(item)">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       {{ item.name }}
@@ -46,8 +46,20 @@ defineOptions({
 })
 
 
-async function getTagList(tagId: number) {
-  query.tagId = tagId
+async function getTagList(item: any) {
+  const { name, tags } = item
+
+  if (tags && tags.length > 0) {
+    const self = tags.find(i => i.name === name)
+    if (self) {
+      query.tagId = self.id
+    } else {
+      query.tagId = tags[0].id
+    }
+  } else {
+    ElMessage.error("当前分类暂未绑定标签")
+    return 
+  }
 
   const list = await getRecommendList(query)
 
