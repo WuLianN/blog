@@ -26,7 +26,7 @@
 import { ref } from 'vue';
 import { getDraftList, deleteDraft, saveDraft } from '@/api/drafts';
 import { getDraftTagList } from '@/api/tags'
-import { useNavigateTo } from '@/hooks/web/useNavigate'
+import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { bindTag2Draft, unbindTag2Draft } from '@/api/tags'
 import { formatDate } from '@/utils/three_party'
 
@@ -61,7 +61,7 @@ const columns = [
     dataKey: 'title',
     cellRenderer: ({ cellData: title, rowData }) => (
       <>
-        <el-link type="primary" target="_blank" onClick={() => jump(rowData)}>{title}</el-link>
+        <el-link type="primary" onClick={() => jump(rowData)}>{title}</el-link>
       </>
     ),
     align: "center",
@@ -201,7 +201,7 @@ function tagsChange(data) {
 function jump(rowData) {
   const { id } = rowData
   if (id) {
-    useNavigateTo(`/viewer/${id}`)
+    useNavigateToNewTag(`/viewer/${id}`)
   }
 }
 

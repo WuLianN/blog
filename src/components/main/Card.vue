@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { useNavigateTo } from '@/hooks/web/useNavigate'
+import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { formatDate } from '@/utils/three_party'
 
 defineProps({
@@ -29,7 +29,7 @@ defineProps({
 })
 
 function jump(id) {
-  useNavigateTo(`/viewer/${id}`)
+  useNavigateToNewTag(`/viewer/${id}`)
 }
 </script>
 
