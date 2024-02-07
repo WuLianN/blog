@@ -35,6 +35,7 @@ function jump(id) {
 
 <style scoped lang="scss">
 .card {
+  width: 100%;
   margin-bottom: 20px;
   cursor: pointer;
 }

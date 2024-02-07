@@ -42,6 +42,13 @@ async function getList() {
 
 <style scoped lang="scss">
 .main {
-  width: 700px;
+  width: 650px;
+}
+
+// 最大992px 宽度自适应
+@media screen and (max-width: 992px) {
+  .main {
+    width: auto;
+  }
 }
 </style>
