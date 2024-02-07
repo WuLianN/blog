@@ -13,9 +13,9 @@
           <Main />
         </div>
 
-        <div class="aside aside-right">
-          <Menu />
-        </div>
+        <!-- <div class="aside aside-right">
+     
+        </div> -->
       </div>
     </el-main>
   </div>
@@ -41,14 +41,12 @@ function handleClick(e: Event) {
 
 <style scoped lang="scss">
 .container {
-  width: 100vw;
   min-height: 100vh;
   background-color: var(--app-bg-color);
   box-sizing: border-box;
 }
 
 .header {
-  width: 100vw;
   position: sticky;
   top: 0;
   left: 0;
