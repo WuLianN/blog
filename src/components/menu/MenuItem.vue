@@ -9,7 +9,7 @@
     <menu-item v-for="(ele, index) in item.children" :item="ele" :key="index" />
   </el-sub-menu>
 
-  <el-menu-item v-else :index="item.path" @click="getTagList(item.meta?.tag_id)">
+  <el-menu-item v-else :index="item.path" @click="getTagList(item.id)">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       {{ item.name }}
