@@ -28,6 +28,7 @@ import { getDraftList, deleteDraft, saveDraft } from '@/api/drafts';
 import { getDraftTagList } from '@/api/tags'
 import { useNavigateTo } from '@/hooks/web/useNavigate'
 import { bindTag2Draft, unbindTag2Draft } from '@/api/tags'
+import { formatDate } from '@/utils/three_party'
 
 const query = ref({
   page: 1,
@@ -51,6 +52,7 @@ const columns = [
   {
     title: '时间',
     dataKey: 'create_time',
+    cellRenderer: ({ cellData: create_time }) => <i>{formatDate(create_time)}</i>,
     align: "center",
     width: 150
   },
@@ -163,7 +165,7 @@ async function submit() {
   await saveDraft(data)
 
   sync() // 同步数据
-  
+
   dialogVisible.value = false
 
   ElMessage.success('提交成功!')

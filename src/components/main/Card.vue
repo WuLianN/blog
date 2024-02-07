@@ -9,9 +9,9 @@
     <template #footer>
       <div class="footer">
         <div>
-          <el-tag v-for="tag in item.tags" :key="tag.id">{{ tag.name }}</el-tag>  
+          <el-tag v-for="tag in item.tags" :key="tag.id">{{ tag.name }}</el-tag>
         </div>
-        <div>{{ item.update_time }}</div>
+        <div>{{ formatDate(item.create_time, "YYYY-MM-DD") }}</div>
       </div>
     </template>
   </el-card>
@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { useNavigateTo } from '@/hooks/web/useNavigate'
+import { formatDate } from '@/utils/three_party'
 
 defineProps({
   list: {
