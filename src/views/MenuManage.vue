@@ -31,6 +31,10 @@
 
         <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
 
+        <div class="upload-container">
+          <avatar-upload :width="64" :height="64" @change="handleImageChange" :imgUrl="imgUrl" />
+        </div>
+
         <template #footer>
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogSubmit">确 定</el-button>
@@ -51,7 +55,7 @@ import {
 } from '@element-plus/icons-vue'
 import { getMenuList } from '@/api/menu'
 import { getMenuTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
-import { addMenuItem, deleteMenuItem } from '@/api/menu'
+import { addMenuItem, deleteMenuItem, updateMenuItem } from '@/api/menu'
 
 interface Tree {
   id: number
@@ -71,6 +75,7 @@ const dataSource = ref<Tree[]>([])
 let newSelectedTags = [] // 选中的未创建的标签
 let deleteSelectedTags = [] // 需要删除(解绑)的标签
 const originTags = ref([]) // 原有的标签
+const imgUrl = ref('')
 
 getTreeList()
 
@@ -131,6 +136,8 @@ async function nodeClick(node, treeNode) {
 
   currentNode.value = node
   currentTreeNode.value = treeNode
+
+  imgUrl.value = node?.meta?.icon
 }
 
 async function getTags(id): Array<any> {
@@ -165,7 +172,9 @@ async function dialogSubmit() {
   const data = {
     name: dialogCategoryName.value,
     parent_id: parentId,
-    category_id: categoryId
+    category_id: categoryId,
+    icon: imgUrl.vaue,
+    id: currentNodeId
   }
 
   // 存在currentParentId，说明是已存在的分类
@@ -173,6 +182,8 @@ async function dialogSubmit() {
     // 更新
     // 同步标签
     syncMenu(dataSource.value, ids)
+
+    await updateMenuItem(data)
   } else {
     // 新增
     const menuItem = await addMenuItem(data)
@@ -270,6 +281,10 @@ function check() {
 
   return true
 }
+
+function handleImageChange(url) {
+  imgUrl.value = url
+}
 </script>
 
 <style>
@@ -312,5 +327,9 @@ function check() {
 .el-tag+.button-tag,
 .el-tag+.el-input {
   margin-left: 10px !important;
+}
+
+.upload-container {
+  margin-top: 20px;
 }
 </style>
