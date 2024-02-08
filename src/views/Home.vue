@@ -3,7 +3,7 @@
     <el-header class="header">
       <Header />
     </el-header>
-    <el-main class="container-main__wrapper">
+    <div class="container-main__wrapper">
       <div class="container-main">
         <div class="aside aside-left">
           <Menu />
@@ -17,7 +17,9 @@
      
         </div> -->
       </div>
-    </el-main>
+    </div>
+
+    <back-top />
   </div>
 </template>
 
@@ -67,6 +69,12 @@ function handleClick(e: Event) {
 
 .aside {
   padding: 20px;
+
+  // &-left {
+  //   position: sticky;
+  //   top: 150px;
+  //   left: 0;
+  // }
 }
 
 .main {

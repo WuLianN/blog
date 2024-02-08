@@ -287,7 +287,7 @@ function handleImageChange(url) {
 }
 </script>
 
-<style>
+<style scoped>
 .custom-tree-container {
   width: 500px;
   padding: 20px 0;

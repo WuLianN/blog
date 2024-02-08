@@ -3,6 +3,8 @@
     <div class="view-container">
       <Viewer :content="content" />
     </div>
+
+    <back-top />
   </div>
 </template>
 

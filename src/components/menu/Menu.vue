@@ -1,12 +1,12 @@
 <template>
-  <template v-if="menuList && menuList.length > 0">
-    <el-menu :defaultActive="defaultActive" :defaultOpeneds="defaultOpeneds" class="el-menu-vertical" :collapse="isCollapse" @open="handleOpen"
-      @close="handleClose">
+  <div class="menu" v-if="menuList && menuList.length > 0">
+    <el-menu :defaultActive="defaultActive" :defaultOpeneds="defaultOpeneds" class="el-menu-vertical"
+      :collapse="isCollapse" @open="handleOpen" @close="handleClose">
       <template v-for="(child, index) in menuList" :key="index">
         <menu-item :item="child" />
       </template>
     </el-menu>
-  </template>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -38,11 +38,11 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
   menuList.value = result
 
   defaultActive.value = result ? result[0].id : ''
-  defaultOpeneds.value = result ? [result[0].id]: []
+  defaultOpeneds.value = result ? [result[0].id] : []
 }
 </script>
 
-<style>
+<style scoped>
 .el-menu-vertical {
   border: 1px solid #ebeef5;
 }
@@ -50,5 +50,11 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
 .el-menu-vertical:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
+}
+
+.menu {
+  position: sticky;
+  top: 80px;
+  left: 0;
 }
 </style>
