@@ -3,6 +3,7 @@ import { loginResultModel } from './model/userModel';
 
 enum Api {
   login = '/login',
+  register =  '/register'
 }
 
 interface loginData {
@@ -16,3 +17,7 @@ interface loginData {
 export const login = (data: loginData) => {
   return defHttp.post<loginResultModel>({ url: Api.login, data });
 };
+
+export const register = (data: loginData) => {
+  return defHttp.post<loginResultModel>({ url: Api.register, data });
+}
