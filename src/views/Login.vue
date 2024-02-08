@@ -64,7 +64,6 @@ if (type === 'register') {
 const submitForm = (formEl: FormInstance) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
-    debugger
     if (valid) {
       let userInfo
       if (loginStaus.value === LoginStatusEnum.LOGIN) {
