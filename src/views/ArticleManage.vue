@@ -1,6 +1,6 @@
 <template>
   <div class="article">
-    <Table :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" />
+    <Table :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" @endReached="endReached" />
 
     <el-dialog title="编辑" v-model="dialogVisible" @close="dialogVisible = false" width="30%">
       <el-form label-width="80px" label-position="left">
@@ -32,7 +32,7 @@ import { formatDate } from '@/utils/three_party'
 
 const query = ref({
   page: 1,
-  pageSize: 10,
+  pageSize: 15,
   status: 0
 });
 
@@ -44,8 +44,9 @@ const tags = ref([])
 const originTags = ref([])
 let newSelectedTags = [] // 选中的未创建的标签
 let deleteSelectedTags = [] // 需要删除(解绑)的标签
+const windowHeight = window.innerHeight
 const tableWidth = ref(750)
-const tableWidthHeight = ref(600)
+const tableWidthHeight = ref(windowHeight)
 
 const list = ref([])
 const columns = [
@@ -101,6 +102,12 @@ getList()
 
 async function getList() {
   const resultList: never[] = await getDraftList(query.value);
+
+  if (resultList.length === 0) {
+    ElMessage.error("没有更多了！")
+    return
+  }
+
   list.value.push(...resultList)
 }
 
@@ -210,6 +217,11 @@ function sync() {
   currenRow.tags = tags.value
   currenRow.is_publish = isPublish.value ? 1 : 0
   currenRow.title = editTitle.value
+}
+
+function endReached() {
+  query.value.page += 1
+  getList()
 }
 </script> 
 

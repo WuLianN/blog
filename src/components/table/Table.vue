@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" fixed />
+    <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" fixed @end-reached="endReached" />
   </div>
 </template>
 
@@ -23,6 +23,12 @@ const props = defineProps({
     default: 400
   }
 })
+
+const emit = defineEmits(["endReached"])
+
+function endReached() {
+  emit("endReached")
+}
 </script>
 
 <style scoped lang="scss">
