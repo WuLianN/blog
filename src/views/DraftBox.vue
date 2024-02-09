@@ -33,6 +33,7 @@ async function getList() {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
+  padding: 20px 0;
 
   &-timeline {
     width: 800px;

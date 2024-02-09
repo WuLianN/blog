@@ -8,7 +8,7 @@
     <el-input v-if="inputVisible" ref="InputRef" v-model="inputValue" class="input" @keyup.enter="handleInputConfirm"
       @blur="handleInputConfirm" />
     <el-button v-else class="button-tag" @click="showInput">
-      + New Tag
+      + 新标签
     </el-button>
   </div>
 </template>
@@ -138,7 +138,6 @@ $MarginLeft: 10px;
   padding-top: 0;
   padding-bottom: 0;
   margin-left: $MarginLeft;
-
 }
 
 .input {

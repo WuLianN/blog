@@ -311,7 +311,7 @@ function handleImageChange(url) {
   justify-content: center;
 }
 
-.el-tree-node__content {
+:deep(.el-tree-node__content) {
   margin-bottom: 10px;
 }
 
@@ -319,13 +319,13 @@ function handleImageChange(url) {
   margin-top: 20px;
 }
 
-.button-tag,
-.el-input {
+:deep(.button-tag,
+  .el-input) {
   margin-left: 0 !important;
 }
 
-.el-tag+.button-tag,
-.el-tag+.el-input {
+:deep(.el-tag+.button-tag,
+  .el-tag+.el-input) {
   margin-left: 10px !important;
 }
 

@@ -6,6 +6,17 @@ export function getToken() {
   return token
 }
 
+export function checkAuth(path?: string) {
+  const token = getToken()
+  if (!token) {
+    router.push({
+      path: '/login', query: {
+        redirect: path
+      }
+    })
+  }
+}
+
 export function getUserId(): (LocationQueryValue | LocationQueryValue[]) {
   const { path } = router.currentRoute.value
   const regexp = /\/user\/(\d+)/
