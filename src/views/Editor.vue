@@ -16,7 +16,7 @@ import Editor from '@blog/markdown-editor/src/components/Editor.vue'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import { debounce } from 'lodash-es'
-import { saveDraft, getDraft } from '@/api/drafts'
+import { saveDraft, getDraft, publishDraft } from '@/api/drafts'
 import { uploadFile } from '@/api/upload'
 import { useNavigateTo } from '@/hooks/web/useNavigate'
 
@@ -71,7 +71,18 @@ function goDraftBox() {
   useNavigateTo('/draftBox')
 }
 
-function publish() { }
+async function publish() {
+  if (draftId) {
+    const id = parseInt(draftId, 10)
+    try {
+      await publishDraft(id)
+      ElMessage.success('发布成功！')
+      useNavigateTo('/')
+    } catch {
+      ElMessage.error('发布失败！')
+    }
+  }
+}
 
 async function upload(file: File) {
   const formData = new FormData();

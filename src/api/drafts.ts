@@ -5,7 +5,8 @@ enum Api {
   saveDraft = '/saveDraft',
   getDraft = '/getDraft',
   getDraftList = '/getDraftList',
-  deleteDraft = '/deleteDraft'
+  deleteDraft = '/deleteDraft',
+  publishDraft = '/publishDraft'
 }
 
 export const createDraft = () => {
@@ -27,3 +28,7 @@ export const getDraftList = (data: any) => {
 export const deleteDraft = (id: number) => {
   return defHttp.post<any>({ url: Api.deleteDraft, data: { id } });
 };
+
+export const publishDraft = (id: number) => {
+  return defHttp.post<any>({ url: Api.publishDraft, data: { id } })
+}
