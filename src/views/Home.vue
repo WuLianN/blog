@@ -13,9 +13,9 @@
           <Main />
         </div>
 
-        <!-- <div class="aside aside-right">
-     
-        </div> -->
+        <div class="aside aside-right">
+
+        </div>
       </div>
     </div>
 
@@ -70,11 +70,9 @@ function handleClick(e: Event) {
 .aside {
   padding: 20px;
 
-  // &-left {
-  //   position: sticky;
-  //   top: 150px;
-  //   left: 0;
-  // }
+  &-right {
+    width: 200px;
+  }
 }
 
 .main {

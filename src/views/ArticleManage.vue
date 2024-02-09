@@ -104,7 +104,7 @@ async function getList() {
   const resultList: never[] = await getDraftList(query.value);
 
   if (resultList.length === 0) {
-    ElMessage.error("没有更多了！")
+    ElMessage.warning("没有更多了！")
     return
   }
 
