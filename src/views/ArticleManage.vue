@@ -14,6 +14,10 @@
 
       <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
 
+      <div class="btn-wrapper">
+        <el-button type="primary" plain @click="goDrafts">校正</el-button>
+      </div>
+
       <template #footer>
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
@@ -223,6 +227,10 @@ function endReached() {
   query.value.page += 1
   getList()
 }
+
+function goDrafts() {
+  currentDraftId.value  && useNavigateToNewTag(`/drafts/${currentDraftId.value}`)
+}
 </script> 
 
 <style scoped lang="scss">
@@ -232,5 +240,13 @@ function endReached() {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+}
+
+:deep(.button-tag) {
+  margin-left: 0 !important;
+}
+
+.btn-wrapper {
+  margin-top: 18px;
 }
 </style>
