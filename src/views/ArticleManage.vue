@@ -19,8 +19,8 @@
       </div>
 
       <template #footer>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button plain @click="dialogVisible = false">取 消</el-button>
+        <el-button plain type="primary" @click="submit">确 定</el-button>
       </template>
     </el-dialog>
   </div>

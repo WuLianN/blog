@@ -7,20 +7,20 @@
           <span class="custom-tree-node">
             <span>{{ node.label }}</span>
             <span>
-              <el-button type="success" size="small" :icon="Plus" circle @click="append(data, $event)" />
-              <el-button type="danger" size="small" :icon="Delete" circle @click="remove(node, data, $event)" />
+              <el-button plain type="primary" size="small" :icon="Plus" circle @click="append(data, $event)" />
+              <el-button plain type="danger" size="small" :icon="Delete" circle @click="remove(node, data, $event)" />
             </span>
           </span>
         </template>
 
         <template #empty>
-          <el-button type="primary" @click="appendTree">添加分类</el-button>
+          <el-button plain type="primary" @click="appendTree">添加分类</el-button>
         </template>
       </el-tree>
     </div>
 
     <div v-if="dataSource.length > 0">
-      <el-button type="primary" @click="appendTree">添加分类</el-button>
+      <el-button plain type="primary" @click="appendTree">添加分类</el-button>
     </div>
 
     <div>
@@ -36,8 +36,8 @@
         </div>
 
         <template #footer>
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogSubmit">确 定</el-button>
+          <el-button plain @click="dialogVisible = false">取 消</el-button>
+          <el-button plain type="primary" @click="dialogSubmit">确 定</el-button>
         </template>
 
       </el-dialog>

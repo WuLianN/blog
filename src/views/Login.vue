@@ -12,7 +12,7 @@
           <el-input type="password" v-model="form.confirmPassword" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm(formRef)">{{ loginBtnText }}</el-button>
+          <el-button plain type="primary" @click="submitForm(formRef)">{{ loginBtnText }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -112,7 +112,7 @@ const validatePass = (rule: any, value: any, callback: any) => {
   if (form.confirmPassword) {
     formRef.value.validateField("confirmPassword")
   }
-  
+
   if (value === '') {
     callback(new Error('请输入密码'))
   } else {
