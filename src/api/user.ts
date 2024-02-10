@@ -3,7 +3,8 @@ import { loginResultModel } from './model/userModel';
 
 enum Api {
   login = '/login',
-  register =  '/register'
+  register = '/register',
+  getUserInfo = '/getUserInfo'
 }
 
 interface loginData {
@@ -20,4 +21,8 @@ export const login = (data: loginData) => {
 
 export const register = (data: loginData) => {
   return defHttp.post<loginResultModel>({ url: Api.register, data });
+}
+
+export const getUserInfo = (id: string | number) => {
+  return defHttp.get<any>({ url: Api.getUserInfo, data: { id } })
 }
