@@ -60,6 +60,5 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
   background-color: var(--el-card-bg-color);
   overflow: hidden;
   color: var(--el-text-color-primary);
-  transition: var(--el-transition-duration);
 }
 </style>

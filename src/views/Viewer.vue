@@ -48,7 +48,19 @@ async function getDraftDetail() {
 
   &-container {
     width: 800px;
+    padding-bottom: 50px;
   }
 }
 
+@media screen and (max-width: 768px) {
+  .view-container {
+    width: 95%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .view-container {
+    width: 90%;
+  }
+}
 </style>
