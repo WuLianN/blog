@@ -4,7 +4,9 @@ import { loginResultModel } from './model/userModel';
 enum Api {
   login = '/login',
   register = '/register',
-  getUserInfo = '/getUserInfo'
+  getUserInfo = '/getUserInfo',
+  updateUserInfo = '/updateUserInfo',
+  changePassword = '/changePassword'
 }
 
 interface loginData {
@@ -25,4 +27,12 @@ export const register = (data: loginData) => {
 
 export const getUserInfo = (id: string | number) => {
   return defHttp.get<any>({ url: Api.getUserInfo, data: { id } })
+}
+
+export const updateUserInfo = (data: any) => {
+  return defHttp.post<any>({ url: Api.updateUserInfo, data })
+}
+
+export const changePassword = (data: any) => {
+  return defHttp.post<any>({ url: Api.changePassword, data })
 }

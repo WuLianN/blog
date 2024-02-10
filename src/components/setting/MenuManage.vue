@@ -290,7 +290,7 @@ function handleImageChange(url) {
 <style scoped>
 .custom-tree-container {
   width: 500px;
-  padding: 20px 0;
+  padding-bottom: 20px;
 }
 
 .custom-tree-node {
