@@ -2,7 +2,7 @@
   <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.id">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
-      {{ item.name }}
+      <el-text type="primary">{{ item.name }}</el-text>
     </template>
 
     <!-- 组件自调 -->
@@ -12,7 +12,7 @@
   <el-menu-item v-else :index="item.id" @click="getTagList(item)">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
-      {{ item.name }}
+      <el-text type="primary">{{ item.name }}</el-text>
     </template>
   </el-menu-item>
 </template>
@@ -58,7 +58,7 @@ async function getTagList(item: any) {
     }
   } else {
     ElMessage.error("当前分类暂未绑定标签")
-    return 
+    return
   }
 
   const list = await getRecommendList(query)

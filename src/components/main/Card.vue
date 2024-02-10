@@ -2,7 +2,7 @@
   <el-card class="card" v-for="(item, index) in list" :key="index" @click="jump(item.id)">
     <template #header>
       <div>
-        {{ item.title }}
+        <el-text type="primary">{{ item.title }}</el-text>
       </div>
     </template>
     <div>{{ item.excerpt }}</div>

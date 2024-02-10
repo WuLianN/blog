@@ -43,10 +43,6 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
 </script>
 
 <style scoped>
-.el-menu-vertical {
-  border: 1px solid #ebeef5;
-}
-
 .el-menu-vertical:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
@@ -56,5 +52,14 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
   position: sticky;
   top: 80px;
   left: 0;
+
+  box-shadow: var(--el-box-shadow-light);
+
+  border-radius: var(--el-card-border-radius);
+  border: 1px px solid var(--el-card-border-color);
+  background-color: var(--el-card-bg-color);
+  overflow: hidden;
+  color: var(--el-text-color-primary);
+  transition: var(--el-transition-duration);
 }
 </style>
