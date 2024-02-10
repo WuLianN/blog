@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="header-left">
-     
+
     </div>
     <div class="header-right">
       <div class="header-right__btn">
@@ -9,6 +9,10 @@
       </div>
       <div class="header-right__switch">
         <Switch />
+      </div>
+
+      <div>
+        <theme-picker />
       </div>
 
       <div class="header-right__login">
@@ -49,9 +53,11 @@ const token = getToken()
   }
 
   &-right {
-    &__switch, &__login, &__btn  {
+
+    &__switch,
+    &__login,
+    &__btn {
       padding: 0 15px;
     }
   }
-}
-</style>
+}</style>
