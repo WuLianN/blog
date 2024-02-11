@@ -1,7 +1,7 @@
 <template>
   <div class="draft-box">
     <div class="draft-box-timeline">
-      <Timeline :list="list" />
+      <Timeline :list="list" @delete="deleteDraft" />
     </div>
   </div>
 </template>
@@ -47,6 +47,14 @@ async function handleScroll() {
   }
 }
 
+function deleteDraft(id) {
+  const index = list.value.findIndex(item => item.id === id)
+
+  if (index !== -1) {
+    list.value.splice(index, 1)
+  }
+}
+
 onMounted(() => {
   // 监听滚动事件
   window.addEventListener('scroll', debounceScrollFn);
@@ -68,6 +76,18 @@ onUnmounted(() => {
 
   &-timeline {
     width: 800px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .draft-box-timeline {
+    width: 90%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .draft-box-timeline {
+    width: 80%;
   }
 }
 </style>
