@@ -8,9 +8,14 @@
         </div>
       </template>
 
+      <div class="card-btn-wrapper">
+        <el-button plain type="primary" @click="go('/draftBox')">草稿箱</el-button>
+        <el-button plain type="primary" @click="go('/articleManage')">文章管理</el-button>
+      </div>
+
       <template #footer>
         <div class="card-footer">
-          <a class="card-footer__link" @click="goSetting">我的设置</a>
+          <a class="card-footer__link" @click="go('/setting')">我的设置</a>
           <a class="card-footer__link" @click="logout">退出登录</a>
         </div>
       </template>
@@ -51,8 +56,8 @@ function logout() {
   useNavigateTo({ path: '/login', query: { type: 'login' } })
 }
 
-function goSetting() {
-  useNavigateTo('/setting')
+function go(path) {
+  useNavigateTo(path)
 }
 </script>
 
@@ -60,7 +65,7 @@ function goSetting() {
 .card {
   position: absolute;
   top: var(--el-header-height);
-  right: 20px;
+  right: 50px;
   z-index: 999;
 
   &-header {
@@ -90,5 +95,26 @@ function goSetting() {
       cursor: pointer;
     }
   }
+
+  &-btn-wrapper {
+    width: 180px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-self: center;
+    padding-top: 10px; // 补button margin-bottom: 10px;
+  }
+}
+
+.el-button+.el-button {
+  margin-left: 0;
+}
+
+.el-button {
+  margin-bottom: 10px;
+}
+
+:deep(.el-card__body) {
+  padding: 10px;
 }
 </style>

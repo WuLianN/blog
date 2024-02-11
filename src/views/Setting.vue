@@ -4,7 +4,7 @@
       <el-tab-pane>
         <template #label>
           <span class="custom-tabs-label">
-            <el-icon>
+            <el-icon :size="20">
               <UserFilled />
             </el-icon>
             <span>个人信息</span>
@@ -15,7 +15,7 @@
       <el-tab-pane>
         <template #label>
           <span class="custom-tabs-label">
-            <el-icon>
+            <el-icon :size="20">
               <Menu />
             </el-icon>
             <span>菜单管理</span>
@@ -26,7 +26,7 @@
       <el-tab-pane>
         <template #label>
           <span class="custom-tabs-label">
-            <el-icon>
+            <el-icon :size="20">
               <CollectionTag />
             </el-icon>
             <span>标签管理</span>
@@ -37,7 +37,7 @@
       <el-tab-pane>
         <template #label>
           <span class="custom-tabs-label">
-            <el-icon>
+            <el-icon :size="20">
               <Setting />
             </el-icon>
             <span>账户设置</span>

@@ -5,13 +5,13 @@
     </div>
     <div class="header-right">
       <div class="header-right__btn">
-        <el-button plain type="primary" @click="() => useNavigateTo('/createCenter')">创作中心</el-button>
+        <el-button plain type="primary" @click="writeArticle">写文章</el-button>
       </div>
       <div class="header-right__switch">
         <Switch />
       </div>
 
-      <div>
+      <div class="header-right__picker">
         <theme-picker />
       </div>
 
@@ -31,8 +31,15 @@
 <script setup lang="ts">
 import { getToken } from '@/utils/auth';
 import { useNavigateTo } from '@/hooks/web/useNavigate'
+import { createDraft } from '@/api/drafts'
 
 const token = getToken()
+
+async function writeArticle() {
+  const { draft_id: id } = await createDraft()
+  useNavigateTo(`/drafts/${id}`)
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -55,9 +62,15 @@ const token = getToken()
   &-right {
 
     &__switch,
-    &__login,
+    
+    &__picker,
     &__btn {
-      padding: 0 15px;
+      padding: 0 12px;
+    }
+
+    &__login {
+      padding: 0 50px 0 12px;
     }
   }
-}</style>
+}
+</style>
