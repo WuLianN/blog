@@ -12,7 +12,6 @@ import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum';
 import { isString, isUnDef, isNull, isEmpty } from '@/utils/is';
 import { getToken } from '@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '@/utils';
-import { useI18n } from '@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { AxiosRetry } from '@/utils/http/axios/axiosRetry';
 import axios from 'axios';
@@ -28,7 +27,6 @@ const transform: AxiosTransform = {
    * @description: 处理响应数据。如果数据不是预期格式，可直接抛出错误
    */
   transformResponseHook: (res: AxiosResponse<Result>, options: RequestOptions) => {
-    const { t } = useI18n();
     const { isTransformResponse, isReturnNativeResponse } = options;
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
     if (isReturnNativeResponse) {
@@ -44,7 +42,7 @@ const transform: AxiosTransform = {
     const { data } = res;
     if (!data) {
       // return '[HTTP] Request has no return value';
-      throw new Error(t('sys.api.apiRequestFailed'));
+      throw new Error('请求出错，请稍候重试');
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, result, message } = data;
@@ -55,11 +53,11 @@ const transform: AxiosTransform = {
       let successMsg = message;
 
       if (isNull(successMsg) || isUnDef(successMsg) || isEmpty(successMsg)) {
-        successMsg = t(`sys.api.operationSuccess`);
+        successMsg = '操作成功';
       }
 
       if (options.successMessageMode === 'modal') {
-        ElMessageBox.confirm(successMsg, t('sys.api.successTip'), { type: 'success' });
+        ElMessageBox.confirm(successMsg, '成功提示', { type: 'success' });
       } else if (options.successMessageMode === 'message') {
         ElMessage.success(successMsg);
       }
@@ -74,7 +72,7 @@ const transform: AxiosTransform = {
         ElMessage.warning(message);
         return;
       case ResultEnum.TIMEOUT:
-        timeoutMsg = t('sys.api.timeoutMessage');
+        timeoutMsg = '登录超时,请重新登录!';
         break;
       default:
         if (message) {
@@ -85,12 +83,12 @@ const transform: AxiosTransform = {
     // errorMessageMode='modal'的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (options.errorMessageMode === 'modal') {
-      ElMessageBox.confirm(timeoutMsg, t('sys.api.errorTip'), { type: "error" });
+      ElMessageBox.confirm(timeoutMsg, '错误提示', { type: "error" });
     } else if (options.errorMessageMode === 'message') {
       ElMessage.error(timeoutMsg);
     }
 
-    throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'));
+    throw new Error(timeoutMsg || '请求出错，请稍候重试');
   },
 
   // 请求之前处理config
@@ -172,7 +170,6 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (axiosInstance: AxiosInstance, error: any) => {
-    const { t } = useI18n();
     const { response, code, message, config } = error || {};
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
     const msg: string = response?.data?.error?.message ?? '';
@@ -185,15 +182,15 @@ const transform: AxiosTransform = {
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
-        errMessage = t('sys.api.apiTimeoutMessage');
+        errMessage = '接口请求超时,请刷新页面重试!';
       }
       if (err?.includes('Network Error')) {
-        errMessage = t('sys.api.networkExceptionMsg');
+        errMessage = '网络异常，请检查您的网络连接是否正常!';
       }
 
       if (errMessage) {
         if (errorMessageMode === 'modal') {
-          ElMessageBox.confirm(errMessage, t('sys.api.errorTip'), { type: "error" });
+          ElMessageBox.confirm(errMessage, '错误提示', { type: "error" });
         } else if (errorMessageMode === 'message') {
           ElMessage.error(errMessage);
         }
