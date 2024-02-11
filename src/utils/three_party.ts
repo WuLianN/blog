@@ -4,7 +4,8 @@ export function getExcerpt(value: string): string {
   const summaryLength = 200
   const { content } = matter(value);
   const sanitizedContent = content.trim().replaceAll(/#+\s+(.+)/g, '')
-  const excerpt = sanitizedContent.trim().slice(0, summaryLength) + ' ...'
+  const ellipsis = sanitizedContent.length > 200 ? ' ...' : ''
+  const excerpt = sanitizedContent.trim().slice(0, summaryLength) + ellipsis
 
   return excerpt
 }

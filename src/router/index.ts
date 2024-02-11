@@ -7,9 +7,8 @@ const CreateCenter = () => import("@/views/CreateCenter.vue")
 const Editor = () => import("@/views/Editor.vue")
 const DraftBox = () => import("@/views/DraftBox.vue")
 const Viewer = () => import('@/views/Viewer.vue')
-const MenuManage = () => import('@/views/MenuManage.vue')
-const TagManage = () => import('@/views/TagManage.vue')
 const ArticleManage = () => import('@/views/ArticleManage.vue')
+const Setting = () => import('@/views/Setting.vue')
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -19,9 +18,8 @@ const routes = [
   { path: '/drafts/:id', name: 'drafts', component: Editor },
   { path: '/draftBox', name: 'draftBox', component: DraftBox },
   { path: '/viewer/:id', name: 'viewer', component: Viewer },
-  { path: '/menuManage', name: 'menuManage', component: MenuManage },
-  { path: '/tagManage', name: 'tagManage', component: TagManage },
-  { path: '/articleManage', name: 'articleManage', component: ArticleManage }
+  { path: '/articleManage', name: 'articleManage', component: ArticleManage },
+  { path: '/setting', name: 'setting', component: Setting }
 ]
 
 export const router = createRouter({

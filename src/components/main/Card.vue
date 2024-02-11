@@ -2,7 +2,7 @@
   <el-card class="card" v-for="(item, index) in list" :key="index" @click="jump(item.id)">
     <template #header>
       <div>
-        <el-text type="primary">{{ item.title }}</el-text>
+        <el-text type="primary" size="large">{{ item.title }}</el-text>
       </div>
     </template>
     <div>{{ item.excerpt }}</div>
@@ -11,7 +11,9 @@
         <div>
           <el-tag v-for="tag in item.tags" :key="tag.id">{{ tag.name }}</el-tag>
         </div>
-        <div>{{ formatDate(item.create_time, "YYYY-MM-DD") }}</div>
+        <div>
+          <el-text>{{ formatDate(item.create_time, "YYYY-MM-DD") }}</el-text>
+        </div>
       </div>
     </template>
   </el-card>

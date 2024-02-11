@@ -14,7 +14,9 @@ import { useUserStore } from '@/store/modules/user'
 const userStore = useUserStore()
 const store = useHomeStore()
 const cardStatus = ref(false)
-const avatar = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
+const defaultAvatar = 'http://127.0.0.1:8000/static/f59dba31b7e35b34915a46af75b037f2.png'
+const avatar = ref('')
+avatar.value = userStore.userInfo.avatar ?? defaultAvatar
 
 function avatarClick(e: Event) {
   e.stopPropagation()
@@ -28,8 +30,16 @@ watch(() => store.status, (value) => {
 })
 
 watch(() => userStore.userInfo.avatar, (value) => {
-  avatar.value = value
+  if (value) {
+    avatar.value = value
+  }
 })
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.avatar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+</style>

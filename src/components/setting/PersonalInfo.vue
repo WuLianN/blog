@@ -37,7 +37,13 @@ async function submit() {
     avatar: avatar.value,
     user_name: form.username
   }
-  await updateUserInfo(data)
+  
+  try {
+    await updateUserInfo(data)
+    ElMessage.success("修改成功!")
+  } catch {
+    ElMessage.error("修改失败!")
+  }
 
   // 更新用户信息 storage store
   userStore.setUserInfo(data)

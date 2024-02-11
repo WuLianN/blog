@@ -173,7 +173,7 @@ async function dialogSubmit() {
     name: dialogCategoryName.value,
     parent_id: parentId,
     category_id: categoryId,
-    icon: imgUrl.vaue,
+    icon: imgUrl.value,
     id: currentNodeId
   }
 

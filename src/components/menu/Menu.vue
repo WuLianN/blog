@@ -1,11 +1,13 @@
 <template>
   <div class="menu" v-if="menuList && menuList.length > 0">
-    <el-menu :defaultActive="defaultActive" :defaultOpeneds="defaultOpeneds" class="el-menu-vertical"
-      :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-      <template v-for="(child, index) in menuList" :key="index">
-        <menu-item :item="child" />
-      </template>
-    </el-menu>
+    <el-card>
+      <el-menu :defaultActive="defaultActive" :defaultOpeneds="defaultOpeneds" class="el-menu-vertical"
+        :collapse="isCollapse" @open="handleOpen" @close="handleClose">
+        <template v-for="(child, index) in menuList" :key="index">
+          <menu-item :item="child" />
+        </template>
+      </el-menu>
+    </el-card>
   </div>
 </template>
 
@@ -52,13 +54,13 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
   position: sticky;
   top: 80px;
   left: 0;
+}
 
-  box-shadow: var(--el-box-shadow-light);
+:deep(.el-menu) {
+  border: 0 !important;
+}
 
-  border-radius: var(--el-card-border-radius);
-  border: 1px px solid var(--el-card-border-color);
-  background-color: var(--el-card-bg-color);
-  overflow: hidden;
-  color: var(--el-text-color-primary);
+:deep(.el-card__body) {
+  padding: 0 !important;
 }
 </style>
