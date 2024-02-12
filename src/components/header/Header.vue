@@ -16,7 +16,7 @@
       </div>
 
       <div class="header-right__login">
-        <template v-if="token">
+        <template v-if="hasUserInfo">
           <Login-Info />
         </template>
         <template v-else>
@@ -29,11 +29,16 @@
 </template>
 
 <script setup lang="ts">
-import { getToken } from '@/utils/auth';
 import { useNavigateTo } from '@/hooks/web/useNavigate'
 import { createDraft } from '@/api/drafts'
+import { useUserStore } from '@/store/modules/user'
+import { computed } from 'vue'
 
-const token = getToken()
+const store = useUserStore()
+
+const hasUserInfo = computed(() => {
+  return store.userInfo.avatar
+})
 
 async function writeArticle() {
   const { draft_id: id } = await createDraft()

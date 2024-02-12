@@ -8,13 +8,13 @@
         </div>
       </template>
 
-      <div class="card-btn-wrapper">
+      <div class="card-btn-wrapper" v-isBrower>
         <el-button plain type="primary" @click="go('/draftBox')">草稿箱</el-button>
         <el-button plain type="primary" @click="go('/articleManage')">文章管理</el-button>
       </div>
 
-      <template #footer>
-        <div class="card-footer">
+      <template #footer >
+        <div class="card-footer" v-isBrower>
           <a class="card-footer__link" @click="go('/setting')">我的设置</a>
           <a class="card-footer__link" @click="logout">退出登录</a>
         </div>

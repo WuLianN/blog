@@ -21,7 +21,7 @@ export const register = (data: LoginParams) => {
 }
 
 export const getUserInfo = (id?: number | null) => {
-  return defHttp.get<any>({ url: Api.getUserInfo, data: { id } })
+  return defHttp.get<any>({ url: Api.getUserInfo, params: { id } })
 }
 
 export const updateUserInfo = (data: any) => {

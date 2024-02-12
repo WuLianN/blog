@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useHomeStore } from '@/store/modules/home'
 import { useUserStore } from '@/store/modules/user'
 
@@ -15,8 +15,10 @@ const userStore = useUserStore()
 const store = useHomeStore()
 const cardStatus = ref(false)
 const defaultAvatar = 'http://127.0.0.1:8000/static/f59dba31b7e35b34915a46af75b037f2.png'
-const avatar = ref('')
-avatar.value = userStore.userInfo.avatar ?? defaultAvatar
+
+const avatar = computed(() => {
+  return userStore.userInfo.avatar ?? defaultAvatar
+})
 
 function avatarClick(e: Event) {
   e.stopPropagation()
@@ -27,12 +29,6 @@ function avatarClick(e: Event) {
 
 watch(() => store.status, (value) => {
   cardStatus.value = value
-})
-
-watch(() => userStore.userInfo.avatar, (value) => {
-  if (value) {
-    avatar.value = value
-  }
 })
 </script>
 
