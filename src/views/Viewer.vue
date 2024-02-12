@@ -13,9 +13,13 @@ import { ref } from 'vue'
 import Viewer from '@blog/markdown-editor/src/components/Viewer.vue'
 import { useRoute } from 'vue-router'
 import { getDraft } from '@/api/drafts'
+import { useDark } from '@vueuse/core'
+import { setColor } from '@/hooks/web/useTheme'
 
 const content = ref('')
 const draftId = getDraftId()
+
+useDark()
 
 if (draftId) {
   getDraftDetail()
@@ -50,6 +54,11 @@ async function getDraftDetail() {
     width: 800px;
     padding-bottom: 50px;
   }
+}
+
+// 暗黑模式，统一字体颜色吧
+:deep(.markdown-body) {
+  color: var(--app-markdown-body-color) !important;
 }
 
 @media screen and (max-width: 768px) {
