@@ -18,25 +18,25 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { getRecommendList } from '@/api/base'
 import { useUserStore } from '@/store/modules/user'
 import { useHomeStore } from '@/store/modules/home'
 import { getExcerpt } from '@/utils/three_party'
+import { PropType } from 'vue'
+import { MenuItem as MenuItemType } from '@/api/model/menuModel'
 
-const router = useRouter()
 const userStore = useUserStore()
 const homeStore = useHomeStore()
 const query = {
   userId: userStore.user.id,
-  tagId: null,
+  tagId: 0,
   page: 1,
   pageSize: 10
 }
 
 defineProps({
   item: {
-    type: Object,
+    type: Object as PropType<MenuItemType>,
     default: () => []
   }
 })
@@ -45,8 +45,7 @@ defineOptions({
   name: 'menuItem'
 })
 
-
-async function getTagList(item: any) {
+async function getTagList(item: MenuItemType) {
   const { name, tags } = item
 
   if (tags && tags.length > 0) {
@@ -61,7 +60,7 @@ async function getTagList(item: any) {
     return
   }
 
-  const list = await getRecommendList(query)
+  const list: any[] = await getRecommendList(query)
 
   list.map(item => item.excerpt = getExcerpt(item.content))
 

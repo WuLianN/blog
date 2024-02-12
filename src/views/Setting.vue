@@ -53,7 +53,7 @@
 import { ref } from 'vue'
 import { UserFilled, Setting, Menu, CollectionTag } from '@element-plus/icons-vue'
 
-const tabPosition = ref('left')
+const tabPosition = ref<any>('left')
 
 </script>
 

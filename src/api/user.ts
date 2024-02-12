@@ -1,5 +1,5 @@
 import { defHttp } from '@/utils/http/axios';
-import { loginResultModel } from './model/userModel';
+import { LoginResult, LoginParams } from './model/userModel';
 
 enum Api {
   login = '/login',
@@ -9,23 +9,18 @@ enum Api {
   changePassword = '/changePassword'
 }
 
-interface loginData {
-  username: string;
-  password: string;
-}
-
 /**
  * @description: 登录
  */
-export const login = (data: loginData) => {
-  return defHttp.post<loginResultModel>({ url: Api.login, data });
+export const login = (data: LoginParams) => {
+  return defHttp.post<LoginResult>({ url: Api.login, data });
 };
 
-export const register = (data: loginData) => {
-  return defHttp.post<loginResultModel>({ url: Api.register, data });
+export const register = (data: LoginParams) => {
+  return defHttp.post<LoginResult>({ url: Api.register, data });
 }
 
-export const getUserInfo = (id: string | number) => {
+export const getUserInfo = (id?: number | null) => {
   return defHttp.get<any>({ url: Api.getUserInfo, data: { id } })
 }
 

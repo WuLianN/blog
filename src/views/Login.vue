@@ -24,9 +24,10 @@ import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
 import { login, register } from '@/api/user'
+import { LoginResult } from '@/api/model/userModel'
 
 const form = reactive({
-  account: 'xx',
+  account: '我全都要',
   password: '1234',
   confirmPassword: ''
 })
@@ -142,7 +143,7 @@ const rules = reactive<FormRules<typeof form>>({
   confirmPassword: [{ validator: validateComfirmPass, trigger: 'blur' }]
 })
 
-async function loginFunc(): string {
+async function loginFunc(): Promise<LoginResult> {
   const userInfo = await login({
     username: form.account,
     password: form.password,
@@ -151,7 +152,7 @@ async function loginFunc(): string {
   return userInfo
 }
 
-async function registerFunc(): string {
+async function registerFunc(): Promise<LoginResult> {
   const userInfo = await register({
     username: form.account,
     password: form.password,

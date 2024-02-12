@@ -27,7 +27,7 @@ const avatar = ref('')
 avatar.value = userStore.userInfo.avatar
 form.username = userStore.userInfo.user_name ?? ''
 
-function handleImageChange(url) {
+function handleImageChange(url: string) {
   avatar.value = url
 }
 

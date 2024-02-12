@@ -69,11 +69,11 @@ const dialogVisible = ref(false)
 const dialogCategoryName = ref('')
 
 const tags = ref([])
-const currentNode = ref('')
-const currentTreeNode = ref('')
+const currentNode = ref<any>('')
+const currentTreeNode = ref<any>('')
 const dataSource = ref<Tree[]>([])
-let newSelectedTags = [] // 选中的未创建的标签
-let deleteSelectedTags = [] // 需要删除(解绑)的标签
+let newSelectedTags: Array<any> = [] // 选中的未创建的标签
+let deleteSelectedTags: Array<any> = [] // 需要删除(解绑)的标签
 const originTags = ref([]) // 原有的标签
 const imgUrl = ref('')
 
@@ -112,14 +112,14 @@ function appendTree() {
 }
 
 async function getTreeList() {
-  const result = await getMenuList()
+  const result: any[] = await getMenuList()
 
   if (result) {
     dataSource.value = [...result]
   }
 }
 
-async function nodeClick(node, treeNode) {
+async function nodeClick(node: any, treeNode: any) {
   dialogVisible.value = true
 
   dialogCategoryName.value = node.label
@@ -129,7 +129,7 @@ async function nodeClick(node, treeNode) {
   newSelectedTags = []
   deleteSelectedTags = []
 
-  const tagList = await getTags(node.id)
+  const tagList: never[] = await getTags(node.id)
 
   tags.value.push(...tagList)
   originTags.value.push(...tagList)
@@ -140,7 +140,7 @@ async function nodeClick(node, treeNode) {
   imgUrl.value = node?.meta?.icon
 }
 
-async function getTags(id): Array<any> {
+async function getTags(id: number): Promise<any> {
   return await getMenuTagList({ menu_id: id })
 }
 
@@ -186,7 +186,7 @@ async function dialogSubmit() {
     await updateMenuItem(data)
   } else {
     // 新增
-    const menuItem = await addMenuItem(data)
+    const menuItem: any = await addMenuItem(data)
     // 同步标签、后端返回的id
     syncMenu(dataSource.value, ids, menuItem)
   }
@@ -214,20 +214,20 @@ async function dialogSubmit() {
   deleteSelectedTags = []
 }
 
-function tagsChange(data) {
+function tagsChange(data: any) {
   const { newSelectedTags: newTagsList, oldSelectedTags: oldTagsList } = data
   newSelectedTags = newTagsList
   deleteSelectedTags = oldTagsList
 }
 
-function getLevel_1_Node(node) {
+function getLevel_1_Node(node: any) {
   if (node.level !== 1) {
     return getLevel_1_Node(node.parent)
   }
   return node
 }
 
-function getNodeByLevel(node, level) {
+function getNodeByLevel(node: any, level: number) {
   if (node.level === level) {
     return node
   } else {
@@ -236,7 +236,7 @@ function getNodeByLevel(node, level) {
 }
 
 // 3 -> 2 -> 1
-function getIds(treeNode, level): Array<number> {
+function getIds(treeNode: any, level: number): Array<number> {
   const ids = []
   for (let i = level; i <= level && i > 0; i--) {
     const node = getNodeByLevel(treeNode, i)
@@ -247,7 +247,7 @@ function getIds(treeNode, level): Array<number> {
 }
 
 // 同步菜单
-function syncMenu(list, ids, menuItem) {
+function syncMenu(list: Array<any>, ids: number[], menuItem?: any) {
   const node = list.find(item => ids.includes(item.id))
   if (node) {
     const length = ids.length
@@ -275,14 +275,14 @@ function check() {
   // level > 1, 不是初始的父级节点
   if (level > 1 && parentId === undefined) {
     dialogVisible.value = false
-    createMessage.error('请先创建父级分类')
+    ElMessage.error('请先创建父级分类')
     return false
   }
 
   return true
 }
 
-function handleImageChange(url) {
+function handleImageChange(url: string) {
   imgUrl.value = url
 }
 </script>

@@ -15,7 +15,7 @@
       <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
 
       <div class="btn-wrapper">
-        <el-button type="primary" plain @click="goDrafts">校正</el-button>
+        <el-button type="primary" plain @click="goDrafts">修改</el-button>
       </div>
 
       <template #footer>
@@ -40,19 +40,19 @@ const query = ref({
   status: 0
 });
 
-const currentDraftId = ref('')
+const currentDraftId = ref<number>(0)
 const editTitle = ref('')
 const isPublish = ref(false)
 const dialogVisible = ref(false)
-const tags = ref([])
-const originTags = ref([])
-let newSelectedTags = [] // 选中的未创建的标签
-let deleteSelectedTags = [] // 需要删除(解绑)的标签
+const tags = ref<any[]>([])
+const originTags = ref<any[]>([])
+let newSelectedTags: any[] = [] // 选中的未创建的标签
+let deleteSelectedTags: any[] = [] // 需要删除(解绑)的标签
 const windowHeight = window.innerHeight
 const tableWidth = ref(750)
 const tableWidthHeight = ref(windowHeight)
 
-const list = ref([])
+const list = ref<any[]>([])
 const columns = [
   {
     title: '时间',
@@ -115,7 +115,7 @@ async function getList() {
   list.value.push(...resultList)
 }
 
-async function edit(id) {
+async function edit(id: number) {
   dialogVisible.value = true
 
   const article = list.value.find(item => item.id === id)
@@ -134,7 +134,7 @@ async function edit(id) {
   originTags.value.push(...tagList)
 }
 
-function del(id) {
+function del(id: number) {
   ElMessageBox.confirm('此操作将永久删除该文章, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -154,7 +154,7 @@ function del(id) {
   })
 }
 
-async function getTags(id): Array<any> {
+async function getTags(id: number): Promise<any> {
   return await getDraftTagList({ draft_id: id })
 }
 
@@ -185,7 +185,7 @@ async function submit() {
   deleteSelectedTags = []
 }
 
-function bindTags(draftId) {
+function bindTags(draftId: number) {
   if (newSelectedTags.length > 0) {
     bindTag2Draft({
       draft_id: draftId,
@@ -194,7 +194,7 @@ function bindTags(draftId) {
   }
 }
 
-function unbindTags(draftId) {
+function unbindTags(draftId: number) {
   if (deleteSelectedTags.length > 0) {
     unbindTag2Draft({
       draft_id: draftId,
@@ -203,13 +203,13 @@ function unbindTags(draftId) {
   }
 }
 
-function tagsChange(data) {
+function tagsChange(data: any) {
   const { newSelectedTags: newTagsList, oldSelectedTags: oldTagsList } = data
   newSelectedTags = newTagsList
   deleteSelectedTags = oldTagsList
 }
 
-function jump(rowData) {
+function jump(rowData: any) {
   const { id } = rowData
   if (id) {
     useNavigateToNewTag(`/viewer/${id}`)

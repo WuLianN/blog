@@ -3,7 +3,7 @@
     <el-card>
       <el-menu :defaultActive="defaultActive" :defaultOpeneds="defaultOpeneds" class="el-menu-vertical"
         :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-        <template v-for="(child, index) in menuList" :key="index">
+        <template v-for="(child) in menuList">
           <menu-item :item="child" />
         </template>
       </el-menu>
@@ -14,7 +14,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { getMenuList } from '@/api/menu'
-import { useRoute, type LocationQueryValue } from 'vue-router'
 import { getUserId } from '@/utils/auth'
 
 const isCollapse = ref(false)
@@ -26,15 +25,15 @@ const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 
-const menuList = ref([])
+const menuList = ref<any[]>([])
 const defaultActive = ref('')
-const defaultOpeneds = ref([])
+const defaultOpeneds = ref<any[]>([])
 
 const userId = getUserId()
 
 getList(userId)
 
-async function getList(id: LocationQueryValue | LocationQueryValue[]) {
+async function getList(id?: number | null) {
   const result = await getMenuList(id)
 
   menuList.value = result

@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useTheme } from '@/hooks/web/useTheme'
 
@@ -12,7 +11,7 @@ const primaryLocalName = 'primaryColor' // localstorage 变量名
 
 const color = useCssVar(primaryVarName)
 
-function activeChange(value) {
+function activeChange(value: any) {
   useTheme(primaryVarName, primaryLocalName, value)
 }
 

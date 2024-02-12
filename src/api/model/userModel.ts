@@ -1,8 +1,16 @@
-export interface loginResult {
+export interface LoginResult {
+  id: number
   token: string
+  user_name: string
 }
 
-/**
- * @description: Get menu return value
- */
-export type loginResultModel = loginResult;
+export interface LoginParams {
+  username: string
+  password: string
+}
+
+export interface UserInfo {
+  id: number
+  user_name: string
+  avatar: string
+}

@@ -19,7 +19,7 @@ const query = ref({
 
 const debounceScrollFn = debounce(handleScroll, 300)
 
-const list = ref([])
+const list = ref<any[]>([])
 
 getList()
 
@@ -47,7 +47,7 @@ async function handleScroll() {
   }
 }
 
-function deleteDraft(id) {
+function deleteDraft(id: number) {
   const index = list.value.findIndex(item => item.id === id)
 
   if (index !== -1) {

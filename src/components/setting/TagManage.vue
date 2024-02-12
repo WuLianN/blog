@@ -8,12 +8,12 @@
 import { ref } from 'vue'
 import { getTagList } from '@/api/tags'
 
-const list = ref([])
+const list = ref<any[]>([])
 
 getList()
 
 async function getList() {
-  const result = await getTagList()
+  const result: any[] = await getTagList()
   list.value.push(...result)
 }
 </script>

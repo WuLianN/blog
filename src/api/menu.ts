@@ -1,6 +1,5 @@
 import { defHttp } from '@/utils/http/axios';
-import { getMenuListResultModel } from './model/menuModel';
-import type { LocationQueryValue } from 'vue-router'
+import { MenuListResultModel } from './model/menuModel';
 
 enum Api {
   GetMenuList = '/getMenuList',
@@ -13,8 +12,8 @@ enum Api {
  * @description: 获取菜单
  */
 
-export const getMenuList = (id: LocationQueryValue | LocationQueryValue[]) => {
-  return defHttp.get<getMenuListResultModel>({ url: Api.GetMenuList, params: { user_id: id } });
+export const getMenuList = (id?: number | null) => {
+  return defHttp.get<MenuListResultModel>({ url: Api.GetMenuList, params: { user_id: id } });
 };
 
 export const addMenuItem = (data: any) => {

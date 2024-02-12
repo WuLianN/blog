@@ -6,7 +6,7 @@ interface User {
 
 interface UserInfo {
   id: number,
-  name: string,
+  user_name: string,
   avatar: string
 }
 

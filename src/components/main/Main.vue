@@ -11,7 +11,7 @@ import { getExcerpt } from '@/utils/three_party'
 import { debounce } from 'lodash-es'
 
 const userId = getUserId()
-const recommendList = ref([])
+const recommendList = ref<any[]>([])
 const homeStore = useHomeStore()
 
 const query = ref(
@@ -31,7 +31,7 @@ watch(() => homeStore.recommendList, (value) => {
 })
 
 async function getList() {
-  const list = await getRecommendList(query.value)
+  const list:any[] = await getRecommendList(query.value)
 
   if (list.length === 0) {
     ElMessage.warning("没有更多了！")

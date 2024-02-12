@@ -22,15 +22,17 @@
 <script setup lang="ts">
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { formatDate } from '@/utils/three_party'
+import { RecommendDraft } from '@/api/model/draftsModel'
+import { PropType } from 'vue'
 
 defineProps({
   list: {
-    type: Array,
+    type: Array as PropType<RecommendDraft[]>,
     default: () => [],
   },
 })
 
-function jump(id) {
+function jump(id: number) {
   useNavigateToNewTag(`/viewer/${id}`)
 }
 </script>

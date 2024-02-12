@@ -56,7 +56,7 @@ function logout() {
   useNavigateTo({ path: '/login', query: { type: 'login' } })
 }
 
-function go(path) {
+function go(path: string) {
   useNavigateTo(path)
 }
 </script>

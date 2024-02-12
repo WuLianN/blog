@@ -1,17 +1,24 @@
-import type { RouteMeta } from 'vue-router';
+import { Tag } from './tagsModel'
 
-export interface RouteItem {
+interface Meta {
+  id: number
+  icon: string
+}
+
+export interface MenuItem {
+  id: number;
   path: string;
   component: any;
-  meta: RouteMeta;
-  name?: string;
-  alias?: string | string[];
+  meta: Meta;
+  parent_id: number
+  name: string;
   redirect?: string;
-  caseSensitive?: boolean;
-  children?: RouteItem[];
+  children?: MenuItem[];
+  label?: string;
+  tags?: Tag[] | null;
 }
 
 /**
  * @description: Get menu return value
  */
-export type getMenuListResultModel = RouteItem[];
+export type MenuListResultModel = MenuItem[];

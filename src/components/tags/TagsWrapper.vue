@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs } from 'vue'
+import { toRefs, PropType } from 'vue'
 
 const props = defineProps({
   tags: {
@@ -22,7 +22,7 @@ const props = defineProps({
   },
   // 原始标签数据
   originTags: {
-    type: Array,
+    type: Array as PropType<any[]>,
     default: () => []
   }
 })
@@ -31,7 +31,7 @@ const { originTags } = toRefs(props)
 
 const emits = defineEmits(['change'])
 
-const selectedTags = (data) => {
+const selectedTags = (data: any[]) => {
   const selectedIds = data.reduce((acc, cur) => {
     if (cur.id) {
       acc.push(cur.id)

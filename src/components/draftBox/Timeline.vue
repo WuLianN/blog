@@ -25,21 +25,23 @@ import { useNavigateTo } from '@/hooks/web/useNavigate';
 import { formatDate } from '@/utils/three_party'
 import { Clock, Delete } from '@element-plus/icons-vue'
 import { deleteDraft } from '@/api/drafts'
+import { Draft } from '@/api/model/draftsModel'
+import { PropType } from 'vue'
 
 defineProps({
   list: {
-    type: Array,
+    type: Array as PropType<Draft[]>,
     default: () => []
   }
 })
 
 const emit = defineEmits(["delete"])
 
-function to(id) {
+function to(id: number) {
   useNavigateTo({ path: `/drafts/${id}` })
 }
 
-async function del(id, event) {
+async function del(id: number, event: Event) {
   event.stopPropagation()
   try {
     await deleteDraft(id)

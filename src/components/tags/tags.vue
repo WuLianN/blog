@@ -14,13 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, watch, toRefs, unref } from 'vue'
+import { ref, nextTick, watch, toRefs, PropType } from 'vue'
 import { createTag, deleteTag } from '@/api/tags'
-import { useMessage } from '@/hooks/web/useMessage'
 
 const props = defineProps({
   tags: {
-    type: Array,
+    type: Array as PropType<any[]>,
     default: () => []
   },
   // 是否使用http上传数据
@@ -39,7 +38,7 @@ const emit = defineEmits(['getTags'])
 
 const { tags, isPost, dialogVisible } = toRefs(props)
 
-const list = ref([])
+const list = ref<any[]>([])
 
 const inputValue = ref('')
 const inputVisible = ref(false)
@@ -76,7 +75,7 @@ const showInput = () => {
   })
 }
 
-const handleInputConfirm = async (): void => {
+const handleInputConfirm = async (): Promise<void> => {
   if (inputValue.value) {
     const isDuplicate = checkIsDuplicate(list.value, inputValue.value)
 

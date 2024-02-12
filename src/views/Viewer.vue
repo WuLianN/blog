@@ -14,7 +14,6 @@ import Viewer from '@blog/markdown-editor/src/components/Viewer.vue'
 import { useRoute } from 'vue-router'
 import { getDraft } from '@/api/drafts'
 import { useDark } from '@vueuse/core'
-import { setColor } from '@/hooks/web/useTheme'
 
 const content = ref('')
 const draftId = getDraftId()

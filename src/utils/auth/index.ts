@@ -1,7 +1,6 @@
 import { router } from '@/router'
-import type { LocationQueryValue } from 'vue-router'
 
-export function getToken() {
+export function getToken(): string | null {
   const token = localStorage.getItem('token')
   return token
 }
@@ -17,13 +16,14 @@ export function checkAuth(path?: string) {
   }
 }
 
-export function getUserId(): (LocationQueryValue | LocationQueryValue[]) {
+export function getUserId(): (number | null) {
   const { path } = router.currentRoute.value
   const regexp = /\/user\/(\d+)/
   const match = path.match(regexp)
 
-  if (match) {
-    return match?.[1]
+  if (match && match[1]) {
+    const id = parseInt(match[1], 10)
+    return id
   }
 
   return null

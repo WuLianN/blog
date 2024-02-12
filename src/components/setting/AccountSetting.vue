@@ -102,7 +102,7 @@ const rules = reactive<FormRules<typeof form>>({
   confirmNewPassword: [{ validator: validConfirmNewPass, trigger: 'blur' }]
 })
 
-async function loginFunc(): string {
+async function loginFunc(): Promise<any> {
   const localUserInfo = JSON.parse(localStorage.getItem('userInfo'))
   let userName = store.userInfo.user_name ?? localUserInfo.user_name
 
