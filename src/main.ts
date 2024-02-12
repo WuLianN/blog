@@ -22,7 +22,7 @@ async function setup() {
   // 主题
   setupTheme()
 
-  app.use(router).use(ElementPlus)
+  app.use(ElementPlus)
 
   app.mount('#app')
 }

@@ -39,7 +39,7 @@ async function getList(id: LocationQueryValue | LocationQueryValue[]) {
 
   menuList.value = result
 
-  defaultActive.value = result ? result[0].id : ''
+  defaultActive.value = result ? result[0].id.toString() : ''
   defaultOpeneds.value = result ? [result[0].id] : []
 }
 </script>

@@ -1,15 +1,15 @@
 <template>
-  <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.id">
+  <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.id.toString()">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       <el-text type="primary" size="large">{{ item.name }}</el-text>
     </template>
 
     <!-- 组件自调 -->
-    <menu-item v-for="(ele, index) in item.children" :item="ele" :key="ele.id" />
+    <menu-item v-for="(ele, index) in item.children" :item="ele" :key="index" />
   </el-sub-menu>
 
-  <el-menu-item v-else :index="item.id" @click="getTagList(item)">
+  <el-menu-item v-else :index="item.id.toString()" @click="getTagList(item)">
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       <el-text type="primary" size="large">{{ item.name }}</el-text>
