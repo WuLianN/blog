@@ -204,10 +204,15 @@ const transform: AxiosTransform = {
 
     // 添加自动重试机制 保险起见 只针对GET请求
     const retryRequest = new AxiosRetry();
-    const { isOpenRetry } = config.requestOptions.retryRequest;
-    config.method?.toUpperCase() === RequestEnum.GET &&
+    let isOpenRetry
+    if (config?.requestOptions?.retryRequest) {
+      isOpenRetry = config?.requestOptions?.retryRequest?.isOpenRetry;
+    }
+
+    config?.method?.toUpperCase() === RequestEnum.GET &&
       isOpenRetry &&
       retryRequest.retry(axiosInstance, error);
+    
     return Promise.reject(error);
   },
 };
@@ -233,7 +238,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // 配置项，下面的选项都可以在独立的接口请求中覆盖
         requestOptions: {
           // 默认将prefix 添加到url
-          joinPrefix: true,
+          joinPrefix: false,
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
           // 需要对返回数据进行处理

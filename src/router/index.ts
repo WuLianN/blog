@@ -8,6 +8,7 @@ const DraftBox = () => import("@/views/DraftBox.vue")
 const Viewer = () => import('@/views/Viewer.vue')
 const ArticleManage = () => import('@/views/ArticleManage.vue')
 const Setting = () => import('@/views/Setting.vue')
+const NotFoundComponent = () => import('@/views/NotFound.vue')
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -17,7 +18,8 @@ const routes = [
   { path: '/draftBox', name: 'draftBox', component: DraftBox },
   { path: '/viewer/:id', name: 'viewer', component: Viewer },
   { path: '/articleManage', name: 'articleManage', component: ArticleManage },
-  { path: '/setting', name: 'setting', component: Setting }
+  { path: '/setting', name: 'setting', component: Setting },
+  { path: '/:pathMatch(.*)', component: NotFoundComponent }
 ]
 
 export const router = createRouter({
