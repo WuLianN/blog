@@ -68,13 +68,13 @@ let id = 1000
 const dialogVisible = ref(false)
 const dialogCategoryName = ref('')
 
-const tags = ref([])
+const tags = ref<any[]>([])
 const currentNode = ref<any>('')
 const currentTreeNode = ref<any>('')
 const dataSource = ref<Tree[]>([])
 let newSelectedTags: Array<any> = [] // 选中的未创建的标签
 let deleteSelectedTags: Array<any> = [] // 需要删除(解绑)的标签
-const originTags = ref([]) // 原有的标签
+const originTags = ref<any[]>([]) // 原有的标签
 const imgUrl = ref('')
 
 getTreeList()
@@ -129,7 +129,7 @@ async function nodeClick(node: any, treeNode: any) {
   newSelectedTags = []
   deleteSelectedTags = []
 
-  const tagList: never[] = await getTags(node.id)
+  const tagList: any[] = await getTags(node.id)
 
   tags.value.push(...tagList)
   originTags.value.push(...tagList)

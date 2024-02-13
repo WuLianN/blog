@@ -5,13 +5,15 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+import { PropType } from 'vue'
+
+defineProps({
   data: {
     type: Array,
     default: () => []
   },
   columns: {
-    type: Array,
+    type: Array as PropType<any[]>,
     default: () => []
   },
   width: {

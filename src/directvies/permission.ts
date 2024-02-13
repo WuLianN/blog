@@ -1,7 +1,7 @@
 import type { App, Directive, DirectiveBinding } from 'vue';
 import { getToken } from '@/utils/auth';
 
-function isAuth(el: Element, binding: any) {
+function isAuth(el: Element, _binding: any) {
   const token = getToken();
 
   if (!token) {

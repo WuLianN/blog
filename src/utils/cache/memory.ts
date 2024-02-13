@@ -20,6 +20,7 @@ export class Memory<T = any, V = any> {
     return this.cache;
   }
 
+  // @ts-ignore
   setCache(cache) {
     this.cache = cache;
   }
@@ -99,6 +100,7 @@ export class Memory<T = any, V = any> {
 
   clear() {
     Object.keys(this.cache).forEach((key) => {
+      // @ts-ignore
       const item = this.cache[key];
       item.timeoutId && clearTimeout(item.timeoutId);
     });

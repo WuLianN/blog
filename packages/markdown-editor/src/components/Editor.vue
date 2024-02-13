@@ -24,6 +24,7 @@ import zh_Hans_highlight_theme from '@ziuchen/bytemd-plugin-highlight-theme/loca
 import zh_Hans_image_zoom from '@ziuchen/bytemd-plugin-image-zoom/locales/zh_Hans.json'
 import zh_Hans_algin from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
 
+// @ts-ignore
 import { Editor } from "@bytemd/vue-next"
 import theme from '../plugins/theme.ts'
 import Dialog from './Dialog.vue'

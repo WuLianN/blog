@@ -24,7 +24,7 @@ const list = ref<any[]>([])
 getList()
 
 async function getList() {
-  const resultList: never[] = await getDraftList(query.value);
+  const resultList: any[] = await getDraftList(query.value);
 
   if (resultList.length === 0) {
     ElMessage.warning("没有更多了！")

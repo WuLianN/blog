@@ -21,6 +21,7 @@ import zh_Hans_image_zoom from '@ziuchen/bytemd-plugin-image-zoom/locales/zh_Han
 import zh_Hans_algin from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
 
 import theme from '../plugins/theme.ts'
+// @ts-ignore
 import { Viewer } from "@bytemd/vue-next"
 
 defineProps({

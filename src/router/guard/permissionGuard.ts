@@ -1,7 +1,7 @@
-import type { Router } from 'vue-router';
+// import type { Router } from 'vue-router';
 
-export function createPermissionGuard(router: Router) {
-  router.beforeEach(async (to, from) => {
-    return
-  })
-}
+// export function createPermissionGuard(router: Router) {
+//   router.beforeEach(async (to, from) => {
+//     return
+//   })
+// }

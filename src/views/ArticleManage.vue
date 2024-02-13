@@ -33,6 +33,17 @@ import { getDraftTagList } from '@/api/tags'
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { bindTag2Draft, unbindTag2Draft } from '@/api/tags'
 import { formatDate } from '@/utils/three_party'
+import { ElTag, ElButton, ElLink, ElText } from 'element-plus';
+import type { Column } from 'element-plus'
+
+type CellRenderProps<T> = {
+  cellData: T
+  column: Column<T>
+  columns: Column<T>[]
+  columnIndex: number
+  rowData: any
+  rowIndex: number
+}
 
 const query = ref({
   page: 1,
@@ -57,18 +68,15 @@ const columns = [
   {
     title: '时间',
     dataKey: 'create_time',
-    cellRenderer: ({ cellData: create_time }) => <i>{formatDate(create_time)}</i>,
+    cellRenderer: ({ cellData: create_time }: CellRenderProps<Date>) => <ElText>{formatDate(create_time)}</ElText>,
     align: "center",
     width: 150
   },
   {
     title: '标题',
     dataKey: 'title',
-    cellRenderer: ({ cellData: title, rowData }) => (
-      <>
-        <el-link type="primary" onClick={() => jump(rowData)}>{title}</el-link>
-      </>
-    ),
+    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink type="primary" onClick={() => jump(rowData)}>{title}</ElLink>
+    ,
     align: "center",
     width: 150,
   },
@@ -76,20 +84,20 @@ const columns = [
     title: '标签',
     dataKey: "tags",
     align: "center",
-    cellRenderer: ({ cellData: tags }) => tags && tags.map(item => <ElTag>{item.name}</ElTag>),
+    cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) => tags && tags.map(item => <ElTag>{item.name}</ElTag>),
     width: 150,
   },
   {
     title: '状态',
     dataKey: 'is_publish',
-    cellRenderer: ({ cellData: is_publish }) => <ElTag type={is_publish ? 'success' : 'primary'}>{is_publish ? '已发布' : '草稿'}</ElTag>,
+    cellRenderer: ({ cellData: is_publish }: CellRenderProps<any>) => <ElTag type={is_publish ? 'success' : 'primary'}>{is_publish ? '已发布' : '草稿'}</ElTag>,
     align: "center",
     width: 150,
   },
   {
     title: '操作',
     dataKey: "operate",
-    cellRenderer: ({ rowData }) => (
+    cellRenderer: ({ rowData }: CellRenderProps<any>) => (
       <>
         <ElButton size="small" onClick={() => edit(rowData.id)}>编辑</ElButton>
         <ElButton size="small" type="danger" onClick={() => del(rowData.id)}>
@@ -105,7 +113,7 @@ const columns = [
 getList()
 
 async function getList() {
-  const resultList: never[] = await getDraftList(query.value);
+  const resultList: any[] = await getDraftList(query.value);
 
   if (resultList.length === 0) {
     ElMessage.warning("没有更多了！")
@@ -229,7 +237,7 @@ function endReached() {
 }
 
 function goDrafts() {
-  currentDraftId.value  && useNavigateToNewTag(`/drafts/${currentDraftId.value}`)
+  currentDraftId.value && useNavigateToNewTag(`/drafts/${currentDraftId.value}`)
 }
 </script> 
 

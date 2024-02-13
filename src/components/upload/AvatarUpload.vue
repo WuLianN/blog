@@ -9,16 +9,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue'
+import { toRefs } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 
 import type { UploadProps } from 'element-plus'
 
 const props = defineProps({
-  width: 178,
-  height: 178,
-  imgUrl: ''
+  width: {
+    type: Number,
+    default: 178
+  },
+  height: {
+    type: Number,
+    default: 178,
+  },
+  imgUrl: {
+    type: String,
+    default: ''
+  }
 })
 
 const emit = defineEmits(['change'])
@@ -39,8 +48,7 @@ const imageUrl = imgUrl
 const action = import.meta.env.VITE_APP_BASE_API + import.meta.env.VITE_APP_UPLOAD_URL
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
-  response,
-  uploadFile
+  response
 ) => {
   const { code, result } = response
 

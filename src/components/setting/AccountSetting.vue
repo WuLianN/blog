@@ -33,7 +33,7 @@ const form = reactive({
 
 const store = useUserStore()
 
-function submit(formEl: FormInstance) {
+function submit(formEl: FormInstance | undefined) {
   if (!formEl) return
   formEl.validate(async (valid) => {
     if (valid) {
@@ -56,7 +56,7 @@ function submit(formEl: FormInstance) {
   })
 }
 
-const validOldPass = (rule: any, value: any, callback: any) => {
+const validOldPass = (_rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请输入旧密码'))
   } else {
@@ -67,10 +67,10 @@ const validOldPass = (rule: any, value: any, callback: any) => {
   }
 }
 
-const validNewPass = (rule: any, value: any, callback: any) => {
+const validNewPass = (_rule: any, value: any, callback: any) => {
   // 校验确认密码
   if (form.confirmNewPassword) {
-    formRef.value.validateField("confirmNewPassword")
+    formRef.value?.validateField("confirmNewPassword")
   }
 
   if (value === '') {
@@ -83,7 +83,7 @@ const validNewPass = (rule: any, value: any, callback: any) => {
   }
 }
 
-const validConfirmNewPass = (rule: any, value: any, callback: any) => {
+const validConfirmNewPass = (_rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请输入确认新密码'))
   } else if (value !== form.newPassword) {
@@ -103,7 +103,7 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 async function loginFunc(): Promise<any> {
-  const localUserInfo = JSON.parse(localStorage.getItem('userInfo'))
+  const localUserInfo = JSON.parse(localStorage.getItem('userInfo') as string)
   let userName = store.userInfo.user_name ?? localUserInfo.user_name
 
   const userInfo = await login({

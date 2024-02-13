@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, toRefs, PropType } from 'vue'
 import { createTag, deleteTag } from '@/api/tags'
+import { ElInput } from 'element-plus';
 
 const props = defineProps({
   tags: {
@@ -34,7 +35,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['getTags'])
+const emit = defineEmits(['selectedTags'])
 
 const { tags, isPost, dialogVisible } = toRefs(props)
 

@@ -62,7 +62,7 @@ if (type === 'register') {
   loginBtnText.value = LoginEnum.REGISTER
 }
 
-const submitForm = (formEl: FormInstance) => {
+const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
     if (valid) {
@@ -84,7 +84,7 @@ const submitForm = (formEl: FormInstance) => {
 
         if (redirect) {
           // 重定向
-          router.push(redirect)
+          router.push(redirect as string)
         } else {
           // 跳转到首页
           router.push('/')
@@ -97,7 +97,7 @@ const submitForm = (formEl: FormInstance) => {
   })
 }
 
-const validateAccount = (rule: any, value: any, callback: any) => {
+const validateAccount = (_rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请输入账号'))
   } else {
@@ -108,10 +108,10 @@ const validateAccount = (rule: any, value: any, callback: any) => {
   }
 }
 
-const validatePass = (rule: any, value: any, callback: any) => {
+const validatePass = (_rule: any, value: any, callback: any) => {
   // 注册情况下，校验确认密码
   if (form.confirmPassword) {
-    formRef.value.validateField("confirmPassword")
+    formRef.value?.validateField("confirmPassword")
   }
 
   if (value === '') {
@@ -124,7 +124,7 @@ const validatePass = (rule: any, value: any, callback: any) => {
   }
 }
 
-const validateComfirmPass = (rule: any, value: any, callback: any) => {
+const validateComfirmPass = (_rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请输入确认密码'))
   } else if (value !== form.password) {

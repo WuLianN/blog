@@ -1,5 +1,9 @@
 export function rgbaToHex(rgbaColor: string) {
   // 分离 RGBA 颜色值
+  if (rgbaColor.match(/\d+/g) == null) {
+    return rgbaColor;
+  }
+  // @ts-ignore
   const [r, g, b, a] = rgbaColor.match(/\d+/g).map(Number);
 
   // 确保 RGB 值在0-255范围内，并转换为十六进制
