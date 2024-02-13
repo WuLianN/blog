@@ -12,7 +12,7 @@
 import { toRefs } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-
+import { getAppEnvConfig } from '@/utils/env'
 import type { UploadProps } from 'element-plus'
 
 const props = defineProps({
@@ -45,7 +45,8 @@ const data = {
 
 const imageUrl = imgUrl
 
-const action = import.meta.env.VITE_APP_BASE_API + import.meta.env.VITE_APP_UPLOAD_URL
+const { VITE_GLOB_API_URL, VITE_GLOB_UPLOAD_URL } = getAppEnvConfig()
+const action = VITE_GLOB_API_URL + VITE_GLOB_UPLOAD_URL
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
   response
