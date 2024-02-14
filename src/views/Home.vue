@@ -46,7 +46,7 @@ function handleClick(e: Event) {
 
 async function queryUserInfo(userId?: number | null) {
   const userInfo = await getUserInfo(userId)
-  userInfo && localStorage.setItem("userInfo", JSON.stringify(userInfo))
+  userInfo && localStorage.setItem("visitUserInfo", JSON.stringify(userInfo))
   userInfo && userStore.setUserInfo(userInfo)
 }
 </script>

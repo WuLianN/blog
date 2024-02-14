@@ -6,6 +6,10 @@
 
     <back-top />
   </div>
+
+  <div class="affix" v-is-author="userId">
+    <el-button type="primary" circle :icon="Edit" @click="edit"></el-button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -14,9 +18,12 @@ import Viewer from '@blog/markdown-editor/src/components/Viewer.vue'
 import { useRoute } from 'vue-router'
 import { getDraft } from '@/api/drafts'
 import { useDark } from '@vueuse/core'
+import { Edit } from '@element-plus/icons-vue'
+import { useNavigateTo } from '@/hooks/web/useNavigate'
 
 const content = ref('')
 const draftId = getDraftId()
+const userId = ref<number>(0)
 
 useDark()
 
@@ -34,11 +41,15 @@ function getDraftId() {
 
 async function getDraftDetail() {
   if (draftId) {
-    const { content: contentAlia } = await getDraft({ id: parseInt(draftId, 10) })
+    const { content: contentAlia, user_id } = await getDraft({ id: parseInt(draftId, 10) })
     content.value = contentAlia
+    userId.value = user_id
   }
 }
 
+function edit() {
+  draftId && useNavigateTo(`/drafts/${draftId}`)
+}
 </script>
 
 <style scoped lang="scss">
@@ -53,6 +64,12 @@ async function getDraftDetail() {
     width: 800px;
     padding-bottom: 50px;
   }
+}
+
+.affix {
+  position: fixed;
+  top: 300px;
+  right: 100px;
 }
 
 // 暗黑模式，统一字体颜色吧

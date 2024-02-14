@@ -1,24 +1,32 @@
 import type { App, Directive, DirectiveBinding } from 'vue';
-import { getToken } from '@/utils/auth';
+import type { UserInfo } from '@/api/model/userModel'
 
-function isAuth(el: Element, _binding: any) {
-  const token = getToken();
+function isAuthor(el: HTMLElement, binding: DirectiveBinding<any>) {
+  const localUserInfo = localStorage.getItem('userInfo');
+  const userInfo: UserInfo | null = localUserInfo ? JSON.parse(localUserInfo) : null;
 
-  if (!token) {
-    el.parentNode?.removeChild(el);
+  if (userInfo?.id !== binding.value) {
+    el.style.display = 'none';
+  } else {
+    el.style.display = 'block';
   }
 }
 
-const mounted = (el: Element, binding: DirectiveBinding<any>) => {
-  isAuth(el, binding);
+const mounted = (el: HTMLElement, binding: DirectiveBinding<any>) => {
+  isAuthor(el, binding);
 };
 
-const authDirective: Directive = {
+const updated = (el: HTMLElement, binding: DirectiveBinding<any>) => {
+  isAuthor(el, binding);
+};
+
+const authorDirective: Directive = {
   mounted,
+  updated,
 };
 
 export function setupPermissionDirective(app: App) {
-  app.directive('auth', authDirective);
+  app.directive('is-author', authorDirective);
 }
 
-export default authDirective;
+export default authorDirective;
