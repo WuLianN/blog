@@ -70,8 +70,18 @@ async function getTagList(item: MenuItemType) {
 
 <style scoped lang="scss">
 .image {
+  position: relative;
   width: 20px;
   height: 20px;
   margin-right: 10px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

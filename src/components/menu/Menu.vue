@@ -49,6 +49,10 @@ async function getList(id?: number | null) {
   min-height: 400px;
 }
 
+:deep(.el-sub-menu__title *) {
+  vertical-align: middle !important;
+}
+
 .menu {
   position: sticky;
   top: 80px;
