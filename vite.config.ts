@@ -6,6 +6,7 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import path from "path";
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import { createHtmlPlugin } from 'vite-plugin-html'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -31,13 +32,16 @@ export default defineConfig({
       resolvers: [ElementPlusResolver({ importStyle: "sass" })],
     }),
     nodePolyfills(
-     {
-      globals: {
-        Buffer: true, // can also be 'build', 'dev', or false
-      },
-     }
+      {
+        globals: {
+          Buffer: true, // can also be 'build', 'dev', or false
+        },
+      }
     ),
-    vueJsx()
+    vueJsx(),
+    createHtmlPlugin({
+      minify: true, // 是否启用HTML压缩，默认为true
+    })
   ],
   server: {
     proxy: {
