@@ -7,9 +7,12 @@
     <back-top />
   </div>
 
-  <div class="affix" v-is-author="userId">
-    <el-button type="primary" circle :icon="Edit" @click="edit"></el-button>
-  </div>
+  <UseDraggable :initial-value="{ x: dragX, y: 300 }" style="position: fixed;" v-is-author="userId"
+    storage-key="vueuse-draggable" storage-type="session">
+    <div class="btn-wrapper">
+      <el-button type="primary" circle :icon="Edit" @click="edit" size="large"></el-button>
+    </div>
+  </UseDraggable>
 </template>
 
 <script setup lang="ts">
@@ -20,10 +23,19 @@ import { getDraft } from '@/api/drafts'
 import { useDark } from '@vueuse/core'
 import { Edit } from '@element-plus/icons-vue'
 import { useNavigateTo } from '@/hooks/web/useNavigate'
+import { UseDraggable } from '@vueuse/components'
 
 const content = ref('')
 const draftId = getDraftId()
 const userId = ref<number>(0)
+
+const screenWidth = window.innerWidth
+
+const dragX = ref<number>(screenWidth - 80 - 100) // 80是div的宽度
+
+if (screenWidth < 1000) {
+  dragX.value = screenWidth - 80 - 20
+}
 
 useDark()
 
@@ -66,10 +78,14 @@ function edit() {
   }
 }
 
-.affix {
-  position: fixed;
-  top: 300px;
-  right: 100px;
+.btn-wrapper {
+  width: 80px;
+  height: 80px;
+  cursor: move;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
 }
 
 // 暗黑模式，统一字体颜色吧
