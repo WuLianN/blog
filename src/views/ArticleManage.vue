@@ -15,7 +15,7 @@
       <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
 
       <div class="btn-wrapper">
-        <el-button type="primary" plain @click="goDrafts">修改</el-button>
+        <el-button type="primary" plain @click="goDrafts">修改文章</el-button>
       </div>
 
       <template #footer>

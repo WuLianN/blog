@@ -54,14 +54,4 @@ const selectedTags = (data: any[]) => {
 .tags-container {
   margin-top: 20px;
 }
-
-.button-tag,
-.el-input {
-  margin-left: 0 !important;
-}
-
-.el-tag+.button-tag,
-.el-tag+.el-input {
-  margin-left: 10px !important;
-}
 </style>

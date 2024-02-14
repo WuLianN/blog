@@ -145,4 +145,9 @@ $MarginLeft: 10px;
   height: $BtnHeight;
   margin-left: $MarginLeft;
 }
+
+.el-tag+.button-tag,
+.el-tag+.el-input {
+  margin-left: 10px !important;
+}
 </style>
