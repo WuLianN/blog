@@ -5,7 +5,13 @@
         <el-text type="primary" size="large">{{ item.title }}</el-text>
       </div>
     </template>
-    <div>{{ item.excerpt }}</div>
+    <div class="content">
+      <div class="content-excerpt" :class="{ 'content-excerpt--no-img': !item.bgImage }">{{ item.excerpt }}</div>
+      <div class="content-img-wrapper" v-if="item.bgImage" @click="imgClick(item.bgImage, $event)">
+        <el-image :lazy="true" fit="cover" :src="item.bgImage" :preview-src-list="previewSrcList" :zIndex="0"
+          :hide-on-click-modal="true" />
+      </div>
+    </div>
     <template #footer>
       <div class="footer">
         <div>
@@ -23,7 +29,9 @@
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { formatDate } from '@/utils/three_party'
 import { RecommendDraft } from '@/api/model/draftsModel'
-import { PropType } from 'vue'
+import { PropType,ref } from 'vue'
+
+const previewSrcList = ref<string[]>([''])
 
 defineProps({
   list: {
@@ -35,6 +43,11 @@ defineProps({
 function jump(id: number) {
   useNavigateToNewTag(`/viewer/${id}`)
 }
+
+function imgClick(url: string, event: Event) {
+  previewSrcList.value = [url]
+  event.stopPropagation()
+}
 </script>
 
 <style scoped lang="scss">
@@ -42,6 +55,25 @@ function jump(id: number) {
   width: 100%;
   margin-bottom: 20px;
   cursor: pointer;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+  &-excerpt {
+    width: calc(100% - 130px);
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  &-img-wrapper {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 .footer {
@@ -52,5 +84,9 @@ function jump(id: number) {
 
 :deep(.el-tag + .el-tag) {
   margin-left: 10px;
+}
+
+.content-excerpt--no-img {
+  width: 100%;
 }
 </style>

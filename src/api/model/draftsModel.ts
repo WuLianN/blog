@@ -14,4 +14,5 @@ export interface Draft {
 
 export interface RecommendDraft extends Draft {
   excerpt?: string; // 添加摘要字段到推荐草稿列表接口
+  bgImage?: string | null;
 }

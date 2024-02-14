@@ -9,9 +9,11 @@ import { getUserId } from '@/utils/auth'
 import { useHomeStore } from '@/store/modules/home'
 import { getExcerpt } from '@/utils/three_party'
 import { debounce } from 'lodash-es'
+import { getFirstImageUrl } from '@/utils/blog'
+import { RecommendDraft } from '@/api/model/draftsModel'
 
 const userId = getUserId()
-const recommendList = ref<any[]>([])
+const recommendList = ref<RecommendDraft[]>([])
 const homeStore = useHomeStore()
 
 const query = ref(
@@ -31,7 +33,7 @@ watch(() => homeStore.recommendList, (value) => {
 })
 
 async function getList() {
-  const list:any[] = await getRecommendList(query.value)
+  const list: RecommendDraft[] = await getRecommendList(query.value)
 
   if (list.length === 0) {
     ElMessage.warning("没有更多了！")
@@ -39,7 +41,12 @@ async function getList() {
     return
   }
 
-  list.map(item => item.excerpt = getExcerpt(item.content))
+  list.map(item => {
+    if (item.content) {
+      item.excerpt = getExcerpt(item.content as string)
+      item.bgImage = getFirstImageUrl(item.content as string)
+    }
+  })
 
   recommendList.value.push(...list)
 }
