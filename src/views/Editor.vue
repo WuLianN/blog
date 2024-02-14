@@ -124,6 +124,7 @@ $header-height: 64px;
   color: #1d2129;
   border: none;
   outline: none;
+  background: #fff;
 
   flex: 1 1 auto;
   height: 100%;

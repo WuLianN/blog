@@ -5,7 +5,7 @@
     </div>
     <div class="header-right">
       <div class="header-right__btn">
-        <el-button plain type="primary" v-auth @click="writeArticle">写文章</el-button>
+        <el-button plain type="primary" v-isBrower @click="writeArticle">写文章</el-button>
       </div>
       <div class="header-right__switch">
         <Switch />
