@@ -1,18 +1,10 @@
 import type { RouteLocationNormalized, RouteRecordNormalized } from 'vue-router';
-import type { App, Component } from 'vue';
 
 import { intersectionWith, isEqual, mergeWith, unionWith } from 'lodash-es';
 import { unref } from 'vue';
 import { isArray, isObject } from '@/utils/is';
 
 export const noop = () => {};
-
-/**
- * @description:  Set ui mount node
- */
-export function getPopupContainer(node?: HTMLElement): HTMLElement {
-  return (node?.parentNode as HTMLElement) ?? document.body;
-}
 
 /**
  * Add the object as a parameter to the URL
@@ -118,30 +110,3 @@ export function getRawRoute(route: RouteLocationNormalized): RouteLocationNormal
       : undefined) as RouteRecordNormalized[],
   };
 }
-
-// https://github.com/vant-ui/vant/issues/8302
-type EventShim = {
-  new (...args: any[]): {
-    $props: {
-      onClick?: (...args: any[]) => void;
-    };
-  };
-};
-
-export type WithInstall<T> = T & {
-  install(app: App): void;
-} & EventShim;
-
-export type CustomComponent = Component & { displayName?: string };
-
-export const withInstall = <T extends CustomComponent>(component: T, alias?: string) => {
-  (component as Record<string, unknown>).install = (app: App) => {
-    const compName = component.name || component.displayName;
-    if (!compName) return;
-    app.component(compName, component);
-    if (alias) {
-      app.config.globalProperties[alias] = component;
-    }
-  };
-  return component as WithInstall<T>;
-};
