@@ -64,7 +64,3 @@ export function useTheme(cssVarName = '--el-color-primary', localName?: string, 
   // --el-color-primary-dark-2
   setColorMixLevel(cssVarName, 2, 'dark', hex)
 }
-
-export function setupTheme() {
-  useTheme('--el-color-primary')
-}

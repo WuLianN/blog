@@ -33,7 +33,7 @@ import { getDraftTagList } from '@/api/tags'
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { bindTag2Draft, unbindTag2Draft } from '@/api/tags'
 import { formatDate } from '@/utils/three_party'
-import { ElTag, ElButton, ElLink, ElText } from 'element-plus';
+import { ElTag, ElButton } from 'element-plus'; // 不引入ElTag ElText, 会丢样式。使用@ts-ignore 
 import type { Column } from 'element-plus'
 
 type CellRenderProps<T> = {
@@ -62,12 +62,12 @@ let deleteSelectedTags: any[] = [] // 需要删除(解绑)的标签
 const windowHeight = window.innerHeight
 const tableWidth = ref(750)
 const tableWidthHeight = ref(windowHeight)
-
 const list = ref<any[]>([])
 const columns = [
   {
     title: '时间',
     dataKey: 'create_time',
+    // @ts-ignore
     cellRenderer: ({ cellData: create_time }: CellRenderProps<Date>) => <ElText>{formatDate(create_time)}</ElText>,
     align: "center",
     width: 150
@@ -75,7 +75,8 @@ const columns = [
   {
     title: '标题',
     dataKey: 'title',
-    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink type="primary" onClick={() => jump(rowData)}>{title}</ElLink>
+    // @ts-ignore
+    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink onClick={() => jump(rowData)}>{title}</ElLink>
     ,
     align: "center",
     width: 150,

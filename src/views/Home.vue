@@ -28,15 +28,6 @@ import { useHomeStore } from '@/store/modules/home';
 import { useUserStore } from '@/store/modules/user';
 import { getUserId } from '@/utils/auth'
 import { getUserInfo } from '@/api/user'
-import { onMounted, nextTick } from 'vue';
-import { setupTheme } from '@/hooks/web/useTheme';
-
-onMounted(() => {
-  nextTick(() => {
-    // 主题
-    setupTheme()
-  })
-})
 
 const homeStore = useHomeStore()
 const userStore = useUserStore()
