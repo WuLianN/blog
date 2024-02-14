@@ -23,7 +23,7 @@ function getLocalColor(localName = 'primaryColor') {
   return window.localStorage.getItem(localName)
 }
 
-export function useTheme(cssVarName = '--el-color-primary', localName?: string, selectedColor?: string) {
+export function useTheme(cssVarName = '--el-color-primary', localName?: string, selectedColor?: string): void {
   let color
 
   if (selectedColor) {
@@ -35,6 +35,9 @@ export function useTheme(cssVarName = '--el-color-primary', localName?: string, 
     // 获取本地主题色
     color = getLocalColor(localName) || getColor(cssVarName)
   }
+
+  // 没获取到color 停止
+  if (!color) return
 
   const isValidHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/i.test(color);
 
@@ -63,4 +66,8 @@ export function useTheme(cssVarName = '--el-color-primary', localName?: string, 
 
   // --el-color-primary-dark-2
   setColorMixLevel(cssVarName, 2, 'dark', hex)
+}
+
+export function setupTheme() {
+  useTheme('--el-color-primary')
 }

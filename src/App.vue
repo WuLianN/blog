@@ -3,7 +3,14 @@
 </template>
 
 <script lang="ts" setup>
+import { setupTheme } from '@/hooks/web/useTheme'
+import { onMounted, nextTick } from 'vue'
 
+onMounted(() => {
+  nextTick(() => {
+    setupTheme()
+  })
+})
 </script>
 
 
