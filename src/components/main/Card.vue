@@ -15,7 +15,8 @@
     <template #footer>
       <div class="footer">
         <div>
-          <el-tag v-for="tag in item.tags" :key="tag.id">{{ tag.name }}</el-tag>
+          <el-tag v-for="tag in item.tags" :key="tag.id" :style="{ backgroundColor: tag.bg_color, color: tag.color }">{{
+            tag.name }} </el-tag>
         </div>
         <div>
           <el-text>{{ formatDate(item.create_time, "YYYY-MM-DD") }}</el-text>
@@ -29,7 +30,7 @@
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { formatDate } from '@/utils/three_party'
 import { RecommendDraft } from '@/api/model/draftsModel'
-import { PropType,ref } from 'vue'
+import { PropType, ref } from 'vue'
 
 const previewSrcList = ref<string[]>([''])
 

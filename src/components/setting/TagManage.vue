@@ -1,6 +1,6 @@
 <template>
   <div class="tag">
-    <Tags :tags="list" />
+    <Tags :tags="list" :editable="true" @update="updateItem" />
   </div>
 </template>
 
@@ -15,6 +15,18 @@ getList()
 async function getList() {
   const result: any[] = await getTagList()
   list.value.push(...result)
+}
+
+async function updateItem(tagInfo: any) {
+  if (tagInfo.id) {
+    list.value.map(item => {
+      if (item.id === tagInfo.id) {
+        item.name = tagInfo.name
+        item.color = tagInfo.color
+        item.bg_color = tagInfo.bg_color
+      }
+    })
+  }
 }
 </script>
 
