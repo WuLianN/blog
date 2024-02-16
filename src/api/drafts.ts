@@ -36,5 +36,5 @@ export const publishDraft = (id: number) => {
 }
 
 export const searchDrafts = (data: any) => {
-  return defHttp.get<RecommendDraft[]>({ url: Api.searchDrafts, params: { keyword: data.keyword, page: data.page, page_size: data.pageSize } });
+  return defHttp.get<RecommendDraft[]>({ url: Api.searchDrafts, params: { keyword: data.keyword, page: data.page, page_size: data.pageSize, user_id: data.userId } });
 };

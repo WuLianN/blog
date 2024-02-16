@@ -9,16 +9,20 @@ import { searchDrafts } from '@/api/drafts'
 import { RecommendDraft } from '@/api/model/draftsModel'
 import { useHomeStore } from '@/store/modules/home'
 import { buildRecommendList } from '@/utils/blog'
+import { getUserId } from '@/utils/auth'
 
+const userId = getUserId()
 const homeStore = useHomeStore()
 const query = reactive({
+  userId: userId,
   page: 1,
-  page_size: 10,
+  pageSize: 10,
   keyword: ''
 })
 
 const search = async () => {
   const list: RecommendDraft[] = await searchDrafts(query)
+  homeStore.setKeyword(query.keyword) // 存储搜索关键字
 
   if (list && list.length > 0) {
     const buildList = buildRecommendList(list)
