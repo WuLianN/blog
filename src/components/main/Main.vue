@@ -7,10 +7,9 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { getRecommendList } from '@/api/base'
 import { getUserId } from '@/utils/auth'
 import { useHomeStore } from '@/store/modules/home'
-import { getExcerpt } from '@/utils/three_party'
 import { debounce } from 'lodash-es'
-import { getFirstImageUrl } from '@/utils/blog'
 import { RecommendDraft } from '@/api/model/draftsModel'
+import { buildRecommendList } from '@/utils/blog'
 
 const userId = getUserId()
 const recommendList = ref<RecommendDraft[]>([])
@@ -41,14 +40,9 @@ async function getList() {
     return
   }
 
-  list.map(item => {
-    if (item.content) {
-      item.excerpt = getExcerpt(item.content as string)
-      item.bgImage = getFirstImageUrl(item.content as string)
-    }
-  })
+  const buildList = buildRecommendList(list)
 
-  recommendList.value.push(...list)
+  recommendList.value.push(...buildList)
 }
 
 

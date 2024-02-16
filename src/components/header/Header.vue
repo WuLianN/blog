@@ -4,6 +4,10 @@
 
     </div>
     <div class="header-right">
+      <div class="header-right__search">
+        <Search />
+      </div>
+
       <div class="header-right__btn">
         <el-button plain type="primary" v-isBrower @click="writeArticle">写文章</el-button>
       </div>
@@ -66,6 +70,7 @@ async function writeArticle() {
 
   &-right {
 
+    &__search,
     &__switch,
     &__picker,
     &__btn {

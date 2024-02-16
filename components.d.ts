@@ -50,6 +50,7 @@ declare module 'vue' {
     PersonalInfo: typeof import('./src/components/setting/PersonalInfo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Search: typeof import('./src/components/header/Search.vue')['default']
     Switch: typeof import('./src/components/header/Switch.vue')['default']
     Table: typeof import('./src/components/table/Table.vue')['default']
     TagManage: typeof import('./src/components/setting/TagManage.vue')['default']

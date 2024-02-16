@@ -1,4 +1,5 @@
 import { defHttp } from '@/utils/http/axios';
+import { RecommendDraft } from './model/draftsModel'
 
 enum Api {
   createDraft = '/createDraft',
@@ -6,7 +7,8 @@ enum Api {
   getDraft = '/getDraft',
   getDraftList = '/getDraftList',
   deleteDraft = '/deleteDraft',
-  publishDraft = '/publishDraft'
+  publishDraft = '/publishDraft',
+  searchDrafts = '/searchDrafts',
 }
 
 export const createDraft = () => {
@@ -32,3 +34,7 @@ export const deleteDraft = (id: number) => {
 export const publishDraft = (id: number) => {
   return defHttp.post<any>({ url: Api.publishDraft, data: { id } })
 }
+
+export const searchDrafts = (data: any) => {
+  return defHttp.get<RecommendDraft[]>({ url: Api.searchDrafts, params: { keyword: data.keyword, page: data.page, page_size: data.pageSize } });
+};

@@ -21,7 +21,7 @@
 import { getRecommendList } from '@/api/base'
 import { useUserStore } from '@/store/modules/user'
 import { useHomeStore } from '@/store/modules/home'
-import { getExcerpt } from '@/utils/three_party'
+import { buildRecommendList } from '@/utils/blog'
 import { PropType } from 'vue'
 import { MenuItem as MenuItemType } from '@/api/model/menuModel'
 
@@ -62,9 +62,9 @@ async function getTagList(item: MenuItemType) {
 
   const list: any[] = await getRecommendList(query)
 
-  list.map(item => item.excerpt = getExcerpt(item.content))
+  const buildList = buildRecommendList(list)
 
-  homeStore.setRecommendList(list)
+  homeStore.setRecommendList(buildList)
 }
 </script>
 
