@@ -23,9 +23,11 @@ const form = reactive({
   username: '',
 })
 
+const localUserInfo = localStorage.getItem("userInfo") && JSON.parse(localStorage.getItem("userInfo") as string)
+
 const avatar = ref('')
-avatar.value = userStore.userInfo.avatar
-form.username = userStore.userInfo.user_name ?? ''
+avatar.value = userStore.userInfo.avatar ?? localUserInfo.avatar
+form.username = userStore.userInfo.user_name ?? localUserInfo.user_name
 
 function handleImageChange(url: string) {
   avatar.value = url
