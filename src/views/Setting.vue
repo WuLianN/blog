@@ -45,13 +45,24 @@
         </template>
         <account-setting />
       </el-tab-pane>
+      <el-tab-pane>
+        <template #label>
+          <span class="custom-tabs-label">
+            <el-icon :size="20">
+              <Link />
+            </el-icon>
+            <span>关联账户</span>
+          </span>
+        </template>
+        <associated-account />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { UserFilled, Setting, Menu, CollectionTag } from '@element-plus/icons-vue'
+import { UserFilled, Setting, Menu, CollectionTag, Link } from '@element-plus/icons-vue'
 
 const tabPosition = ref<any>('left')
 

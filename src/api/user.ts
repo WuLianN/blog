@@ -6,7 +6,10 @@ enum Api {
   register = '/register',
   getUserInfo = '/getUserInfo',
   updateUserInfo = '/updateUserInfo',
-  changePassword = '/changePassword'
+  changePassword = '/changePassword',
+  bingUser = '/bingUser',
+  unbindUser = '/unbindUser',
+  getBindedUserList = '/getBindedUserList'
 }
 
 /**
@@ -30,4 +33,16 @@ export const updateUserInfo = (data: any) => {
 
 export const changePassword = (data: any) => {
   return defHttp.post<any>({ url: Api.changePassword, data })
+}
+
+export const bingUser = (data: any) => {
+  return defHttp.post<any>({ url: Api.bingUser, data })
+}
+
+export const unbindUser = (id: number) => {
+  return defHttp.post<any>({ url: Api.unbindUser, data: { id } })
+}
+
+export const getBindedUserList = (id: number) => {
+  return defHttp.get<any>({ url: Api.getBindedUserList, params: { user_id: id } })
 }
