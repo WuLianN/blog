@@ -77,18 +77,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
       userInfo && localStorage.setItem('userInfo', JSON.stringify(userInfo))
 
-      const { token } = userInfo
-
-      if (token) {
-        localStorage.setItem('token', token)
-
-        if (redirect) {
-          // 重定向
-          router.push(redirect as string)
-        } else {
-          // 跳转到首页
-          router.push('/')
-        }
+      if (redirect) {
+        // 重定向
+        router.push(redirect as string)
+      } else {
+        // 跳转到首页
+        router.push('/')
       }
     } else {
       console.log('error submit!')

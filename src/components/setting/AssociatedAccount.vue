@@ -129,7 +129,6 @@ async function changeAccountFunc(id: number) {
     const result = await changeAccount(id)
     const resultJson = JSON.stringify(result)
     localStorage.setItem("userInfo", resultJson)
-    localStorage.setItem("token", result.token)
     userStore.setUserInfo(result)
     useNavigateReplace('/')
   } catch {
