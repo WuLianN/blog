@@ -7,6 +7,8 @@
       </div>
       <div class="list-row-right">
         <el-button type="primary" plain @click="unbind(item.id)">解绑</el-button>
+
+        <el-button type="success" plain @click="changeAccountFunc(item.id)">切换</el-button>
       </div>
     </div>
   </div>
@@ -33,8 +35,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { bingUser, unbindUser, getBindedUserList } from '@/api/user'
+import { bingUser, unbindUser, getBindedUserList, changeAccount } from '@/api/user'
 import { UserInfo } from '@/api/model/userModel'
+import { useUserStore } from '@/store/modules/user'
+import { useNavigateReplace } from '@/hooks/web/useNavigate'
 
 const dialogVisible = ref(false)
 const form = reactive({
@@ -43,6 +47,7 @@ const form = reactive({
 })
 const formRef = ref<FormInstance>()
 const list = ref<UserInfo[]>([])
+const userStore = useUserStore()
 
 getList()
 
@@ -116,6 +121,19 @@ async function getList() {
     const result = await getBindedUserList(id)
 
     list.value.push(...result)
+  }
+}
+
+async function changeAccountFunc(id: number) {
+  try {
+    const result = await changeAccount(id)
+    const resultJson = JSON.stringify(result)
+    localStorage.setItem("userInfo", resultJson)
+    localStorage.setItem("token", result.token)
+    userStore.setUserInfo(result)
+    useNavigateReplace('/')
+  } catch {
+    
   }
 }
 </script>
