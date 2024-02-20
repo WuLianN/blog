@@ -82,4 +82,10 @@ async function writeArticle() {
     }
   }
 }
+
+@media screen and (max-width: 992px) {
+  .header-right__login {
+    padding: 0 20px 0 12px;
+  }
+}
 </style>

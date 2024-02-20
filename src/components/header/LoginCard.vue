@@ -118,4 +118,10 @@ function go(path: string) {
 :deep(.el-card__body) {
   padding: 10px;
 }
+
+@media screen and (max-width: 992px) {
+  .card {
+    right: 20px;
+  }
+}
 </style>
