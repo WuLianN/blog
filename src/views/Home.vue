@@ -27,7 +27,7 @@
 import { useHomeStore } from '@/store/modules/home';
 import { useUserStore } from '@/store/modules/user';
 import { getUserId } from '@/utils/auth'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, getUserSetting } from '@/api/user'
 
 const homeStore = useHomeStore()
 const userStore = useUserStore()
@@ -37,6 +37,7 @@ const userId = getUserId()
 userId && userStore.setUser({ id: userId })
 
 queryUserInfo(userId)
+queryUserSetting(userId)
 
 function handleClick(e: Event) {
   e.stopPropagation();
@@ -48,6 +49,13 @@ async function queryUserInfo(userId?: number | null) {
   const userInfo = await getUserInfo(userId)
   userInfo && localStorage.setItem("visitUserInfo", JSON.stringify(userInfo))
   userInfo && userStore.setUserInfo(userInfo)
+}
+
+async function queryUserSetting(userId?: number | null) {
+  const result = await getUserSetting(userId)
+  if (result) {
+    localStorage.setItem("user_setting", JSON.stringify(result))
+  }
 }
 </script>
 

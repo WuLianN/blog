@@ -10,7 +10,9 @@ enum Api {
   bingUser = '/bingUser',
   unbindUser = '/unbindUser',
   getBindedUserList = '/getBindedUserList',
-  changeAccount = '/changeAccount'
+  changeAccount = '/changeAccount',
+  updateUserSetting = '/updateUserSetting',
+  getUserSetting = '/getUserSetting'
 }
 
 /**
@@ -50,4 +52,12 @@ export const getBindedUserList = (id: number) => {
 
 export const changeAccount = (id: number) => {
   return defHttp.post<any>({ url: Api.changeAccount, data: { id } })
+}
+
+export const updateUserSetting = (data: any) => {
+  return defHttp.post<any>({ url: Api.updateUserSetting, data })
+}
+
+export const getUserSetting = (id?: number | null) => {
+  return defHttp.get<any>({ url: Api.getUserSetting, params: { user_id: id } })
 }

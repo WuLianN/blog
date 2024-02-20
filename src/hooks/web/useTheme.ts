@@ -19,21 +19,24 @@ function setColorMixLevel(name: string, number: number, mode: 'light' | 'dark', 
   setColor(varName, color)
 }
 
-function getLocalColor(localName = 'primaryColor') {
-  return window.localStorage.getItem(localName)
+function getLocalColor(): string {
+  const userSetting = localStorage.getItem('user_setting')
+  if (userSetting) {
+    const { primary_color } = JSON.parse(userSetting)
+    return primary_color
+  }
+  return ''
 }
 
-export function useTheme(cssVarName = '--el-color-primary', localName?: string, selectedColor?: string): void {
+export function useTheme(cssVarName = '--el-color-primary', selectedColor?: string): void {
   let color
 
   if (selectedColor) {
     // 用户传入主题色
     color = selectedColor
-    // 存储用户的主题色
-    localName && localStorage.setItem(localName, color)
   } else {
     // 获取本地主题色
-    color = getLocalColor(localName) || getColor(cssVarName)
+    color = getLocalColor() || getColor(cssVarName)
   }
 
   // 没获取到color 停止
