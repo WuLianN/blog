@@ -27,8 +27,8 @@ import { login, register } from '@/api/user'
 import { LoginResult } from '@/api/model/userModel'
 
 const form = reactive({
-  account: '我全都要',
-  password: '1234',
+  account: '',
+  password: '',
   confirmPassword: ''
 })
 

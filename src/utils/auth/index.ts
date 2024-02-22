@@ -1,7 +1,7 @@
 import { router } from '@/router'
 
 export function getToken(): string | null {
-  const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : {}
+  const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo') as string) : {}
   const { token } = userInfo
   return token
 }

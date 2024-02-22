@@ -8,12 +8,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AccountSetting: typeof import('./src/components/setting/AccountSetting.vue')['default']
-    Affix: typeof import('./src/components/affix/Affix.vue')['default']
     AssociatedAccount: typeof import('./src/components/setting/AssociatedAccount.vue')['default']
     AvatarUpload: typeof import('./src/components/upload/AvatarUpload.vue')['default']
     BackTop: typeof import('./src/components/backtop/BackTop.vue')['default']
     Card: typeof import('./src/components/main/Card.vue')['default']
-    ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -41,7 +39,6 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Header: typeof import('./src/components/header/Header.vue')['default']
-    Link: typeof import('./src/components/setting/Link.vue')['default']
     Login: typeof import('./src/components/header/Login.vue')['default']
     LoginCard: typeof import('./src/components/header/LoginCard.vue')['default']
     LoginInfo: typeof import('./src/components/header/LoginInfo.vue')['default']

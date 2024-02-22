@@ -41,7 +41,7 @@ import { computed } from 'vue'
 const store = useUserStore()
 
 const hasUserInfo = computed(() => {
-  return store.userInfo.avatar
+  return store.userInfo.user_name
 })
 
 async function writeArticle() {
