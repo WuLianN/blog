@@ -134,7 +134,7 @@ async function queryUserSetting(userId?: number | null) {
 // 最大992px 宽度自适应
 @media screen and (max-width: 992px) {
   .main {
-    width: auto;
+    width: 100vw;
   }
 }
 </style>
