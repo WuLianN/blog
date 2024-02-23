@@ -1,15 +1,15 @@
 <template>
   <div class="login">
     <div class="form">
-      <el-form ref="formRef" :model="form" status-icon :rules="rules" label-width="120px">
+      <el-form ref="formRef" :model="form" status-icon :rules="rules" :label-width="lableWidth">
         <el-form-item label="账户" prop="account">
-          <el-input v-model="form.account" />
+          <el-input v-model="form.account" @keyup.enter="submitForm(formRef)" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password" />
+          <el-input type="password" v-model="form.password" @keyup.enter="submitForm(formRef)" />
         </el-form-item>
         <el-form-item v-if="loginStaus === 'register'" label="确认密码" prop="confirmPassword">
-          <el-input type="password" v-model="form.confirmPassword" />
+          <el-input type="password" v-model="form.confirmPassword" @keyup.enter="submitForm(formRef)" />
         </el-form-item>
         <el-form-item>
           <el-button plain type="primary" @click="submitForm(formRef)">{{ loginBtnText }}</el-button>
@@ -49,6 +49,7 @@ enum LoginStatusEnum {
 
 const loginStaus = ref(LoginStatusEnum.LOGIN)
 const loginBtnText = ref(LoginEnum.LOGIN)
+const lableWidth = ref(60)
 
 const { type, redirect } = route.query
 
@@ -60,6 +61,7 @@ if (type === 'register') {
 
   loginStaus.value = LoginStatusEnum.REGISTER
   loginBtnText.value = LoginEnum.REGISTER
+  lableWidth.value = 80
 }
 
 const submitForm = (formEl: FormInstance | undefined) => {
@@ -164,10 +166,5 @@ async function registerFunc(): Promise<LoginResult> {
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-}
-
-.form {
-  width: 400px;
-  height: 400px;
 }
 </style>

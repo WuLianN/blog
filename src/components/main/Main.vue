@@ -52,9 +52,11 @@ async function getList() {
 
   list.push(...result)
 
-  if (list.length === 0) {
+  if (list.length === 0 && query.page > 1) {
     ElMessage.warning("没有更多了！")
-
+    return
+  } else if (list.length === 0 && query.page === 1) {
+    ElMessage.warning("没有数据！")
     return
   }
 

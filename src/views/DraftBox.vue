@@ -26,8 +26,11 @@ getList()
 async function getList() {
   const resultList: any[] = await getDraftList(query.value);
 
-  if (resultList.length === 0) {
+  if (resultList.length === 0 && query.value.page > 1) {
     ElMessage.warning("没有更多了！")
+    return
+  } else if (resultList.length === 0 && query.value.page === 1) {
+    ElMessage.warning("没有数据！")
     return
   }
 

@@ -1,6 +1,8 @@
 <template>
-  <el-button type="primary" plain @click="login('login')">登录</el-button>
-  <el-button type="success" plain @click="login('register')">注册</el-button>
+  <div class="btn-wrapper">
+    <el-button type="primary" plain @click="login('login')">登录</el-button>
+    <el-button type="success" plain @click="login('register')">注册</el-button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -18,4 +20,9 @@ function login(param: string) {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.btn-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+}
+</style>
