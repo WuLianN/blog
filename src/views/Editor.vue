@@ -16,7 +16,7 @@ import Editor from '@blog/markdown-editor/src/components/Editor.vue'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import { debounce } from 'lodash-es'
-import { saveDraft, getDraft, publishDraft } from '@/api/drafts'
+import { saveDraft, getUserDraft, publishDraft } from '@/api/drafts'
 import { uploadFile } from '@/api/upload'
 import { useNavigateTo } from '@/hooks/web/useNavigate'
 
@@ -50,7 +50,7 @@ function contentChange(value: string) {
 
 async function getDraftDetail() {
   if (draftId) {
-    const { title: titleAlia, content: contentAlia } = await getDraft({ id: parseInt(draftId, 10) })
+    const { title: titleAlia, content: contentAlia } = await getUserDraft({ id: parseInt(draftId, 10) })
     title.value = titleAlia
     content.value = contentAlia
   }
