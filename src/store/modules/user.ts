@@ -10,10 +10,15 @@ interface UserInfo {
   avatar: string
 }
 
+interface UserSetting {
+  primary_color: string
+}
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: {} as User,
-    userInfo: {} as UserInfo
+    userInfo: {} as UserInfo,
+    userSetting: {} as UserSetting,
   }),
   actions: {
     setUser(user: User) {
@@ -21,6 +26,9 @@ export const useUserStore = defineStore('user', {
     },
     setUserInfo(userInfo: UserInfo) {
       this.userInfo = userInfo
-    }
+    },
+    setUserSetting(userSetting: UserSetting) {
+      this.userSetting = userSetting
+    },
   }
 })

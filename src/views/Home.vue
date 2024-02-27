@@ -29,6 +29,7 @@ import { useUserStore } from '@/store/modules/user';
 import { getUserId } from '@/utils/auth'
 import { getUserInfo, getUserSetting } from '@/api/user'
 import { watch, ref } from 'vue'
+import { setupTheme } from '@/hooks/web/useTheme'
 
 const homeStore = useHomeStore()
 const userStore = useUserStore()
@@ -66,6 +67,9 @@ async function queryUserSetting(userId?: number | null) {
   const result = await getUserSetting(userId)
   if (result) {
     localStorage.setItem("user_setting", JSON.stringify(result))
+    userStore.setUserSetting(result)
+
+    setupTheme()
   }
 }
 </script>

@@ -7,17 +7,18 @@ import { useCssVar } from '@vueuse/core'
 import { useTheme } from '@/hooks/web/useTheme'
 import { updateUserSetting } from '@/api/user'
 import { getUserId } from '@/utils/auth'
+import { useUserStore } from '@/store/modules/user'
+import { watch } from 'vue'
 
 const userId = getUserId()
 
 const primaryVarName = '--el-color-primary' // css变量名
 const color = useCssVar(primaryVarName)
+const userStore = useUserStore()
 
-setTimeout(() => {
-  useTheme('--el-color-primary')
-  const newColor = useCssVar(primaryVarName).value
-  color.value = newColor
-}, 100)
+watch(() => userStore.userSetting.primary_color, (value) => {
+  color.value = value
+})
 
 function activeChange(value: any) {
   useTheme(primaryVarName, value)
