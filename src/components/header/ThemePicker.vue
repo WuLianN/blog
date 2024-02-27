@@ -17,7 +17,14 @@ const color = useCssVar(primaryVarName)
 const userStore = useUserStore()
 
 watch(() => userStore.userSetting.primary_color, (value) => {
-  color.value = value
+  if (value) {
+    // 读取用户设置的主题色
+    color.value = value
+  } else {
+    // 读取博客系统默认主题色
+    const newColor = useCssVar(primaryVarName).value
+    color.value = newColor
+  }
 })
 
 function activeChange(value: any) {
