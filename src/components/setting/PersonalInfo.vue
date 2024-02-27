@@ -6,6 +6,9 @@
     <el-form-item label="头像">
       <avatar-upload :width="128" :height="128" @change="handleImageChange" :imgUrl="avatar" />
     </el-form-item>
+    <el-form-item label="私密账号">
+      <el-switch size="large" v-model="form.isPrivacy" inline-prompt active-text="是" inactive-text="否" />
+    </el-form-item>
     <el-form-item label="个人主页">
       <el-link type="primary" :href="link" target="_blank">{{ link }}</el-link>
     </el-form-item>
@@ -24,16 +27,18 @@ const userStore = useUserStore()
 
 const form = reactive({
   username: '',
+  isPrivacy: false
 })
 
 const localUserInfo = localStorage.getItem("userInfo") && JSON.parse(localStorage.getItem("userInfo") as string)
 
 const avatar = ref('')
-avatar.value = userStore.userInfo.avatar ?? localUserInfo.avatar
-form.username = userStore.userInfo.user_name ?? localUserInfo.user_name
+avatar.value = userStore.userInfo.avatar || localUserInfo.avatar
+form.username = userStore.userInfo.user_name || localUserInfo.user_name
+form.isPrivacy = userStore.userInfo.is_privacy ? true : false || localUserInfo.is_privacy ? true : false
 
 const link = ref('')
-const userId = userStore.userInfo.id ?? localUserInfo.id
+const userId = userStore.userInfo.id || localUserInfo.id
 
 link.value = `${location.origin}/user/${userId}`
 
@@ -45,7 +50,8 @@ async function submit() {
   const data = {
     id: userStore.userInfo.id,
     avatar: avatar.value,
-    user_name: form.username
+    user_name: form.username,
+    is_privacy: form.isPrivacy ? 1 : 0
   }
 
   try {

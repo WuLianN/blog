@@ -8,6 +8,7 @@ interface UserInfo {
   id: number,
   user_name: string,
   avatar: string
+  is_privacy: number
 }
 
 interface UserSetting {
