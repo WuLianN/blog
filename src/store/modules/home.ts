@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 interface HomeState {
   status: boolean
   recommendList: Array<any>
-  keyword: string
+  keyword: string,
+  menuList: Array<any>
 }
 
 export const useHomeStore = defineStore({
@@ -11,7 +12,8 @@ export const useHomeStore = defineStore({
   state: (): HomeState => ({
     status: false,
     recommendList: [],
-    keyword: ''
+    keyword: '',
+    menuList: [],
   }),
   actions: {
     setLoginCardStatus(status: boolean) {
@@ -22,6 +24,9 @@ export const useHomeStore = defineStore({
     },
     setKeyword(keyword: string) {
       this.keyword = keyword
+    },
+    setMenuList(list: any) {
+      this.menuList = list
     }
   },
 });

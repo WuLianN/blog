@@ -15,8 +15,10 @@
 import { ref } from 'vue'
 import { getMenuList } from '@/api/menu'
 import { getUserId } from '@/utils/auth'
+import { useHomeStore } from '@/store/modules/home'
 
 const isCollapse = ref(false)
+const homeStore = useHomeStore()
 
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -37,6 +39,8 @@ async function getList(id?: number | null) {
   const result = await getMenuList(id)
 
   menuList.value = result
+
+  homeStore.setMenuList(result)
 
   defaultActive.value = result ? result[0].id.toString() : ''
   defaultOpeneds.value = result ? [result[0].id] : []

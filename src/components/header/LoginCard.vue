@@ -3,7 +3,7 @@
     <el-card>
       <template #header>
         <div class="card-header">
-          <el-avatar :size="50" :src="avatar" />
+          <el-image class="card-header-avatar" @click.stop="imgClick(avatar)" :src="avatar" :preview-src-list="previewSrcList" :zIndex="0" :hide-on-click-modal="true" />
           <div class="card-header-username">{{ userStore.userInfo.user_name ?? '' }}</div>
         </div>
       </template>
@@ -13,7 +13,7 @@
         <el-button plain type="primary" @click="go('/articleManage')">文章管理</el-button>
       </div>
 
-      <template #footer >
+      <template #footer>
         <div class="card-footer" v-isBrower>
           <a class="card-footer__link" @click="go('/setting')">我的设置</a>
           <a class="card-footer__link" @click="logout">退出登录</a>
@@ -35,10 +35,11 @@ defineProps({
   }
 })
 
+const previewSrcList = ref<string[]>([''])
 const userStore = useUserStore()
-const defaultAvatar = 'http://127.0.0.1:8000/static/f59dba31b7e35b34915a46af75b037f2.png'
 const avatar = ref('')
-avatar.value = userStore.userInfo.avatar ?? defaultAvatar
+const defaultAvatar = 'https://api.bearcub.club/static/f59dba31b7e35b34915a46af75b037f2.png'
+avatar.value = userStore.userInfo.avatar || defaultAvatar
 
 watch(() => userStore.userInfo.avatar, (value) => {
   if (value) {
@@ -60,6 +61,11 @@ function logout() {
 function go(path: string) {
   useNavigateTo(path)
 }
+
+
+function imgClick(url: string) {
+  previewSrcList.value = [url]
+}
 </script>
 
 <style scoped lang="scss">
@@ -73,6 +79,13 @@ function go(path: string) {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+
+    &-avatar {
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
 
     &-username {
       margin-left: 10px;

@@ -13,7 +13,7 @@
           <Main />
         </div>
 
-        <div class="aside aside-right">
+        <div class="aside aside-right" ref="asideRight">
 
         </div>
       </div>
@@ -28,9 +28,12 @@ import { useHomeStore } from '@/store/modules/home';
 import { useUserStore } from '@/store/modules/user';
 import { getUserId } from '@/utils/auth'
 import { getUserInfo, getUserSetting } from '@/api/user'
+import { watch, ref } from 'vue'
 
 const homeStore = useHomeStore()
 const userStore = useUserStore()
+
+const asideRight = ref<any>(null)
 
 const userId = getUserId()
 
@@ -38,6 +41,14 @@ userId && userStore.setUser({ id: userId })
 
 queryUserInfo(userId)
 queryUserSetting(userId)
+
+watch(() => homeStore.menuList, (list) => {
+  if (list && list.length > 0) {
+    asideRight.value.style.width = '200px'
+  } else {
+    asideRight.value.style.width = 0
+  }
+})
 
 function handleClick(e: Event) {
   e.stopPropagation();
@@ -87,10 +98,6 @@ async function queryUserSetting(userId?: number | null) {
 
 .aside {
   padding: 20px;
-
-  &-right {
-    width: 200px;
-  }
 }
 
 .main {

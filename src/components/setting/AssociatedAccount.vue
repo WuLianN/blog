@@ -119,7 +119,7 @@ async function getList() {
     const userInfo = JSON.parse(userInfoStr)
     const { id } = userInfo
     const result = await getBindedUserList(id)
-
+    list.value = []
     list.value.push(...result)
   }
 }

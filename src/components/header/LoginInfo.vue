@@ -14,10 +14,9 @@ import { useUserStore } from '@/store/modules/user'
 const userStore = useUserStore()
 const store = useHomeStore()
 const cardStatus = ref(false)
-const defaultAvatar = 'http://127.0.0.1:8000/static/f59dba31b7e35b34915a46af75b037f2.png'
-
+const defaultAvatar = 'https://api.bearcub.club/static/f59dba31b7e35b34915a46af75b037f2.png'
 const avatar = computed(() => {
-  return userStore.userInfo.avatar ?? defaultAvatar
+  return userStore.userInfo.avatar || defaultAvatar
 })
 
 function avatarClick(e: Event) {
