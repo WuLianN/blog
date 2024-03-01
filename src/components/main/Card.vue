@@ -8,8 +8,8 @@
     <div class="content">
       <div class="content-excerpt" :class="{ 'content-excerpt--no-img': !item.bgImage }">{{ item.excerpt }}</div>
       <div class="content-img-wrapper" v-if="item.bgImage" @click="imgClick(item.bgImage, $event)">
-        <el-image :lazy="true" fit="cover" :src="item.bgImage" :preview-src-list="previewSrcList" :zIndex="0"
-          :hide-on-click-modal="true" />
+        <el-image class="content-img" :lazy="true" fit="scale-down" :src="item.bgImage" :preview-src-list="previewSrcList"
+          :zIndex="0" :hide-on-click-modal="true" />
       </div>
     </div>
     <template #footer>
@@ -74,6 +74,11 @@ function imgClick(url: string, event: Event) {
   &-img-wrapper {
     width: 100px;
     height: 100px;
+  }
+
+  &-img {
+    width: inherit;
+    height: inherit;
   }
 }
 
