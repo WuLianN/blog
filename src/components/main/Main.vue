@@ -71,8 +71,8 @@ async function handleScroll() {
   const scrollHeight = Math.floor(document.documentElement.scrollHeight);
   const clientHeight = Math.floor(document.documentElement.clientHeight);
 
-  // 检测是否滚动到底部
-  if (scrollHeight - scrollTop <= clientHeight + 10) {
+  // 检测是否滚动到距离底部60px
+  if (scrollHeight - scrollTop <= clientHeight + 60) {
     query.page += 1
 
     getList()
