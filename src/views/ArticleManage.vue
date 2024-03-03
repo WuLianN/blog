@@ -10,6 +10,9 @@
         <el-form-item label="发布">
           <el-switch size="large" v-model="isPublish" inline-prompt active-text="是" inactive-text="否"></el-switch>
         </el-form-item>
+        <el-form-item label="私密">
+          <el-switch size="large" v-model="isPrivacy" inline-prompt active-text="是" inactive-text="否"></el-switch>
+        </el-form-item>
       </el-form>
 
       <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
@@ -54,13 +57,14 @@ const query = ref({
 const currentDraftId = ref<number>(0)
 const editTitle = ref('')
 const isPublish = ref(false)
+const isPrivacy = ref(false)
 const dialogVisible = ref(false)
 const tags = ref<any[]>([])
 const originTags = ref<any[]>([])
 let newSelectedTags: any[] = [] // 选中的未创建的标签
 let deleteSelectedTags: any[] = [] // 需要删除(解绑)的标签
 const windowHeight = window.innerHeight
-const tableWidth = ref(750)
+const tableWidth = ref(760)
 const tableWidthHeight = ref(windowHeight)
 const list = ref<any[]>([])
 const columns = [
@@ -91,9 +95,12 @@ const columns = [
   {
     title: '状态',
     dataKey: 'is_publish',
-    cellRenderer: ({ cellData: is_publish }: CellRenderProps<any>) => <ElTag type={is_publish ? 'success' : 'primary'}>{is_publish ? '已发布' : '草稿'}</ElTag>,
+    cellRenderer: ({ cellData: is_publish, rowData }: CellRenderProps<any>) => <>
+      <ElTag type={is_publish ? 'success' : 'primary'}>{is_publish ? '已发布' : '草稿'}</ElTag>
+      { rowData.is_privacy === 1 && <ElTag type='danger'>私密</ElTag>}
+      </>,
     align: "center",
-    width: 150,
+    width: 160,
   },
   {
     title: '操作',
@@ -131,11 +138,12 @@ async function edit(id: number) {
   dialogVisible.value = true
 
   const article = list.value.find(item => item.id === id)
-  const { title, is_publish } = article
+  const { title, is_publish, is_privacy } = article
 
   currentDraftId.value = id
   editTitle.value = title
   isPublish.value = is_publish === 1 ? true : false
+  isPrivacy.value = is_privacy === 1 ? true : false
 
   tags.value = []
   originTags.value = []
@@ -182,6 +190,7 @@ async function submit() {
     id: currentDraftId.value,
     title: editTitle.value, // 标题
     is_publish: isPublish.value ? 1 : 0, // 是否发布
+    is_privacy: isPrivacy.value ? 1 : 0, // 是否私密
     operated_type: 1, // 
   }
 
@@ -232,6 +241,7 @@ function sync() {
   const currenRow = list.value.find(item => item.id === currentDraftId.value)
   currenRow.tags = tags.value
   currenRow.is_publish = isPublish.value ? 1 : 0
+  currenRow.is_privacy = isPrivacy.value ? 1 : 0
   currenRow.title = editTitle.value
 }
 
