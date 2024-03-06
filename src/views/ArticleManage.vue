@@ -2,7 +2,7 @@
   <div class="article">
     <Table :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" @endReached="endReached" />
 
-    <el-dialog title="编辑" v-model="dialogVisible" @close="dialogVisible = false" width="30%">
+    <el-dialog title="编辑" v-model="dialogVisible" @close="dialogVisible = false" :width="dialogWidth">
       <el-form label-width="80px" label-position="left">
         <el-form-item label="标题">
           <el-input v-model="editTitle" placeholder="请输入标题" clearable />
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { getDraftList, deleteDraft, saveDraft } from '@/api/drafts';
 import { getDraftTagList } from '@/api/tags'
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
@@ -122,6 +122,10 @@ const columns = [
     key: 'operate',
   }
 ]
+
+
+const dialogWidth = ref('30%')
+setDialogWidth()
 
 getList()
 
@@ -258,6 +262,21 @@ function endReached() {
 function goDrafts() {
   currentDraftId.value && useNavigateToNewTag(`/drafts/${currentDraftId.value}`)
 }
+
+function setDialogWidth(){
+  const checkMedia = window.matchMedia("only screen and (max-width: 1000px)").matches
+  if (checkMedia) {
+    dialogWidth.value = '80%'
+  } else {
+    dialogWidth.value = '30%'
+  }
+}
+
+addEventListener('resize', setDialogWidth)
+
+onUnmounted(() => {
+  removeEventListener("resize", setDialogWidth)
+})
 </script> 
 
 <style scoped lang="scss">

@@ -12,7 +12,7 @@
     </el-button>
   </div>
 
-  <el-dialog title="编辑" v-model="visible" @close="visible = false" width="30%">
+  <el-dialog title="编辑" v-model="visible" @close="visible = false" :width="dialogWidth">
     <el-form label-width="80px" label-position="left">
       <el-form-item label="预览">
         <el-tag class="dialog-tag" :style="{ backgroundColor: currentTag.bg_color, color: currentTag.color }" size="large">{{ currentTag.name }}</el-tag>
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, watch, toRefs, PropType, reactive } from 'vue'
+import { ref, nextTick, watch, toRefs, PropType, reactive, onUnmounted } from 'vue'
 import { createTag, deleteTag, updateTag } from '@/api/tags'
 import { ElInput } from 'element-plus';
 
@@ -83,6 +83,9 @@ const currentTag = reactive({
   bg_color: ''
 })
 const visible = ref(false)
+
+const dialogWidth = ref('30%')
+setDialogWidth()
 
 watch(tags, (value) => {
   list.value = value
@@ -194,6 +197,21 @@ function activeChangeBg(value: any) {
 function activeChangeText(value: any) {
   currentTag.color = value
 }
+
+function setDialogWidth(){
+  const checkMedia = window.matchMedia("only screen and (max-width: 1000px)").matches
+  if (checkMedia) {
+    dialogWidth.value = '80%'
+  } else {
+    dialogWidth.value = '30%'
+  }
+}
+
+addEventListener('resize', setDialogWidth)
+
+onUnmounted(() => {
+  removeEventListener("resize", setDialogWidth)
+})
 </script>
 
 <style scoped lang="scss">
