@@ -95,4 +95,8 @@ function imgClick(url: string, event: Event) {
 .content-excerpt--no-img {
   width: 100%;
 }
+
+:deep(.el-tag) {
+  border-color: transparent !important;
+}
 </style>

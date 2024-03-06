@@ -64,7 +64,7 @@ const originTags = ref<any[]>([])
 let newSelectedTags: any[] = [] // 选中的未创建的标签
 let deleteSelectedTags: any[] = [] // 需要删除(解绑)的标签
 const windowHeight = window.innerHeight
-const tableWidth = ref(760)
+const tableWidth = ref(830)
 const tableWidthHeight = ref(windowHeight)
 const list = ref<any[]>([])
 const columns = [
@@ -74,23 +74,26 @@ const columns = [
     // @ts-ignore
     cellRenderer: ({ cellData: create_time }: CellRenderProps<Date>) => <ElText>{formatDate(create_time)}</ElText>,
     align: "center",
-    width: 150
+    width: 180,
+    key: 'create_time',
   },
   {
     title: '标题',
     dataKey: 'title',
     // @ts-ignore
-    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink onClick={() => jump(rowData)}>{title}</ElLink>
+    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink onClick={() => jump(rowData)}>{title.length > 12 ? title.slice(0, 12) + '...' : title}</ElLink>
     ,
     align: "center",
-    width: 150,
+    width: 200,
+    key: 'title',
   },
   {
     title: '标签',
     dataKey: "tags",
     align: "center",
-    cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) => tags && tags.map(item => <ElTag>{item.name}</ElTag>),
+    cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) => tags && tags.map(item => <ElTag style={{'backgroundColor': item.bg_color, 'color': item.color}}>{item.name}</ElTag>),
     width: 150,
+    key: 'tags',
   },
   {
     title: '状态',
@@ -100,7 +103,8 @@ const columns = [
       { rowData.is_privacy === 1 && <ElTag type='danger'>私密</ElTag>}
       </>,
     align: "center",
-    width: 160,
+    width: 150,
+    key: 'is_publish',
   },
   {
     title: '操作',
@@ -115,6 +119,7 @@ const columns = [
     ),
     align: "center",
     width: 150,
+    key: 'operate',
   }
 ]
 
@@ -270,5 +275,20 @@ function goDrafts() {
 
 .btn-wrapper {
   margin-top: 18px;
+}
+
+:deep(.el-link__inner) {
+  width: 100%; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:deep(.el-link) {
+  width: 100%;
+}
+
+:deep(.el-tag) {
+  border-color: transparent !important;
 }
 </style>

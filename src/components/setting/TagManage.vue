@@ -34,4 +34,8 @@ async function updateItem(tagInfo: any) {
 .tag {
   width: 100%;
 }
+
+:deep(.el-tag) {
+  border-color: transparent !important;
+}
 </style>
