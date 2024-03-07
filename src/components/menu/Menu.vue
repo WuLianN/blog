@@ -20,11 +20,11 @@ import { useHomeStore } from '@/store/modules/home'
 const isCollapse = ref(false)
 const homeStore = useHomeStore()
 
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+const handleOpen = (_key: string, _keyPath: string[]) => {
+  
 }
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+const handleClose = (_key: string, _keyPath: string[]) => {
+ 
 }
 
 const menuList = ref<any[]>([])
