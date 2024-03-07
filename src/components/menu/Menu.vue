@@ -43,7 +43,16 @@ async function getList(id?: number | null) {
   homeStore.setMenuList(result)
 
   defaultActive.value = result ? result[0].id.toString() : ''
-  defaultOpeneds.value = result ? [result[0].id] : []
+  defaultOpeneds.value = result && getDefaultOpeneds(result)
+}
+
+// 获取默认展开的菜单 [第一个]
+function getDefaultOpeneds(result: any[]): string[] {
+  const openeds: string[] = []
+  const first = result.find((item: any) => item.children && item.children.length > 0)
+
+  openeds.push(first ? first.id.toString() : '')
+  return openeds
 }
 </script>
 
