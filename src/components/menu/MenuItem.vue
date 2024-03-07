@@ -10,6 +10,7 @@
   </el-sub-menu>
 
   <el-menu-item v-else :index="item.id.toString()" @click="getTagList(item)">
+
     <template #title>
       <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
       <el-text type="primary" size="large">{{ item.name }}</el-text>
@@ -62,9 +63,13 @@ async function getTagList(item: MenuItemType) {
 
   const list: any[] = await getRecommendList(query)
 
-  const buildList = buildRecommendList(list)
+  if (list && list.length > 0) {
+    const buildList = buildRecommendList(list)
 
-  homeStore.setRecommendList(buildList)
+    homeStore.setRecommendList(buildList)
+  } else {
+    ElMessage.warning("没有文章！")
+  }
 }
 </script>
 
