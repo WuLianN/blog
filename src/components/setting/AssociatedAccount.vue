@@ -17,7 +17,7 @@
     <el-button plain type="primary" @click="dialogVisible = true">添加关联</el-button>
   </div>
 
-  <el-dialog v-model="dialogVisible" title="添加关联" width="30%">
+  <el-dialog v-model="dialogVisible" title="添加关联" :width="dialogWidth">
     <el-form ref="formRef" :model="form" status-icon :rules="rules" label-width="60px">
       <el-form-item label="账户" prop="username">
         <el-input v-model="form.username" />
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onUnmounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { bingUser, unbindUser, getBindedUserList, changeAccount } from '@/api/user'
 import { UserInfo } from '@/api/model/userModel'
@@ -48,6 +48,9 @@ const form = reactive({
 const formRef = ref<FormInstance>()
 const list = ref<UserInfo[]>([])
 const userStore = useUserStore()
+
+const dialogWidth = ref('30%')
+setDialogWidth()
 
 getList()
 
@@ -135,6 +138,21 @@ async function changeAccountFunc(id: number) {
     
   }
 }
+
+function setDialogWidth(){
+  const checkMedia = window.matchMedia("only screen and (max-width: 1000px)").matches
+  if (checkMedia) {
+    dialogWidth.value = '80%'
+  } else {
+    dialogWidth.value = '30%'
+  }
+}
+
+addEventListener('resize', setDialogWidth)
+
+onUnmounted(() => {
+  removeEventListener("resize", setDialogWidth)
+})
 </script>
 
 <style scoped lang="scss">
