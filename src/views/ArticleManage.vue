@@ -13,6 +13,9 @@
         <el-form-item label="私密">
           <el-switch size="large" v-model="isPrivacy" inline-prompt active-text="是" inactive-text="否"></el-switch>
         </el-form-item>
+        <el-form-item label="背景图">
+          <avatar-upload :width="128" :height="128" @change="handleImageChange" :imgUrl="bgImage" />
+        </el-form-item>
       </el-form>
 
       <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
@@ -123,6 +126,7 @@ const columns = [
   }
 ]
 
+const bgImage = ref('')
 
 const dialogWidth = ref('30%')
 setDialogWidth()
@@ -147,12 +151,13 @@ async function edit(id: number) {
   dialogVisible.value = true
 
   const article = list.value.find(item => item.id === id)
-  const { title, is_publish, is_privacy } = article
+  const { title, is_publish, is_privacy, bg_image } = article
 
   currentDraftId.value = id
   editTitle.value = title
   isPublish.value = is_publish === 1 ? true : false
   isPrivacy.value = is_privacy === 1 ? true : false
+  bgImage.value = bg_image
 
   tags.value = []
   originTags.value = []
@@ -201,6 +206,7 @@ async function submit() {
     is_publish: isPublish.value ? 1 : 0, // 是否发布
     is_privacy: isPrivacy.value ? 1 : 0, // 是否私密
     operated_type: 1, // 
+    bg_image: bgImage.value, // 背景图 
   }
 
   await saveDraft(data)
@@ -261,6 +267,10 @@ function endReached() {
 
 function goDrafts() {
   currentDraftId.value && useNavigateToNewTag(`/drafts/${currentDraftId.value}`)
+}
+
+function handleImageChange(url: string) {
+  bgImage.value = url
 }
 
 function setDialogWidth(){

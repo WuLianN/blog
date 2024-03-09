@@ -28,7 +28,8 @@ export function buildRecommendList(list: RecommendDraft[]) {
   list.map(item => {
     if (item.content) {
       item.excerpt = getExcerpt(item.content as string)
-      item.bgImage = getFirstImageUrl(item.content as string)
+      // 获取一个图片链接 1背景图 2插图
+      item.bgImage = item.bg_image ? item.bg_image : getFirstImageUrl(item.content as string)
     }
   })
   return list

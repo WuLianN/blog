@@ -10,6 +10,7 @@ export interface Draft {
   user_id: number;
   is_delete: number;
   is_publish: number;
+  bg_image?: string | null;
 }
 
 export interface RecommendDraft extends Draft {
