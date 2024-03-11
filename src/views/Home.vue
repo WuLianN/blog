@@ -38,8 +38,6 @@ const asideRight = ref<any>(null)
 
 const userId = getUserId()
 
-userId && userStore.setUser({ id: userId })
-
 queryUserInfo(userId)
 queryUserSetting(userId)
 

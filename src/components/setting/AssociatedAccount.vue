@@ -2,7 +2,7 @@
   <div class="list" v-if="list && list.length > 0">
     <div v-for="(item, index) in list" class="list-row" :key="index">
       <div class="list-row-left">
-        <el-avatar class="list-row-left-avatar" :width="64" :height="64" :src="item.avatar" />
+        <el-avatar class="list-row-left-avatar" :width="64" :height="64" :src="item.avatar || defaultAvatar" />
         <el-text>{{ item.user_name }}</el-text>
       </div>
       <div class="list-row-right">
@@ -48,6 +48,8 @@ const form = reactive({
 const formRef = ref<FormInstance>()
 const list = ref<UserInfo[]>([])
 const userStore = useUserStore()
+
+const defaultAvatar = 'https://api.bearcub.club/static/f59dba31b7e35b34915a46af75b037f2.png'
 
 const dialogWidth = ref('30%')
 setDialogWidth()

@@ -54,6 +54,7 @@ function cardClick(e: Event) {
 function logout() {
   localStorage.removeItem('token')
   localStorage.removeItem('userInfo')
+  userStore.logout()
 
   useNavigateTo({ path: '/login', query: { type: 'login' } })
 }
