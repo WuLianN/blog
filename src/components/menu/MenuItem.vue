@@ -29,7 +29,7 @@ import { MenuItem as MenuItemType } from '@/api/model/menuModel'
 const userStore = useUserStore()
 const homeStore = useHomeStore()
 const query = {
-  userId: userStore.user.id,
+  userId: userStore.userInfo.id,
   tagId: 0,
   page: 1,
   pageSize: 10
