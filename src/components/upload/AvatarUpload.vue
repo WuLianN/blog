@@ -62,12 +62,13 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
 }
 
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-  const allImageType = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg']
+  const allImageType = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp']
   if (!allImageType.includes(rawFile.type)) {
     ElMessage.error('不支持该图片格式')
     return false
-  } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('Avatar picture size can not exceed 2MB!')
+  } else if (rawFile.size / 1024 / 1024 > 5) {
+    console.log(rawFile.size)
+    ElMessage.error('Avatar picture size can not exceed 5MB!')
     return false
   }
   return true
