@@ -67,7 +67,6 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     ElMessage.error('不支持该图片格式')
     return false
   } else if (rawFile.size / 1024 / 1024 > 5) {
-    console.log(rawFile.size)
     ElMessage.error('Avatar picture size can not exceed 5MB!')
     return false
   }

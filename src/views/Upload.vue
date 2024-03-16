@@ -5,7 +5,9 @@
         <avatar-upload :width="128" :height="128" @change="handleImageChange" :imgUrl="avatar" />
       </el-form-item>
       <el-form-item label="链接">
-        <el-link type="primary" :href="avatar" target="_blank">{{ avatar }}</el-link>
+        <div class="link-container">
+          <el-link type="primary" :href="avatar" target="_blank">{{ avatar }}</el-link>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -23,14 +25,23 @@ function handleImageChange(url: string) {
 
 <style scoped lang="scss">
 .container {
-  width: 100%;
+  width: 100vw;
   height: 100%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-
-  padding-top: 20px
+  box-sizing: border-box;
+  padding: 20px;
 }
 
+.link-container {
+  word-break: break-all; 
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    justify-content: flex-start;
+  }
+}
 </style>
