@@ -9,6 +9,7 @@ const Viewer = () => import('@/views/Viewer.vue')
 const ArticleManage = () => import('@/views/ArticleManage.vue')
 const Setting = () => import('@/views/Setting.vue')
 const Upload = () => import('@/views/Upload.vue')
+const ManageImages = () => import('@/views/ManageImages.vue')
 const NotFoundComponent = () => import('@/views/NotFound.vue')
 
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
   { path: '/articleManage', name: 'articleManage', component: ArticleManage },
   { path: '/setting', name: 'setting', component: Setting },
   { path: '/upload', name: 'upload', component: Upload },
+  { path: '/manageImages', name: 'manageImages', component: ManageImages },
   { path: '/:pathMatch(.*)', component: NotFoundComponent }
 ]
 

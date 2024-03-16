@@ -57,5 +57,6 @@ declare module 'vue' {
     TagsWrapper: typeof import('./src/components/tags/TagsWrapper.vue')['default']
     ThemePicker: typeof import('./src/components/header/ThemePicker.vue')['default']
     Timeline: typeof import('./src/components/draftBox/Timeline.vue')['default']
+    WaterfallList: typeof import('./src/components/waterfallList/WaterfallList.vue')['default']
   }
 }
