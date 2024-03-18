@@ -1,5 +1,5 @@
 <template>
-  <Card :list="recommendList" />
+  <Card :list="recommendList" @tag-click="handleTagClick" />
 </template>
 
 <script setup lang="ts">
@@ -21,7 +21,8 @@ const query = reactive(
     userId: userId,
     page: 1,
     pageSize: 10,
-    keyword: ''
+    keyword: '',
+    tagId: 0,
   }
 )
 const debounceScrollFn = debounce(handleScroll, 300)
@@ -65,6 +66,19 @@ async function getList() {
   recommendList.value.push(...buildList)
 }
 
+function resetQuery() {
+  query.page = 1
+  query.tagId = 0
+  query.keyword = ''
+}
+
+async function handleTagClick(tagId: number){
+  resetQuery()
+  query.tagId = tagId
+  recommendList.value = []
+
+  getList()
+}
 
 async function handleScroll() {
   const scrollTop = Math.floor(document.documentElement.scrollTop);

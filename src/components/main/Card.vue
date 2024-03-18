@@ -8,15 +8,16 @@
     <div class="content">
       <div class="content-excerpt" :class="{ 'content-excerpt--no-img': !item.bgImage }">{{ item.excerpt }}</div>
       <div class="content-img-wrapper" v-if="item.bgImage" @click="imgClick(item.bgImage, $event)">
-        <el-image class="content-img" :lazy="true" fit="scale-down" :src="item.bgImage" :preview-src-list="previewSrcList"
-          :zIndex="0" :hide-on-click-modal="true" />
+        <el-image class="content-img" :lazy="true" fit="scale-down" :src="item.bgImage"
+          :preview-src-list="previewSrcList" :zIndex="0" :hide-on-click-modal="true" />
       </div>
     </div>
     <template #footer>
       <div class="footer">
         <div>
-          <el-tag v-for="tag in item.tags" :key="tag.id" :style="{ backgroundColor: tag.bg_color, color: tag.color }">{{
-            tag.name }} </el-tag>
+          <el-tag @click.stop="tagClick(tag.id)" v-for="tag in item.tags" :key="tag.id"
+            :style="{ backgroundColor: tag.bg_color, color: tag.color }">{{
+    tag.name }} </el-tag>
         </div>
         <div>
           <el-text>{{ formatDate(item.create_time, "YYYY-MM-DD") }}</el-text>
@@ -40,6 +41,12 @@ defineProps({
     default: () => [],
   },
 })
+
+const emit = defineEmits(['tagClick'])
+
+function tagClick(id: number) {
+  emit('tagClick', id)
+}
 
 function jump(id: number) {
   useNavigateToNewTag(`/viewer/${id}`)
