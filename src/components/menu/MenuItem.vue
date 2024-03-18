@@ -30,7 +30,7 @@ const userStore = useUserStore()
 const homeStore = useHomeStore()
 const query = {
   userId: userStore.userInfo.id,
-  tagId: 0,
+  tagIds: '',
   page: 1,
   pageSize: 10
 }
@@ -47,15 +47,15 @@ defineOptions({
 })
 
 async function getTagList(item: MenuItemType) {
-  const { name, tags } = item
+  const { tags } = item
 
   if (tags && tags.length > 0) {
-    const self = tags.find(i => i.name === name)
-    if (self) {
-      query.tagId = self.id
-    } else {
-      query.tagId = tags[0].id
-    }
+    query.tagIds = ''
+    const tempList: any[] = []
+    tags.forEach((ele: any) => {
+      tempList.push(ele.id)
+    })
+    query.tagIds = tempList.toString()
   } else {
     ElMessage.error("当前分类暂未绑定标签")
     return

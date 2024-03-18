@@ -22,7 +22,7 @@ const query = reactive(
     page: 1,
     pageSize: 10,
     keyword: '',
-    tagId: 0,
+    tagIds: '',
   }
 )
 const debounceScrollFn = debounce(handleScroll, 300)
@@ -68,13 +68,13 @@ async function getList() {
 
 function resetQuery() {
   query.page = 1
-  query.tagId = 0
+  query.tagIds = ''
   query.keyword = ''
 }
 
 async function handleTagClick(tagId: number){
   resetQuery()
-  query.tagId = tagId
+  query.tagIds = tagId.toString()
   recommendList.value = []
 
   getList()
