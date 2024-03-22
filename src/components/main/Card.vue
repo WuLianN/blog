@@ -81,6 +81,7 @@ function imgClick(url: string, event: Event) {
   &-img-wrapper {
     width: 100px;
     height: 100px;
+    z-index: 1001;
   }
 
   &-img {
