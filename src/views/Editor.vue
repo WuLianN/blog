@@ -1,22 +1,9 @@
-<template>
-  <header class="editor-header">
-    <div class="left-box"></div>
-    <input placeholder="输入文章标题..." spellcheck="false" maxlength="80" class="title-input" v-model="title">
-    <div class="right-box">
-      <div title="" class="status-text with-padding">{{ status }}</div>
-      <el-button plain type="primary" @click="goDraftBox">草稿箱</el-button>
-      <el-button plain type="success" @click="publish">发布</el-button>
-    </div>
-  </header>
-  <Editor :content="content" @contentChange="contentChange" :upload="upload" />
-</template>
-
 <script setup lang="ts">
 import Editor from '@blog/markdown-editor/src/components/Editor.vue'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import { debounce } from 'lodash-es'
-import { saveDraft, getUserDraft, publishDraft } from '@/api/drafts'
+import { getUserDraft, publishDraft, saveDraft } from '@/api/drafts'
 import { uploadFile } from '@/api/upload'
 import { useNavigateTo } from '@/hooks/web/useNavigate'
 
@@ -28,9 +15,8 @@ const debounceSave = debounce(save, debounceWaitMs)
 
 const draftId = getDraftId()
 
-if (draftId) {
+if (draftId)
   getDraftDetail()
-}
 
 watch([title, content], () => {
   debounceSave(title.value, content.value)
@@ -50,7 +36,7 @@ function contentChange(value: string) {
 
 async function getDraftDetail() {
   if (draftId) {
-    const { title: titleAlia, content: contentAlia } = await getUserDraft({ id: parseInt(draftId, 10) })
+    const { title: titleAlia, content: contentAlia } = await getUserDraft({ id: Number.parseInt(draftId, 10) })
     title.value = titleAlia
     content.value = contentAlia
   }
@@ -59,9 +45,10 @@ async function getDraftDetail() {
 async function save(title: string, content: string) {
   if (draftId) {
     try {
-      await saveDraft({ title, content, id: parseInt(draftId, 10) })
+      await saveDraft({ title, content, id: Number.parseInt(draftId, 10) })
       status.value = '保存成功'
-    } catch {
+    }
+    catch {
       status.value = '保存失败'
     }
   }
@@ -73,19 +60,20 @@ function goDraftBox() {
 
 async function publish() {
   if (draftId) {
-    const id = parseInt(draftId, 10)
+    const id = Number.parseInt(draftId, 10)
     try {
       await publishDraft(id)
       ElMessage.success('发布成功！')
       useNavigateTo('/')
-    } catch {
+    }
+    catch {
       ElMessage.error('发布失败！')
     }
   }
 }
 
 async function upload(file: File) {
-  const formData = new FormData();
+  const formData = new FormData()
   formData.append('type', '1')
   formData.append('file', file)
 
@@ -95,11 +83,29 @@ async function upload(file: File) {
       return { url }
     })
     .catch(() => {
-      console.log('上传失败')
       return ''
     })
 }
 </script>
+
+<template>
+  <header class="editor-header">
+    <div class="left-box" />
+    <input v-model="title" placeholder="输入文章标题..." spellcheck="false" maxlength="80" class="title-input">
+    <div class="right-box">
+      <div title="" class="status-text with-padding">
+        {{ status }}
+      </div>
+      <el-button plain type="primary" @click="goDraftBox">
+        草稿箱
+      </el-button>
+      <el-button plain type="success" @click="publish">
+        发布
+      </el-button>
+    </div>
+  </header>
+  <Editor :content="content" :upload="upload" @content-change="contentChange" />
+</template>
 
 <style scoped lang="scss">
 $header-height: 64px;

@@ -1,54 +1,55 @@
-<template>
-  <div class="tags-container">
-    <Tags :tags="tags" :isPost="isPost" :dialogVisible="dialogVisible" @selectedTags="selectedTags" />
-  </div>
-</template>
-
 <script setup lang="ts">
-import { toRefs, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { toRefs } from 'vue'
 
 const props = defineProps({
   tags: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   dialogVisible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   isPost: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 原始标签数据
   originTags: {
     type: Array as PropType<any[]>,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
-
-const { originTags } = toRefs(props)
 
 const emits = defineEmits(['change'])
 
-const selectedTags = (data: any[]) => {
+const { originTags } = toRefs(props)
+
+function selectedTags(data: any[]) {
   const selectedIds = data.reduce((acc, cur) => {
-    if (cur.id) {
+    if (cur.id)
       acc.push(cur.id)
-    }
+
     return acc
   }, [])
   const oldSelectedTags = originTags.value.filter(item => !selectedIds.includes(item.id))
   const newSelectedTags = data.filter(item => item.id === undefined)
 
   const tagsInfo = {
-    oldSelectedTags: oldSelectedTags, // 旧标签 -> 解绑
-    newSelectedTags: newSelectedTags // 新标签 -> 绑定
+    oldSelectedTags, // 旧标签 -> 解绑
+    newSelectedTags, // 新标签 -> 绑定
   }
 
   emits('change', tagsInfo)
 }
 </script>
+
+<template>
+  <div class="tags-container">
+    <Tags :tags="tags" :is-post="isPost" :dialog-visible="dialogVisible" @selected-tags="selectedTags" />
+  </div>
+</template>
 
 <style scoped lang="scss">
 .tags-container {

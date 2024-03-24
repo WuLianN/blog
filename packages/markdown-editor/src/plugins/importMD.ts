@@ -10,12 +10,11 @@ export default function importMD(): BytemdPlugin {
       position: 'right',
       handler: {
         type: 'action',
-        click: async ({ }) => {
+        click: async () => {
           const modal = document.querySelector('.import-modal') as HTMLElement
           modal.style.display = 'block'
-          return
-        }
-      }
-    }]
+        },
+      },
+    }],
   }
 }

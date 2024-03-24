@@ -1,5 +1,5 @@
-import { defHttp } from '@/utils/http/axios';
-import { RecommendDraft } from './model/draftsModel'
+import type { RecommendDraft } from './model/draftsModel'
+import { defHttp } from '@/utils/http/axios'
 
 enum Api {
   createDraft = '/createDraft',
@@ -12,34 +12,34 @@ enum Api {
   searchDrafts = '/searchDrafts',
 }
 
-export const createDraft = () => {
-  return defHttp.get<any>({ url: Api.createDraft });
-};
+export function createDraft() {
+  return defHttp.get<any>({ url: Api.createDraft })
+}
 
-export const saveDraft = (data: any) => {
-  return defHttp.post<any>({ url: Api.saveDraft, data });
-};
+export function saveDraft(data: any) {
+  return defHttp.post<any>({ url: Api.saveDraft, data })
+}
 
-export const getDraft = (data: any) => {
-  return defHttp.get<any>({ url: Api.getDraft, params: data });
-};
+export function getDraft(data: any) {
+  return defHttp.get<any>({ url: Api.getDraft, params: data })
+}
 
-export const getUserDraft = (data: any) => {
-  return defHttp.get<any>({ url: Api.getUserDraft, params: data });
-};
+export function getUserDraft(data: any) {
+  return defHttp.get<any>({ url: Api.getUserDraft, params: data })
+}
 
-export const getDraftList = (data: any) => {
-  return defHttp.get<any>({ url: Api.getDraftList, params: { status: data.status, page: data.page, page_size: data.pageSize } });
-};
+export function getDraftList(data: any) {
+  return defHttp.get<any>({ url: Api.getDraftList, params: { status: data.status, page: data.page, page_size: data.pageSize } })
+}
 
-export const deleteDraft = (id: number) => {
-  return defHttp.post<any>({ url: Api.deleteDraft, data: { id } });
-};
+export function deleteDraft(id: number) {
+  return defHttp.post<any>({ url: Api.deleteDraft, data: { id } })
+}
 
-export const publishDraft = (id: number) => {
+export function publishDraft(id: number) {
   return defHttp.post<any>({ url: Api.publishDraft, data: { id } })
 }
 
-export const searchDrafts = (data: any) => {
-  return defHttp.get<RecommendDraft[]>({ url: Api.searchDrafts, params: { keyword: data.keyword, page: data.page, page_size: data.pageSize, user_id: data.userId } });
-};
+export function searchDrafts(data: any) {
+  return defHttp.get<RecommendDraft[]>({ url: Api.searchDrafts, params: { keyword: data.keyword, page: data.page, page_size: data.pageSize, user_id: data.userId } })
+}

@@ -1,12 +1,15 @@
 {
   "name": "vue-ts-template",
-  "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@blog/markdown-editor": "workspace:*",
@@ -24,12 +27,18 @@
     "vue-waterfall-plugin-next": "^2.4.3"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^2.9.0",
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@types/crypto-js": "^4.2.2",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.11.5",
     "@types/qs": "^6.9.11",
     "@vitejs/plugin-vue": "^4.5.2",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "sass": "^1.70.0",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.17.3",
@@ -38,5 +47,10 @@
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-node-polyfills": "^0.19.0",
     "vue-tsc": "^1.8.25"
+  },
+  "lint-staged": {
+    "*.{ts,js,vue}": [
+      "eslint . --fix"
+    ]
   }
 }

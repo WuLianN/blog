@@ -1,21 +1,13 @@
-<template>
-  <div class="draft-box">
-    <div class="draft-box-timeline">
-      <Timeline :list="list" @delete="deleteDraft" />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { getDraftList } from '@/api/drafts';
+import { onMounted, onUnmounted, ref } from 'vue'
 import { debounce } from 'lodash-es'
+import { getDraftList } from '@/api/drafts'
 
 const query = ref({
   page: 1,
   pageSize: 10,
-  status: 2 // 草稿
-});
+  status: 2, // 草稿
+})
 
 const debounceScrollFn = debounce(handleScroll, 300)
 
@@ -24,13 +16,14 @@ const list = ref<any[]>([])
 getList()
 
 async function getList() {
-  const resultList: any[] = await getDraftList(query.value);
+  const resultList: any[] = await getDraftList(query.value)
 
   if (resultList.length === 0 && query.value.page > 1) {
-    ElMessage.warning("没有更多了！")
+    ElMessage.warning('没有更多了！')
     return
-  } else if (resultList.length === 0 && query.value.page === 1) {
-    ElMessage.warning("没有数据！")
+  }
+  else if (resultList.length === 0 && query.value.page === 1) {
+    ElMessage.warning('没有数据！')
     return
   }
 
@@ -38,9 +31,9 @@ async function getList() {
 }
 
 async function handleScroll() {
-  const scrollTop = Math.floor(document.documentElement.scrollTop);
-  const scrollHeight = Math.floor(document.documentElement.scrollHeight);
-  const clientHeight = Math.floor(document.documentElement.clientHeight);
+  const scrollTop = Math.floor(document.documentElement.scrollTop)
+  const scrollHeight = Math.floor(document.documentElement.scrollHeight)
+  const clientHeight = Math.floor(document.documentElement.clientHeight)
 
   // 检测是否滚动到底部
   if (scrollHeight - scrollTop <= clientHeight + 10) {
@@ -53,20 +46,27 @@ async function handleScroll() {
 function deleteDraft(id: number) {
   const index = list.value.findIndex(item => item.id === id)
 
-  if (index !== -1) {
+  if (index !== -1)
     list.value.splice(index, 1)
-  }
 }
 
 onMounted(() => {
   // 监听滚动事件
-  window.addEventListener('scroll', debounceScrollFn);
+  window.addEventListener('scroll', debounceScrollFn)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', debounceScrollFn)
 })
 </script>
+
+<template>
+  <div class="draft-box">
+    <div class="draft-box-timeline">
+      <Timeline :list="list" @delete="deleteDraft" />
+    </div>
+  </div>
+</template>
 
 <style scoped lang="scss">
 .draft-box {

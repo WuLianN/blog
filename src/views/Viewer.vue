@@ -1,29 +1,12 @@
-<template>
-  <div class="view">
-    <div class="view-container">
-      <Viewer :content="content" />
-    </div>
-
-    <back-top />
-  </div>
-
-  <UseDraggable :initial-value="{ x: dragX, y: 300 }" style="position: fixed;" v-is-author="userId"
-    storage-key="vueuse-draggable" storage-type="session">
-    <div class="btn-wrapper">
-      <el-button type="primary" circle :icon="Edit" @click="edit" size="large"></el-button>
-    </div>
-  </UseDraggable>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import Viewer from '@blog/markdown-editor/src/components/Viewer.vue'
 import { useRoute } from 'vue-router'
-import { getDraft } from '@/api/drafts'
 import { useDark } from '@vueuse/core'
 import { Edit } from '@element-plus/icons-vue'
-import { useNavigateTo } from '@/hooks/web/useNavigate'
 import { UseDraggable } from '@vueuse/components'
+import { useNavigateTo } from '@/hooks/web/useNavigate'
+import { getDraft } from '@/api/drafts'
 
 const content = ref('')
 const draftId = getDraftId()
@@ -33,15 +16,13 @@ const screenWidth = window.innerWidth
 
 const dragX = ref<number>(screenWidth - 80 - 100) // 80是div的宽度
 
-if (screenWidth < 1000) {
+if (screenWidth < 1000)
   dragX.value = screenWidth - 80 - 20
-}
 
 useDark()
 
-if (draftId) {
+if (draftId)
   getDraftDetail()
-}
 
 function getDraftId() {
   const route = useRoute()
@@ -53,7 +34,7 @@ function getDraftId() {
 
 async function getDraftDetail() {
   if (draftId) {
-    const { content: contentAlia, user_id } = await getDraft({ id: parseInt(draftId, 10) })
+    const { content: contentAlia, user_id } = await getDraft({ id: Number.parseInt(draftId, 10) })
     content.value = contentAlia
     userId.value = user_id
   }
@@ -63,6 +44,25 @@ function edit() {
   draftId && useNavigateTo(`/drafts/${draftId}`)
 }
 </script>
+
+<template>
+  <div class="view">
+    <div class="view-container">
+      <Viewer :content="content" />
+    </div>
+
+    <back-top />
+  </div>
+
+  <UseDraggable
+    v-is-author="userId" :initial-value="{ x: dragX, y: 300 }" style="position: fixed;"
+    storage-key="vueuse-draggable" storage-type="session"
+  >
+    <div class="btn-wrapper">
+      <el-button type="primary" circle :icon="Edit" size="large" @click="edit" />
+    </div>
+  </UseDraggable>
+</template>
 
 <style scoped lang="scss">
 .view {

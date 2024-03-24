@@ -1,24 +1,3 @@
-<template>
-  <Waterfall :list="options.list" :rowKey="options.rowKey" :loadProps="options.loadProps">
-    <template #item="{ item, url }">
-      <div class="card" @mouseenter="handleMouseEnter(item.id)" @mouselevel="handleMouseLeave(item.id)">
-        <LazyImg :url="url" />
-        <div class="overlay" v-show="overlayMap[item.id]">
-          <div class="overlay-text">
-            {{ item.name }}
-          </div>
-
-          <el-button type="danger" circle size="large" @click="del(item.id)">
-            <el-icon>
-              <Delete />
-            </el-icon>
-          </el-button>
-        </div>
-      </div>
-    </template>
-  </Waterfall>
-</template>
-
 <script setup lang="ts">
 import { LazyImg, Waterfall } from 'vue-waterfall-plugin-next'
 import 'vue-waterfall-plugin-next/dist/style.css'
@@ -29,8 +8,8 @@ import type { ViewCard } from 'vue-waterfall-plugin-next/dist/types/types/waterf
 const props = defineProps({
   options: {
     type: Object,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 })
 
 const emit = defineEmits(['delete'])
@@ -44,7 +23,7 @@ watch(props.options.list, (list) => {
 })
 
 function resetOverlay() {
-  Object.keys(overlayMap).forEach(key => {
+  Object.keys(overlayMap).forEach((key) => {
     overlayMap[key] = false
   })
 }
@@ -62,7 +41,7 @@ function del(id: number) {
   ElMessageBox.confirm('此操作将永久删除该图片, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
+    type: 'warning',
   }).then(async () => {
     emit('delete', id)
   }).catch(() => {
@@ -70,6 +49,27 @@ function del(id: number) {
   })
 }
 </script>
+
+<template>
+  <Waterfall :list="options.list" :row-key="options.rowKey" :load-props="options.loadProps">
+    <template #item="{ item, url }">
+      <div class="card" @mouseenter="handleMouseEnter(item.id)" @mouselevel="handleMouseLeave(item.id)">
+        <LazyImg :url="url" />
+        <div v-show="overlayMap[item.id]" class="overlay">
+          <div class="overlay-text">
+            {{ item.name }}
+          </div>
+
+          <el-button type="danger" circle size="large" @click="del(item.id)">
+            <el-icon>
+              <Delete />
+            </el-icon>
+          </el-button>
+        </div>
+      </div>
+    </template>
+  </Waterfall>
+</template>
 
 <style scoped lang="scss">
 .card {

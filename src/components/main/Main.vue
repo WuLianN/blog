@@ -1,14 +1,10 @@
-<template>
-  <Card :list="recommendList" @tag-click="handleTagClick" />
-</template>
-
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { debounce } from 'lodash-es'
 import { getRecommendList } from '@/api/base'
 import { getUserId } from '@/utils/auth'
 import { useHomeStore } from '@/store/modules/home'
-import { debounce } from 'lodash-es'
-import { RecommendDraft } from '@/api/model/draftsModel'
+import type { RecommendDraft } from '@/api/model/draftsModel'
 import { buildRecommendList } from '@/utils/blog'
 import { searchDrafts } from '@/api/drafts'
 
@@ -18,12 +14,12 @@ const homeStore = useHomeStore()
 
 const query = reactive(
   {
-    userId: userId,
+    userId,
     page: 1,
     pageSize: 10,
     keyword: '',
     tagIds: '',
-  }
+  },
 )
 const debounceScrollFn = debounce(handleScroll, 300)
 
@@ -46,7 +42,8 @@ async function getList() {
   if (!query.keyword) {
     // 推荐模式
     result = await getRecommendList(query)
-  } else {
+  }
+  else {
     // 搜索模式 关键字
     result = await searchDrafts(query)
   }
@@ -54,10 +51,11 @@ async function getList() {
   list.push(...result)
 
   if (list.length === 0 && query.page > 1) {
-    ElMessage.warning("没有更多了！")
+    ElMessage.warning('没有更多了！')
     return
-  } else if (list.length === 0 && query.page === 1) {
-    ElMessage.warning("没有数据！")
+  }
+  else if (list.length === 0 && query.page === 1) {
+    ElMessage.warning('没有数据！')
     return
   }
 
@@ -72,7 +70,7 @@ function resetQuery() {
   query.keyword = ''
 }
 
-async function handleTagClick(tagId: number){
+async function handleTagClick(tagId: number) {
   resetQuery()
   query.tagIds = tagId.toString()
   recommendList.value = []
@@ -81,9 +79,9 @@ async function handleTagClick(tagId: number){
 }
 
 async function handleScroll() {
-  const scrollTop = Math.floor(document.documentElement.scrollTop);
-  const scrollHeight = Math.floor(document.documentElement.scrollHeight);
-  const clientHeight = Math.floor(document.documentElement.clientHeight);
+  const scrollTop = Math.floor(document.documentElement.scrollTop)
+  const scrollHeight = Math.floor(document.documentElement.scrollHeight)
+  const clientHeight = Math.floor(document.documentElement.clientHeight)
 
   // 检测是否滚动到距离底部60px
   if (scrollHeight - scrollTop <= clientHeight + 60) {
@@ -95,12 +93,16 @@ async function handleScroll() {
 
 onMounted(() => {
   // 监听滚动事件
-  window.addEventListener('scroll', debounceScrollFn);
+  window.addEventListener('scroll', debounceScrollFn)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', debounceScrollFn)
 })
 </script>
+
+<template>
+  <Card :list="recommendList" @tag-click="handleTagClick" />
+</template>
 
 <style scoped lang="scss"></style>

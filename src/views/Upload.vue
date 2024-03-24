@@ -1,18 +1,3 @@
-<template>
-  <div class="container">
-    <el-form label-width="80px" label-position="top">
-      <el-form-item label="图片">
-        <avatar-upload :width="128" :height="128" @change="handleImageChange" :imgUrl="avatar" />
-      </el-form-item>
-      <el-form-item label="链接">
-        <div class="link-container">
-          <el-link type="primary" :href="avatar" target="_blank">{{ avatar }}</el-link>
-        </div>
-      </el-form-item>
-    </el-form>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 
@@ -22,6 +7,23 @@ function handleImageChange(url: string) {
   avatar.value = url
 }
 </script>
+
+<template>
+  <div class="container">
+    <el-form label-width="80px" label-position="top">
+      <el-form-item label="图片">
+        <avatar-upload :width="128" :height="128" :img-url="avatar" @change="handleImageChange" />
+      </el-form-item>
+      <el-form-item label="链接">
+        <div class="link-container">
+          <el-link type="primary" :href="avatar" target="_blank">
+            {{ avatar }}
+          </el-link>
+        </div>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
 
 <style scoped lang="scss">
 .container {
@@ -36,7 +38,7 @@ function handleImageChange(url: string) {
 }
 
 .link-container {
-  word-break: break-all; 
+  word-break: break-all;
 }
 
 @media screen and (max-width: 768px) {

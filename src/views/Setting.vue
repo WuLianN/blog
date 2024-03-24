@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { CollectionTag, Link, Menu, Setting, UserFilled } from '@element-plus/icons-vue'
+
+const tabPosition = ref<any>('left')
+</script>
+
 <template>
   <div class="setting">
     <el-tabs :tab-position="tabPosition" class="tabs" type="border-card">
@@ -59,14 +66,6 @@
     </el-tabs>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { UserFilled, Setting, Menu, CollectionTag, Link } from '@element-plus/icons-vue'
-
-const tabPosition = ref<any>('left')
-
-</script>
 
 <style scoped lang="scss">
 .setting {

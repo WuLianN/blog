@@ -1,9 +1,5 @@
-<template>
-  <Viewer :value="content" :plugins="plugins" />
-</template>
-
 <script setup lang="ts">
-import gfm from "@bytemd/plugin-gfm";
+import gfm from '@bytemd/plugin-gfm'
 import frontmatter from '@bytemd/plugin-frontmatter'
 import gemoji from '@bytemd/plugin-gemoji'
 import highlight from '@bytemd/plugin-highlight'
@@ -19,16 +15,15 @@ import 'bytemd/dist/index.css'
 import zh_Hans_highlight_theme from '@ziuchen/bytemd-plugin-highlight-theme/locales/zh_Hans.json'
 import zh_Hans_image_zoom from '@ziuchen/bytemd-plugin-image-zoom/locales/zh_Hans.json'
 import zh_Hans_algin from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
-
+// @ts-expect-error 已经在<template>使用了
+import { Viewer } from '@bytemd/vue-next'
 import theme from '../plugins/theme.ts'
-// @ts-ignore
-import { Viewer } from "@bytemd/vue-next"
 
 defineProps({
   content: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
 function stripPrefixes(obj: Record<string, any>) {
@@ -41,17 +36,17 @@ function stripPrefixes(obj: Record<string, any>) {
 const gfmLocales = stripPrefixes(
   import.meta.glob('../../node_modules/@bytemd/plugin-gfm/locales/*.json', {
     eager: true,
-  })
+  }),
 )
 const mathLocales = stripPrefixes(
   import.meta.glob('../../node_modules/@bytemd/plugin-math/locales/*.json', {
     eager: true,
-  })
+  }),
 )
 const mermaidLocales = stripPrefixes(
   import.meta.glob('../../node_modules/@bytemd/plugin-mermaid/locales/*.json', {
     eager: true,
-  })
+  }),
 )
 
 const localeKey = 'zh_Hans'
@@ -69,10 +64,10 @@ const plugins = [
   }),
   mediumZoom(),
   align({
-    locale: zh_Hans_algin
+    locale: zh_Hans_algin,
   }),
   imageZoom({
-    locale: zh_Hans_image_zoom
+    locale: zh_Hans_image_zoom,
   }),
   mermaid({
     locale: mermaidLocales[localeKey],
@@ -80,9 +75,13 @@ const plugins = [
   theme(),
   highlightTheme({
     highlights: hls,
-    locale: zh_Hans_highlight_theme
+    locale: zh_Hans_highlight_theme,
   }),
-];
+]
 </script>
+
+<template>
+  <Viewer :value="content" :plugins="plugins" />
+</template>
 
 <style scoped lang="scss"></style>

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 
 interface UserInfo {
-  id: number,
-  user_name: string,
+  id: number
+  user_name: string
   avatar: string
   is_privacy: number
 }
@@ -28,8 +28,8 @@ export const useUserStore = defineStore('user', {
         id: 0,
         user_name: '',
         avatar: '',
-        is_privacy: 0
+        is_privacy: 0,
       }
-    }
-  }
+    },
+  },
 })

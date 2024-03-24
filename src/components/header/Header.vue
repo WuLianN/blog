@@ -1,15 +1,33 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useNavigateTo } from '@/hooks/web/useNavigate'
+import { createDraft } from '@/api/drafts'
+import { useUserStore } from '@/store/modules/user'
+
+const store = useUserStore()
+
+const hasUserInfo = computed(() => {
+  return store.userInfo.user_name
+})
+
+async function writeArticle() {
+  const { draft_id: id } = await createDraft()
+  useNavigateTo(`/drafts/${id}`)
+}
+</script>
+
 <template>
   <div class="header">
-    <div class="header-left">
-
-    </div>
+    <div class="header-left" />
     <div class="header-right">
       <div class="header-right__search">
         <Search />
       </div>
 
       <div class="header-right__btn">
-        <el-button plain type="primary" v-isBrower @click="writeArticle">写文章</el-button>
+        <el-button v-isBrower plain type="primary" @click="writeArticle">
+          写文章
+        </el-button>
       </div>
       <div class="header-right__switch">
         <Switch />
@@ -28,28 +46,8 @@
         </template>
       </div>
     </div>
-
   </div>
 </template>
-
-<script setup lang="ts">
-import { useNavigateTo } from '@/hooks/web/useNavigate'
-import { createDraft } from '@/api/drafts'
-import { useUserStore } from '@/store/modules/user'
-import { computed } from 'vue'
-
-const store = useUserStore()
-
-const hasUserInfo = computed(() => {
-  return store.userInfo.user_name
-})
-
-async function writeArticle() {
-  const { draft_id: id } = await createDraft()
-  useNavigateTo(`/drafts/${id}`)
-}
-
-</script>
 
 <style scoped lang="scss">
 .header {

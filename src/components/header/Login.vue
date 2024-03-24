@@ -1,10 +1,3 @@
-<template>
-  <div class="btn-wrapper">
-    <el-button type="primary" plain @click="login('login')">登录</el-button>
-    <el-button type="success" plain @click="login('register')">注册</el-button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
@@ -14,11 +7,22 @@ function login(param: string) {
   router.push({
     path: '/login',
     query: {
-      type: param
-    }
+      type: param,
+    },
   })
 }
 </script>
+
+<template>
+  <div class="btn-wrapper">
+    <el-button type="primary" plain @click="login('login')">
+      登录
+    </el-button>
+    <el-button type="success" plain @click="login('register')">
+      注册
+    </el-button>
+  </div>
+</template>
 
 <style scoped lang="scss">
 .btn-wrapper {

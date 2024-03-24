@@ -1,3 +1,51 @@
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { useHomeStore } from '@/store/modules/home'
+import { useUserStore } from '@/store/modules/user'
+import { getUserId } from '@/utils/auth'
+import { getUserInfo, getUserSetting } from '@/api/user'
+import { setupTheme } from '@/hooks/web/useTheme'
+
+const homeStore = useHomeStore()
+const userStore = useUserStore()
+
+const asideRight = ref<any>(null)
+
+const userId = getUserId()
+
+queryUserInfo(userId)
+queryUserSetting(userId)
+
+watch(() => homeStore.menuList, (list) => {
+  if (list && list.length > 0)
+    asideRight.value.style.width = '200px'
+  else
+    asideRight.value.style.width = 0
+})
+
+function handleClick(e: Event) {
+  e.stopPropagation()
+
+  homeStore.setLoginCardStatus(false)
+}
+
+async function queryUserInfo(userId?: number | null) {
+  const userInfo = await getUserInfo(userId)
+  userInfo && localStorage.setItem('visitUserInfo', JSON.stringify(userInfo))
+  userInfo && userStore.setUserInfo(userInfo)
+}
+
+async function queryUserSetting(userId?: number | null) {
+  const result = await getUserSetting(userId)
+  if (result) {
+    localStorage.setItem('user_setting', JSON.stringify(result))
+    userStore.setUserSetting(result)
+
+    setupTheme()
+  }
+}
+</script>
+
 <template>
   <div class="container" @click="handleClick">
     <el-header class="header">
@@ -13,64 +61,13 @@
           <Main />
         </div>
 
-        <div class="aside aside-right" ref="asideRight">
-
-        </div>
+        <div ref="asideRight" class="aside aside-right" />
       </div>
     </div>
 
     <back-top />
   </div>
 </template>
-
-<script setup lang="ts">
-import { useHomeStore } from '@/store/modules/home';
-import { useUserStore } from '@/store/modules/user';
-import { getUserId } from '@/utils/auth'
-import { getUserInfo, getUserSetting } from '@/api/user'
-import { watch, ref } from 'vue'
-import { setupTheme } from '@/hooks/web/useTheme'
-
-const homeStore = useHomeStore()
-const userStore = useUserStore()
-
-const asideRight = ref<any>(null)
-
-const userId = getUserId()
-
-queryUserInfo(userId)
-queryUserSetting(userId)
-
-watch(() => homeStore.menuList, (list) => {
-  if (list && list.length > 0) {
-    asideRight.value.style.width = '200px'
-  } else {
-    asideRight.value.style.width = 0
-  }
-})
-
-function handleClick(e: Event) {
-  e.stopPropagation();
-
-  homeStore.setLoginCardStatus(false)
-}
-
-async function queryUserInfo(userId?: number | null) {
-  const userInfo = await getUserInfo(userId)
-  userInfo && localStorage.setItem("visitUserInfo", JSON.stringify(userInfo))
-  userInfo && userStore.setUserInfo(userInfo)
-}
-
-async function queryUserSetting(userId?: number | null) {
-  const result = await getUserSetting(userId)
-  if (result) {
-    localStorage.setItem("user_setting", JSON.stringify(result))
-    userStore.setUserSetting(result)
-
-    setupTheme()
-  }
-}
-</script>
 
 <style scoped lang="scss">
 .container {

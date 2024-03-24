@@ -1,9 +1,3 @@
-<template>
-  <div class="tag">
-    <Tags :tags="list" :editable="true" @update="updateItem" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { getTagList } from '@/api/tags'
@@ -19,7 +13,7 @@ async function getList() {
 
 async function updateItem(tagInfo: any) {
   if (tagInfo.id) {
-    list.value.map(item => {
+    list.value.forEach((item) => {
       if (item.id === tagInfo.id) {
         item.name = tagInfo.name
         item.color = tagInfo.color
@@ -29,6 +23,12 @@ async function updateItem(tagInfo: any) {
   }
 }
 </script>
+
+<template>
+  <div class="tag">
+    <Tags :tags="list" :editable="true" @update="updateItem" />
+  </div>
+</template>
 
 <style scoped lang="scss">
 .tag {

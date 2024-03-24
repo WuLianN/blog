@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
-import App from './App.vue'
 import ElementPlus from 'element-plus'
+import App from './App.vue'
 import { setupRouter } from './router/index.ts'
 // import { setupRouterGuard } from '@/router/guard'
 import { setupStore } from '@/store'

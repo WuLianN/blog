@@ -20,9 +20,8 @@ export default function exportMD(): BytemdPlugin {
           link.href = url
           link.download = `${title}.md`
           link.click()
-          return
-        }
-      }
-    }]
+        },
+      },
+    }],
   }
 }

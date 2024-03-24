@@ -1,28 +1,3 @@
-<template>
-  <div class="card" v-show="status" @click="cardClick($event)">
-    <el-card>
-      <template #header>
-        <div class="card-header">
-          <el-image class="card-header-avatar" @click.stop="imgClick(avatar)" :src="avatar" :preview-src-list="previewSrcList" :zIndex="0" :hide-on-click-modal="true" />
-          <div class="card-header-username">{{ userStore.userInfo.user_name ?? '' }}</div>
-        </div>
-      </template>
-
-      <div class="card-btn-wrapper" v-isBrower>
-        <el-button plain type="primary" @click="go('/draftBox')">草稿箱</el-button>
-        <el-button plain type="primary" @click="go('/articleManage')">文章管理</el-button>
-      </div>
-
-      <template #footer>
-        <div class="card-footer" v-isBrower>
-          <a class="card-footer__link" @click="go('/setting')">我的设置</a>
-          <a class="card-footer__link" @click="logout">退出登录</a>
-        </div>
-      </template>
-    </el-card>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useNavigateTo } from '@/hooks/web/useNavigate'
@@ -31,8 +6,8 @@ import { useUserStore } from '@/store/modules/user'
 defineProps({
   status: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const previewSrcList = ref<string[]>([''])
@@ -42,9 +17,8 @@ const defaultAvatar = 'https://api.bearcub.club/static/f59dba31b7e35b34915a46af7
 avatar.value = userStore.userInfo.avatar || defaultAvatar
 
 watch(() => userStore.userInfo.avatar, (value) => {
-  if (value) {
+  if (value)
     avatar.value = value
-  }
 })
 
 function cardClick(e: Event) {
@@ -63,11 +37,41 @@ function go(path: string) {
   useNavigateTo(path)
 }
 
-
 function imgClick(url: string) {
   previewSrcList.value = [url]
 }
 </script>
+
+<template>
+  <div v-show="status" class="card" @click="cardClick($event)">
+    <el-card>
+      <template #header>
+        <div class="card-header">
+          <el-image class="card-header-avatar" :src="avatar" :preview-src-list="previewSrcList" :z-index="0" :hide-on-click-modal="true" @click.stop="imgClick(avatar)" />
+          <div class="card-header-username">
+            {{ userStore.userInfo.user_name ?? '' }}
+          </div>
+        </div>
+      </template>
+
+      <div v-isBrower class="card-btn-wrapper">
+        <el-button plain type="primary" @click="go('/draftBox')">
+          草稿箱
+        </el-button>
+        <el-button plain type="primary" @click="go('/articleManage')">
+          文章管理
+        </el-button>
+      </div>
+
+      <template #footer>
+        <div v-isBrower class="card-footer">
+          <a class="card-footer__link" @click="go('/setting')">我的设置</a>
+          <a class="card-footer__link" @click="logout">退出登录</a>
+        </div>
+      </template>
+    </el-card>
+  </div>
+</template>
 
 <style scoped lang="scss">
 .card {

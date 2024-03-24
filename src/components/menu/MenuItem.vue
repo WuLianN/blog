@@ -1,50 +1,28 @@
-<template>
-  <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.id.toString()">
-    <template #title>
-      <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
-      <el-text type="primary" size="large">{{ item.name }}</el-text>
-    </template>
-
-    <!-- 组件自调 -->
-    <menu-item v-for="(ele, index) in item.children" :item="ele" :key="index" />
-  </el-sub-menu>
-
-  <el-menu-item v-else :index="item.id.toString()" @click="getTagList(item)">
-
-    <template #title>
-      <el-image class="image" v-if="item.meta && item.meta.icon" :src="item.meta && item.meta.icon" />
-      <el-text type="primary" size="large">{{ item.name }}</el-text>
-    </template>
-  </el-menu-item>
-</template>
-
 <script setup lang="ts">
+import type { PropType } from 'vue'
 import { getRecommendList } from '@/api/base'
 import { useUserStore } from '@/store/modules/user'
 import { useHomeStore } from '@/store/modules/home'
 import { buildRecommendList } from '@/utils/blog'
-import { PropType } from 'vue'
-import { MenuItem as MenuItemType } from '@/api/model/menuModel'
+import type { MenuItem as MenuItemType } from '@/api/model/menuModel'
 
+defineOptions({
+  name: 'MenuItem',
+})
+defineProps({
+  item: {
+    type: Object as PropType<MenuItemType>,
+    default: () => {},
+  },
+})
 const userStore = useUserStore()
 const homeStore = useHomeStore()
 const query = {
   userId: userStore.userInfo.id,
   tagIds: '',
   page: 1,
-  pageSize: 10
+  pageSize: 10,
 }
-
-defineProps({
-  item: {
-    type: Object as PropType<MenuItemType>,
-    default: () => []
-  }
-})
-
-defineOptions({
-  name: 'menuItem'
-})
 
 async function getTagList(item: MenuItemType) {
   const { tags } = item
@@ -56,8 +34,9 @@ async function getTagList(item: MenuItemType) {
       tempList.push(ele.id)
     })
     query.tagIds = tempList.toString()
-  } else {
-    ElMessage.error("当前分类暂未绑定标签")
+  }
+  else {
+    ElMessage.error('当前分类暂未绑定标签')
     return
   }
 
@@ -67,11 +46,35 @@ async function getTagList(item: MenuItemType) {
     const buildList = buildRecommendList(list)
 
     homeStore.setRecommendList(buildList)
-  } else {
-    ElMessage.warning("没有文章！")
+  }
+  else {
+    ElMessage.warning('没有文章！')
   }
 }
 </script>
+
+<template>
+  <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.id.toString()">
+    <template #title>
+      <el-image v-if="item.meta && item.meta.icon" class="image" :src="item.meta && item.meta.icon" />
+      <el-text type="primary" size="large">
+        {{ item.name }}
+      </el-text>
+    </template>
+
+    <!-- 组件自调 -->
+    <menu-item v-for="(ele, index) in item.children" :key="index" :item="ele" />
+  </el-sub-menu>
+
+  <el-menu-item v-else :index="item.id.toString()" @click="getTagList(item)">
+    <template #title>
+      <el-image v-if="item.meta && item.meta.icon" class="image" :src="item.meta && item.meta.icon" />
+      <el-text type="primary" size="large">
+        {{ item.name }}
+      </el-text>
+    </template>
+  </el-menu-item>
+</template>
 
 <style scoped lang="scss">
 .image {

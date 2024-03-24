@@ -1,24 +1,14 @@
-<template>
-  <el-upload class="avatar-uploader" :action="action" :show-file-list="false" :on-success="handleAvatarSuccess"
-    :before-upload="beforeAvatarUpload" :data="data">
-    <img v-if="imageUrl" :src="imageUrl" class="avatar" :style="avatarStyle" />
-    <el-icon v-else class="avatar-uploader-icon" :style="avatarStyle">
-      <Plus />
-    </el-icon>
-  </el-upload>
-</template>
-
 <script lang="ts" setup>
 import { toRefs } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { getAppEnvConfig } from '@/utils/env'
 import type { UploadProps } from 'element-plus'
+import { getAppEnvConfig } from '@/utils/env'
 
 const props = defineProps({
   width: {
     type: Number,
-    default: 178
+    default: 178,
   },
   height: {
     type: Number,
@@ -26,8 +16,8 @@ const props = defineProps({
   },
   imgUrl: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
 const emit = defineEmits(['change'])
@@ -35,12 +25,12 @@ const emit = defineEmits(['change'])
 const { width, height, imgUrl } = toRefs(props)
 
 const avatarStyle = {
-  width: width.value + 'px',
-  height: height.value + 'px'
+  width: `${width.value}px`,
+  height: `${height.value}px`,
 }
 
 const data = {
-  type: 1
+  type: 1,
 }
 
 const imageUrl = imgUrl
@@ -49,7 +39,7 @@ const { VITE_GLOB_API_URL, VITE_GLOB_UPLOAD_URL } = getAppEnvConfig()
 const action = VITE_GLOB_API_URL + VITE_GLOB_UPLOAD_URL
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
-  response
+  response,
 ) => {
   const { code, result } = response
 
@@ -66,13 +56,27 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (!allImageType.includes(rawFile.type)) {
     ElMessage.error('不支持该图片格式')
     return false
-  } else if (rawFile.size / 1024 / 1024 > 5) {
+  }
+  else if (rawFile.size / 1024 / 1024 > 5) {
     ElMessage.error('Avatar picture size can not exceed 5MB!')
     return false
   }
   return true
 }
 </script>
+
+<template>
+  <el-upload
+    class="avatar-uploader" :action="action" :show-file-list="false" :on-success="handleAvatarSuccess"
+    :before-upload="beforeAvatarUpload" :data="data"
+  >
+    <img v-if="imageUrl" :src="imageUrl" class="avatar" :style="avatarStyle">
+    <el-icon v-else class="avatar-uploader-icon" :style="avatarStyle">
+      <Plus />
+    </el-icon>
+  </el-upload>
+</template>
+
 <style scoped>
 :deep(.el-upload) {
   border: 1px dashed var(--el-border-color) !important;

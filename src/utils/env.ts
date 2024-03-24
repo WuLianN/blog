@@ -1,25 +1,25 @@
 export function getAppEnvConfig() {
   const ENV = import.meta.env
-  const { VITE_GLOB_APP_TITLE, VITE_GLOB_API_URL, VITE_GLOB_API_URL_PREFIX, VITE_GLOB_UPLOAD_URL } =
-    ENV;
+  const { VITE_GLOB_APP_TITLE, VITE_GLOB_API_URL, VITE_GLOB_API_URL_PREFIX, VITE_GLOB_UPLOAD_URL }
+    = ENV
 
   return {
     VITE_GLOB_APP_TITLE,
     VITE_GLOB_API_URL,
     VITE_GLOB_API_URL_PREFIX,
     VITE_GLOB_UPLOAD_URL,
-  };
+  }
 }
 
 /**
  * @description: Development mode
  */
-export const devMode = 'development';
+export const devMode = 'development'
 
 /**
  * @description: Production mode
  */
-export const prodMode = 'production';
+export const prodMode = 'production'
 
 /**
  * @description: Get environment variables
@@ -27,7 +27,7 @@ export const prodMode = 'production';
  * @example:
  */
 export function getEnv(): string {
-  return import.meta.env.MODE;
+  return import.meta.env.MODE
 }
 
 /**
@@ -36,7 +36,7 @@ export function getEnv(): string {
  * @example:
  */
 export function isDevMode(): boolean {
-  return import.meta.env.DEV;
+  return import.meta.env.DEV
 }
 
 /**
@@ -45,5 +45,5 @@ export function isDevMode(): boolean {
  * @example:
  */
 export function isProdMode(): boolean {
-  return import.meta.env.PROD;
+  return import.meta.env.PROD
 }

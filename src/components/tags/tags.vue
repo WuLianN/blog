@@ -1,69 +1,28 @@
-<template>
-  <div>
-    <el-tag v-for="tag in list" :key="tag.id" size="large" closable :disable-transitions="false"
-      @close="handleClose(tag.id)" @click="handleClick(tag)" :style="{ backgroundColor: tag.bg_color, color: tag.color }">
-      {{ tag.name }}
-    </el-tag>
-
-    <el-input v-if="inputVisible" ref="InputRef" v-model="inputValue" class="input" @keyup.enter="handleInputConfirm"
-      @blur="handleInputConfirm" />
-    <el-button v-else class="button-tag" @click="showInput">
-      + 新标签
-    </el-button>
-  </div>
-
-  <el-dialog title="编辑" v-model="visible" @close="visible = false" :width="dialogWidth">
-    <el-form label-width="80px" label-position="left">
-      <el-form-item label="预览">
-        <el-tag class="dialog-tag" :style="{ backgroundColor: currentTag.bg_color, color: currentTag.color }" size="large">{{ currentTag.name }}</el-tag>
-      </el-form-item>
-
-      <el-form-item label="标签名">
-        <el-input v-model="currentTag.name" />
-      </el-form-item>
-
-
-      <el-form-item label="背景颜色">
-        <el-color-picker v-model="currentTag.bg_color" @activeChange="activeChangeBg" show-alpha />
-      </el-form-item>
-
-      <el-form-item label="字体颜色">
-        <el-color-picker v-model="currentTag.color" @activeChange="activeChangeText" show-alpha />
-      </el-form-item>
-
-    </el-form>
-
-    <template #footer>
-      <el-button plain @click="visible = false">取 消</el-button>
-      <el-button plain type="primary" @click="submit">确 定</el-button>
-    </template>
-  </el-dialog>
-</template>
-
 <script setup lang="ts">
-import { ref, nextTick, watch, toRefs, PropType, reactive, onUnmounted } from 'vue'
+import type { PropType } from 'vue'
+import { nextTick, onUnmounted, reactive, ref, toRefs, watch } from 'vue'
+import { ElInput } from 'element-plus'
 import { createTag, deleteTag, updateTag } from '@/api/tags'
-import { ElInput } from 'element-plus';
 
 const props = defineProps({
   tags: {
     type: Array as PropType<any[]>,
-    default: () => []
+    default: () => [],
   },
   // 是否使用http上传数据
   isPost: {
     type: Boolean,
-    default: true
+    default: true,
   },
   // dialogVisible 的状态来控制inputVisible
   dialogVisible: {
     type: Boolean,
-    default: true
+    default: true,
   },
   editable: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const emit = defineEmits(['selectedTags', 'click', 'update'])
@@ -80,7 +39,7 @@ const currentTag = reactive({
   id: 0,
   name: '',
   color: '',
-  bg_color: ''
+  bg_color: '',
 })
 const visible = ref(false)
 
@@ -92,15 +51,14 @@ watch(tags, (value) => {
 }, { immediate: true })
 
 watch(dialogVisible, (val) => {
-  if (val) {
+  if (val)
     inputVisible.value = false
-  } else {
+  else
     inputVisible.value = true
-  }
 }, { immediate: true })
 
-const handleClose = (tagId: number) => {
-  const index = list.value.findIndex((item) => item.id === tagId)
+function handleClose(tagId: number) {
+  const index = list.value.findIndex(item => item.id === tagId)
   if (index !== -1) {
     list.value.splice(index, 1)
     // 上报 - 删除数据
@@ -111,14 +69,14 @@ const handleClose = (tagId: number) => {
   }
 }
 
-const showInput = () => {
+function showInput() {
   inputVisible.value = true
   nextTick(() => {
     InputRef.value!.input!.focus()
   })
 }
 
-const handleInputConfirm = async (): Promise<void> => {
+async function handleInputConfirm(): Promise<void> {
   if (inputValue.value) {
     const isDuplicate = checkIsDuplicate(list.value, inputValue.value)
 
@@ -137,7 +95,8 @@ const handleInputConfirm = async (): Promise<void> => {
         const { id } = await createTag({ name: inputValue.value })
         const found = list.value.find(item => item.name === inputValue.value)
         found && (found.id = id)
-      } catch {
+      }
+      catch {
         list.value.pop()
       }
     }
@@ -149,12 +108,12 @@ const handleInputConfirm = async (): Promise<void> => {
   }
 }
 
-const exposeSelectedTags = () => {
+function exposeSelectedTags() {
   emit('selectedTags', list.value)
 }
 
-function checkIsDuplicate(list: Array<any>, checkValue: string): Boolean {
-  const index = list.findIndex((item) => item.name === checkValue)
+function checkIsDuplicate(list: Array<any>, checkValue: string): boolean {
+  const index = list.findIndex(item => item.name === checkValue)
 
   if (index !== -1) {
     // 有重复的
@@ -165,7 +124,8 @@ function checkIsDuplicate(list: Array<any>, checkValue: string): Boolean {
 }
 
 function handleClick(tagInfo: any): void {
-  if (!editable.value) return
+  if (!editable.value)
+    return
   currentTag.id = tagInfo.id
   currentTag.name = tagInfo.name
   currentTag.color = tagInfo.color
@@ -184,8 +144,9 @@ async function submit() {
     ElMessage.success('修改成功')
     visible.value = false
 
-    emit("update", currentTag)
-  } catch {
+    emit('update', currentTag)
+  }
+  catch {
     ElMessage.error('修改失败')
   }
 }
@@ -198,21 +159,70 @@ function activeChangeText(value: any) {
   currentTag.color = value
 }
 
-function setDialogWidth(){
-  const checkMedia = window.matchMedia("only screen and (max-width: 1000px)").matches
-  if (checkMedia) {
+function setDialogWidth() {
+  const checkMedia = window.matchMedia('only screen and (max-width: 1000px)').matches
+  if (checkMedia)
     dialogWidth.value = '80%'
-  } else {
+  else
     dialogWidth.value = '30%'
-  }
 }
 
 addEventListener('resize', setDialogWidth)
 
 onUnmounted(() => {
-  removeEventListener("resize", setDialogWidth)
+  removeEventListener('resize', setDialogWidth)
 })
 </script>
+
+<template>
+  <div>
+    <el-tag
+      v-for="tag in list" :key="tag.id" size="large" closable :disable-transitions="false"
+      :style="{ backgroundColor: tag.bg_color, color: tag.color }" @close="handleClose(tag.id)" @click="handleClick(tag)"
+    >
+      {{ tag.name }}
+    </el-tag>
+
+    <ElInput
+      v-if="inputVisible" ref="InputRef" v-model="inputValue" class="input" @keyup.enter="handleInputConfirm"
+      @blur="handleInputConfirm"
+    />
+    <el-button v-else class="button-tag" @click="showInput">
+      + 新标签
+    </el-button>
+  </div>
+
+  <el-dialog v-model="visible" title="编辑" :width="dialogWidth" @close="visible = false">
+    <el-form label-width="80px" label-position="left">
+      <el-form-item label="预览">
+        <el-tag class="dialog-tag" :style="{ backgroundColor: currentTag.bg_color, color: currentTag.color }" size="large">
+          {{ currentTag.name }}
+        </el-tag>
+      </el-form-item>
+
+      <el-form-item label="标签名">
+        <ElInput v-model="currentTag.name" />
+      </el-form-item>
+
+      <el-form-item label="背景颜色">
+        <el-color-picker v-model="currentTag.bg_color" show-alpha @active-change="activeChangeBg" />
+      </el-form-item>
+
+      <el-form-item label="字体颜色">
+        <el-color-picker v-model="currentTag.color" show-alpha @active-change="activeChangeText" />
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <el-button plain @click="visible = false">
+        取 消
+      </el-button>
+      <el-button plain type="primary" @click="submit">
+        确 定
+      </el-button>
+    </template>
+  </el-dialog>
+</template>
 
 <style scoped lang="scss">
 $BtnWidth: 100px;
@@ -241,7 +251,6 @@ $MarginLeft: 10px;
 .el-tag+.el-input {
   margin-left: 10px !important;
 }
-
 
 .dialog-tag-wrapper {
   display: flex;

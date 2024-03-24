@@ -10,9 +10,10 @@ export function checkAuth(path?: string) {
   const token = getToken()
   if (!token) {
     router.push({
-      path: '/login', query: {
-        redirect: path
-      }
+      path: '/login',
+      query: {
+        redirect: path,
+      },
     })
   }
 }
@@ -23,7 +24,7 @@ export function getUserId(): (number | null) {
   const match = path.match(regexp)
 
   if (match && match[1]) {
-    const id = parseInt(match[1], 10)
+    const id = Number.parseInt(match[1], 10)
     return id
   }
 

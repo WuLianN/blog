@@ -1,4 +1,4 @@
-import { rgbaToHex, generateLightColor } from '@/utils/color'
+import { generateLightColor, rgbaToHex } from '@/utils/color'
 
 function getColor(cssVarName: string): string {
   const el = document.documentElement
@@ -34,22 +34,23 @@ export function useTheme(cssVarName = '--el-color-primary', selectedColor?: stri
   if (selectedColor) {
     // 用户传入主题色
     color = selectedColor
-  } else {
+  }
+  else {
     // 获取本地主题色
     color = getLocalColor() || getColor(cssVarName)
   }
 
   // 没获取到color 停止
-  if (!color) return
+  if (!color)
+    return
 
-  const isValidHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/i.test(color);
+  const isValidHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/i.test(color)
 
   let hex
-  if (isValidHex) {
+  if (isValidHex)
     hex = color
-  } else {
+  else
     hex = rgbaToHex(color)
-  }
 
   setColor(cssVarName, color)
 
@@ -63,9 +64,8 @@ export function useTheme(cssVarName = '--el-color-primary', selectedColor?: stri
   // 70% c6e2ff
   // 80% d9ecff
   // 90% ecf5ff
-  for (let i = 1; i < 10; i++) {
+  for (let i = 1; i < 10; i++)
     setColorMixLevel(cssVarName, i, 'light', hex)
-  }
 
   // --el-color-primary-dark-2
   setColorMixLevel(cssVarName, 2, 'dark', hex)

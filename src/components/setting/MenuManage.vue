@@ -1,61 +1,12 @@
-<template>
-  <div class="menu">
-    <div class="custom-tree-container">
-      <el-tree :data="dataSource" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false"
-        @nodeClick="nodeClick">
-        <template #default="{ node, data }">
-          <span class="custom-tree-node">
-            <span>{{ node.label }}</span>
-            <span>
-              <el-button plain type="primary" size="small" :icon="Plus" circle @click="append(data, $event)" />
-              <el-button plain type="danger" size="small" :icon="Delete" circle @click="remove(node, data, $event)" />
-            </span>
-          </span>
-        </template>
-
-        <template #empty>
-          <el-button plain type="primary" @click="appendTree">添加分类</el-button>
-        </template>
-      </el-tree>
-    </div>
-
-    <div v-if="dataSource.length > 0">
-      <el-button plain type="primary" @click="appendTree">添加分类</el-button>
-    </div>
-
-    <div>
-      <el-dialog v-model="dialogVisible" title="编辑" width="30%">
-        <div>
-          <el-input v-model="dialogCategoryName" placeholder="请输入分类名称" />
-        </div>
-
-        <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
-
-        <div class="upload-container">
-          <avatar-upload :width="64" :height="64" @change="handleImageChange" :imgUrl="imgUrl" />
-        </div>
-
-        <template #footer>
-          <el-button plain @click="dialogVisible = false">取 消</el-button>
-          <el-button plain type="primary" @click="dialogSubmit">确 定</el-button>
-        </template>
-
-      </el-dialog>
-    </div>
-
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { ref } from 'vue'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import {
-  Plus,
   Delete,
+  Plus,
 } from '@element-plus/icons-vue'
-import { getMenuList } from '@/api/menu'
-import { getMenuTagList, bindTag2Menu, unbindTag2Menu } from '@/api/tags'
-import { addMenuItem, deleteMenuItem, updateMenuItem } from '@/api/menu'
+import { addMenuItem, deleteMenuItem, getMenuList, updateMenuItem } from '@/api/menu'
+import { bindTag2Menu, getMenuTagList, unbindTag2Menu } from '@/api/tags'
 
 interface Tree {
   id: number
@@ -79,23 +30,23 @@ const imgUrl = ref('')
 
 getTreeList()
 
-const append = (data: Tree, event: Event) => {
+function append(data: Tree, event: Event) {
   event.stopPropagation()
 
   const newChild = { id: id++, label: '标题', children: [] }
-  if (!data.children) {
+  if (!data.children)
     data.children = []
-  }
+
   data.children.push(newChild)
   dataSource.value = [...dataSource.value]
 }
 
-const remove = async (node: Node, data: Tree, event: Event) => {
+async function remove(node: Node, data: Tree, event: Event) {
   event.stopPropagation()
 
   const parent = node.parent
   const children: Tree[] = parent.data.children || parent.data
-  const index = children.findIndex((d) => d.id === data.id)
+  const index = children.findIndex(d => d.id === data.id)
   children.splice(index, 1)
   dataSource.value = [...dataSource.value]
 
@@ -105,8 +56,8 @@ const remove = async (node: Node, data: Tree, event: Event) => {
 function appendTree() {
   const node = {
     id: id++,
-    label: '分类' + String(id).slice(3),
-    children: []
+    label: `分类${String(id).slice(3)}`,
+    children: [],
   }
   dataSource.value.push(node)
 }
@@ -114,9 +65,8 @@ function appendTree() {
 async function getTreeList() {
   const result: any[] = await getMenuList()
 
-  if (result) {
+  if (result)
     dataSource.value = [...result]
-  }
 }
 
 async function nodeClick(node: any, treeNode: any) {
@@ -146,9 +96,9 @@ async function getTags(id: number): Promise<any> {
 
 async function dialogSubmit() {
   const checkStatus = check()
-  if (!checkStatus) {
+  if (!checkStatus)
     return
-  }
+
   const { id: currentNodeId, parent_id: currentParentId } = currentNode.value // 点击的当前节点 +添加的节点没有parent_id 注：parent_id=0为一级节点
   const level1Node = getLevel_1_Node(currentTreeNode.value) // level1节点 也就是当前节点的根节点
   const { category_id: categoryId } = level1Node
@@ -161,12 +111,12 @@ async function dialogSubmit() {
 
   if (currentParentId || currentParentId === 0) {
     parentId = currentParentId
-  } else {
-    if (currentTreeNode.value.parent.level === 0) {
+  }
+  else {
+    if (currentTreeNode.value.parent.level === 0)
       parentId = 0
-    } else {
+    else
       parentId = currentTreeNode.value.parent.data.id
-    }
   }
 
   const data = {
@@ -174,7 +124,7 @@ async function dialogSubmit() {
     parent_id: parentId,
     category_id: categoryId,
     icon: imgUrl.value,
-    id: currentNodeId
+    id: currentNodeId,
   }
 
   // 存在currentParentId，说明是已存在的分类
@@ -184,7 +134,8 @@ async function dialogSubmit() {
     syncMenu(dataSource.value, ids)
 
     await updateMenuItem(data)
-  } else {
+  }
+  else {
     // 新增
     const menuItem: any = await addMenuItem(data)
     // 同步标签、后端返回的id
@@ -195,7 +146,7 @@ async function dialogSubmit() {
   if (deleteSelectedTags.length > 0) {
     unbindTag2Menu({
       menu_id: currentNodeId,
-      tags: deleteSelectedTags
+      tags: deleteSelectedTags,
     })
   }
 
@@ -203,7 +154,7 @@ async function dialogSubmit() {
   if (newSelectedTags.length > 0) {
     bindTag2Menu({
       menu_id: currentNode.value.id, // 去拿syncMenu同步后的菜单id。注意：不要用上边解构的currentNodeId，已丢失绑定。
-      tags: newSelectedTags
+      tags: newSelectedTags,
     })
   }
 
@@ -221,18 +172,17 @@ function tagsChange(data: any) {
 }
 
 function getLevel_1_Node(node: any) {
-  if (node.level !== 1) {
+  if (node.level !== 1)
     return getLevel_1_Node(node.parent)
-  }
+
   return node
 }
 
 function getNodeByLevel(node: any, level: number) {
-  if (node.level === level) {
+  if (node.level === level)
     return node
-  } else {
+  else
     return getNodeByLevel(node.parent, level)
-  }
 }
 
 // 3 -> 2 -> 1
@@ -255,17 +205,14 @@ function syncMenu(list: Array<any>, ids: number[], menuItem?: any) {
       node.label = dialogCategoryName.value
 
       // 更换为后端返回的id, 方便给当前分类添加额外功能
-      if (menuItem?.id >= 0) {
+      if (menuItem?.id >= 0)
         node.id = menuItem.id
-      }
-      if (menuItem?.parent_id >= 0) {
+
+      if (menuItem?.parent_id >= 0)
         node.parent_id = menuItem.parent_id
-      }
     }
     return syncMenu(node.children, ids, menuItem)
   }
-
-  return
 }
 
 function check() {
@@ -286,6 +233,62 @@ function handleImageChange(url: string) {
   imgUrl.value = url
 }
 </script>
+
+<template>
+  <div class="menu">
+    <div class="custom-tree-container">
+      <el-tree
+        :data="dataSource" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false"
+        @node-click="nodeClick"
+      >
+        <template #default="{ node, data }">
+          <span class="custom-tree-node">
+            <span>{{ node.label }}</span>
+            <span>
+              <el-button plain type="primary" size="small" :icon="Plus" circle @click="append(data, $event)" />
+              <el-button plain type="danger" size="small" :icon="Delete" circle @click="remove(node, data, $event)" />
+            </span>
+          </span>
+        </template>
+
+        <template #empty>
+          <el-button plain type="primary" @click="appendTree">
+            添加分类
+          </el-button>
+        </template>
+      </el-tree>
+    </div>
+
+    <div v-if="dataSource.length > 0">
+      <el-button plain type="primary" @click="appendTree">
+        添加分类
+      </el-button>
+    </div>
+
+    <div>
+      <el-dialog v-model="dialogVisible" title="编辑" width="30%">
+        <div>
+          <el-input v-model="dialogCategoryName" placeholder="请输入分类名称" />
+        </div>
+
+        <TagsWrapper :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
+
+        <div class="upload-container">
+          <avatar-upload :width="64" :height="64" :img-url="imgUrl" @change="handleImageChange" />
+        </div>
+
+        <template #footer>
+          <el-button plain @click="dialogVisible = false">
+            取 消
+          </el-button>
+          <el-button plain type="primary" @click="dialogSubmit">
+            确 定
+          </el-button>
+        </template>
+      </el-dialog>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .custom-tree-container {

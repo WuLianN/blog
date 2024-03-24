@@ -1,4 +1,4 @@
-import { type RouteLocationRaw } from 'vue-router'
+import type { RouteLocationRaw } from 'vue-router'
 import { router } from '@/router'
 
 export function useNavigateTo(to: RouteLocationRaw) {
@@ -7,7 +7,7 @@ export function useNavigateTo(to: RouteLocationRaw) {
 
 export function useNavigateToNewTag(to: RouteLocationRaw) {
   const route = router.resolve(to)
-  window.open(route.href, "_blank")
+  window.open(route.href, '_blank')
 }
 
 export function useNavigateReplace(to: RouteLocationRaw) {

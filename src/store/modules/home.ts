@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 interface HomeState {
   status: boolean
   recommendList: Array<any>
-  keyword: string,
+  keyword: string
   menuList: Array<any>
 }
 
@@ -27,6 +27,6 @@ export const useHomeStore = defineStore({
     },
     setMenuList(list: any) {
       this.menuList = list
-    }
+    },
   },
-});
+})

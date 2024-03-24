@@ -1,10 +1,6 @@
-<template>
-  <router-view></router-view>
-</template>
-
 <script lang="ts" setup>
+import { nextTick, onMounted } from 'vue'
 import { setupTheme } from '@/hooks/web/useTheme'
-import { onMounted, nextTick } from 'vue'
 
 onMounted(() => {
   nextTick(() => {
@@ -13,6 +9,9 @@ onMounted(() => {
 })
 </script>
 
+<template>
+  <router-view />
+</template>
 
 <style>
 * {

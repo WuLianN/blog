@@ -8,10 +8,8 @@
 - [x] 暗黑模式
 - [x] 关联账号
 
-
 ## 后端项目
 * [go-toy](https://github.com/WuLianN/go-toy)
-
 
 ## 使用 gray-matter 的注意点
 
@@ -29,6 +27,6 @@ plugins: [
         Buffer: true, // can also be 'build', 'dev', or false
       },
     }
-  )  
+  )
 ]
 ```

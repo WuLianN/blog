@@ -1,13 +1,5 @@
-<template>
-  <div class="avatar" @click="avatarClick">
-    <el-avatar :size="50" :src="avatar" />
-
-    <Login-Card :status="cardStatus" />
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useHomeStore } from '@/store/modules/home'
 import { useUserStore } from '@/store/modules/user'
 
@@ -30,6 +22,14 @@ watch(() => store.status, (value) => {
   cardStatus.value = value
 })
 </script>
+
+<template>
+  <div class="avatar" @click="avatarClick">
+    <el-avatar :size="50" :src="avatar" />
+
+    <Login-Card :status="cardStatus" />
+  </div>
+</template>
 
 <style scoped lang="scss">
 .avatar {

@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { useDark } from '@vueuse/core'
+
+import { Moon, Sunny } from '@element-plus/icons-vue'
+
+const isDark = useDark()
+</script>
 
 <template>
   <el-switch v-model="isDark" style="--el-switch-on-color: #2c2c2c;" size="large">
@@ -13,15 +20,6 @@
     </template>
   </el-switch>
 </template>
-
-<script setup lang="ts">
-import { useDark } from '@vueuse/core'
-
-import { Sunny, Moon } from '@element-plus/icons-vue'
-
-const isDark = useDark()
-
-</script>
 
 <style scoped lang="scss">
 .light-icon {

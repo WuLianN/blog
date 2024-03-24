@@ -1,11 +1,5 @@
-
-<template>
-  <Editor :value="content" :plugins="plugins" @change="handleChange" :locale="locale" :uploadImages="uploadImages" />
-  <Dialog @fileChange="fileChange" />
-</template>
-
 <script setup lang="ts">
-import gfm from "@bytemd/plugin-gfm";
+import gfm from '@bytemd/plugin-gfm'
 import frontmatter from '@bytemd/plugin-frontmatter'
 import gemoji from '@bytemd/plugin-gemoji'
 import highlight from '@bytemd/plugin-highlight'
@@ -16,28 +10,27 @@ import breaks from '@bytemd/plugin-breaks'
 import highlightTheme from '@ziuchen/bytemd-plugin-highlight-theme'
 import imageZoom from '@ziuchen/bytemd-plugin-image-zoom'
 import align from '@ziuchen/bytemd-plugin-align'
-import exportMD from '../plugins/exportMD.ts'
-import importMD from '../plugins/importMD.ts'
 import hls from '@ziuchen/bytemd-plugin-highlight-theme/dist/highlights.json'
 import 'bytemd/dist/index.css'
 import zh_Hans_highlight_theme from '@ziuchen/bytemd-plugin-highlight-theme/locales/zh_Hans.json'
 import zh_Hans_image_zoom from '@ziuchen/bytemd-plugin-image-zoom/locales/zh_Hans.json'
 import zh_Hans_algin from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
-
-// @ts-ignore
-import { Editor } from "@bytemd/vue-next"
+// @ts-expect-error 已经在<template>使用了
+import { Editor } from '@bytemd/vue-next'
 import theme from '../plugins/theme.ts'
+import exportMD from '../plugins/exportMD.ts'
+import importMD from '../plugins/importMD.ts'
 import Dialog from './Dialog.vue'
 
 const props = defineProps({
   content: {
     type: String,
-    default: ''
+    default: '',
   },
   upload: {
     type: Function,
-    default: () => { }
-  }
+    default: () => { },
+  },
 })
 
 const emits = defineEmits(['contentChange'])
@@ -51,22 +44,22 @@ function stripPrefixes(obj: Record<string, any>) {
 }
 
 const locales = stripPrefixes(
-  import.meta.glob('../../node_modules/bytemd/locales/*.json', { eager: true })
+  import.meta.glob('../../node_modules/bytemd/locales/*.json', { eager: true }),
 )
 const gfmLocales = stripPrefixes(
   import.meta.glob('../../node_modules/@bytemd/plugin-gfm/locales/*.json', {
     eager: true,
-  })
+  }),
 )
 const mathLocales = stripPrefixes(
   import.meta.glob('../../node_modules/@bytemd/plugin-math/locales/*.json', {
     eager: true,
-  })
+  }),
 )
 const mermaidLocales = stripPrefixes(
   import.meta.glob('../../node_modules/@bytemd/plugin-mermaid/locales/*.json', {
     eager: true,
-  })
+  }),
 )
 
 const localeKey = 'zh_Hans'
@@ -85,10 +78,10 @@ const plugins = [
   }),
   mediumZoom(),
   align({
-    locale: zh_Hans_algin
+    locale: zh_Hans_algin,
   }),
   imageZoom({
-    locale: zh_Hans_image_zoom
+    locale: zh_Hans_image_zoom,
   }),
   mermaid({
     locale: mermaidLocales[localeKey],
@@ -96,18 +89,18 @@ const plugins = [
   theme(),
   highlightTheme({
     highlights: hls,
-    locale: zh_Hans_highlight_theme
+    locale: zh_Hans_highlight_theme,
   }),
   exportMD(),
-  importMD()
-];
+  importMD(),
+]
 
 function handleChange(v: any) {
   emits('contentChange', v)
 }
 
 function uploadImages(fileList: Array<File>) {
-  return Promise.all(fileList.map(file => {
+  return Promise.all(fileList.map((file) => {
     return props.upload(file)
   }))
 }
@@ -121,6 +114,11 @@ async function fileChange(file: File) {
   })
 }
 </script>
+
+<template>
+  <Editor :value="content" :plugins="plugins" :locale="locale" :upload-images="uploadImages" @change="handleChange" />
+  <Dialog @file-change="fileChange" />
+</template>
 
 <style scoped lang="scss">
 $header-height: 64px;

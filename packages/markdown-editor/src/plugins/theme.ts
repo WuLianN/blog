@@ -10,18 +10,18 @@ function removeOldStyle() {
 
 function updateStyle(style: string) {
   removeOldStyle()
-  const $style = document.createElement('style');
-  $style.setAttribute('data-themes', "1")
+  const $style = document.createElement('style')
+  $style.setAttribute('data-themes', '1')
   $style.innerHTML = style
-  document.head.appendChild($style);
+  document.head.appendChild($style)
 }
 
 export default function themes(): BytemdPlugin {
-  const actionItems: { title: string; style: string }[] = []
+  const actionItems: { title: string, style: string }[] = []
   for (const key in themesMap) {
     actionItems.push({
       title: key,
-      style: themesMap[key].style
+      style: themesMap[key].style,
     })
   }
 
@@ -32,32 +32,30 @@ export default function themes(): BytemdPlugin {
       start: {
         line: 0,
         column: 0,
-        offset: 0
+        offset: 0,
       },
       end: {
         line: 0,
         column: 0,
-        offset: 0
-      }
-    }
+        offset: 0,
+      },
+    },
   }
 
   return {
     viewerEffect({ file }) {
       let style
-      if (isRef(file)) {
-         // @ts-ignore
-        style = themesMap[file.value?.frontmatter?.theme]?.style ?? themesMap.juejin.style;
-      } else {
-        // @ts-ignore
-        style = themesMap[file.frontmatter?.theme]?.style ?? themesMap.juejin.style;
-      }
+      if (isRef(file))
+        // @ts-expect-error Property 'frontmatter' 可能不存在
+        style = themesMap[file.value.frontmatter?.theme]?.style ?? themesMap.juejin.style
+      else
+        // @ts-expect-error  Property 'theme' does not exist on type '{}'
+        style = themesMap[file.frontmatter?.theme]?.style ?? themesMap.juejin.style
 
       updateStyle(style)
     },
-    remark: (processor) =>
-      // @ts-ignore
-      processor.use(() => (tree, file) => {
+    remark: processor =>
+      processor.use(() => (tree: any, file: any) => {
         // no frontmatter block, return directly and use default theme
         if (!file.frontmatter) {
           info.status = 0
@@ -66,13 +64,13 @@ export default function themes(): BytemdPlugin {
             start: {
               line: 0,
               column: 0,
-              offset: 0
+              offset: 0,
             },
             end: {
               line: 0,
               column: 0,
-              offset: 0
-            }
+              offset: 0,
+            },
           }
           return
         }
@@ -123,8 +121,8 @@ export default function themes(): BytemdPlugin {
                 const { start, end } = info.position
                 const frontmatter = v.slice(start.offset, end.offset)
 
-                const newFrontmatter =
-                  info.status === 0
+                const newFrontmatter
+                  = info.status === 0
                     ? `---\ntheme: ${title}\n---\n`
                     : info.status === 1
                       ? frontmatter.replace('---', `---\ntheme: ${title}`)

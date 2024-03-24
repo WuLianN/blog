@@ -1,16 +1,3 @@
-<template>
-  <div class="menu" v-if="menuList && menuList.length > 0">
-    <el-card>
-      <el-menu :defaultActive="defaultActive" :defaultOpeneds="defaultOpeneds" class="el-menu-vertical"
-        :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-        <template v-for="(child) in menuList">
-          <menu-item :item="child" />
-        </template>
-      </el-menu>
-    </el-card>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { getMenuList } from '@/api/menu'
@@ -20,11 +7,11 @@ import { useHomeStore } from '@/store/modules/home'
 const isCollapse = ref(false)
 const homeStore = useHomeStore()
 
-const handleOpen = (_key: string, _keyPath: string[]) => {
-  
+function handleOpen(_key: string, _keyPath: string[]) {
+
 }
-const handleClose = (_key: string, _keyPath: string[]) => {
- 
+function handleClose(_key: string, _keyPath: string[]) {
+
 }
 
 const menuList = ref<any[]>([])
@@ -55,6 +42,21 @@ function getDefaultOpeneds(result: any[]): string[] {
   return openeds
 }
 </script>
+
+<template>
+  <div v-if="menuList && menuList.length > 0" class="menu">
+    <el-card>
+      <el-menu
+        :default-active="defaultActive" :default-openeds="defaultOpeneds" class="el-menu-vertical"
+        :collapse="isCollapse" @open="handleOpen" @close="handleClose"
+      >
+        <template v-for="(child) in menuList" :key="child.id">
+          <menu-item :item="child" />
+        </template>
+      </el-menu>
+    </el-card>
+  </div>
+</template>
 
 <style scoped>
 .el-menu-vertical:not(.el-menu--collapse) {

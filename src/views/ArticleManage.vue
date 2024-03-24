@@ -1,48 +1,14 @@
-<template>
-  <div class="article">
-    <Table :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" @endReached="endReached" />
-
-    <el-dialog title="编辑" v-model="dialogVisible" @close="dialogVisible = false" :width="dialogWidth">
-      <el-form label-width="80px" label-position="left">
-        <el-form-item label="标题">
-          <el-input v-model="editTitle" placeholder="请输入标题" clearable />
-        </el-form-item>
-        <el-form-item label="发布">
-          <el-switch size="large" v-model="isPublish" inline-prompt active-text="是" inactive-text="否"></el-switch>
-        </el-form-item>
-        <el-form-item label="私密">
-          <el-switch size="large" v-model="isPrivacy" inline-prompt active-text="是" inactive-text="否"></el-switch>
-        </el-form-item>
-        <el-form-item label="背景图">
-          <avatar-upload :width="128" :height="128" @change="handleImageChange" :imgUrl="bgImage" />
-        </el-form-item>
-      </el-form>
-
-      <TagsWrapper :originTags="originTags" :tags="tags" :dialogVisible="dialogVisible" @change="tagsChange" />
-
-      <div class="btn-wrapper">
-        <el-button type="primary" plain @click="goDrafts">修改文章</el-button>
-      </div>
-
-      <template #footer>
-        <el-button plain @click="dialogVisible = false">取 消</el-button>
-        <el-button plain type="primary" @click="submit">确 定</el-button>
-      </template>
-    </el-dialog>
-  </div>
-</template>
-
 <script setup lang="tsx">
-import { onUnmounted, ref } from 'vue';
-import { getDraftList, deleteDraft, saveDraft } from '@/api/drafts';
-import { getDraftTagList } from '@/api/tags'
-import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
-import { bindTag2Draft, unbindTag2Draft } from '@/api/tags'
-import { formatDate } from '@/utils/three_party'
-import { ElTag, ElButton } from 'element-plus'; // 不引入ElTag ElText, 会丢样式。使用@ts-ignore 
+import { onUnmounted, ref } from 'vue'
+import { ElButton, ElTag, ElText } from 'element-plus'
 import type { Column } from 'element-plus'
+import { deleteDraft, getDraftList, saveDraft } from '@/api/drafts'
+import { bindTag2Draft, getDraftTagList, unbindTag2Draft } from '@/api/tags'
+import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 
-type CellRenderProps<T> = {
+import { formatDate } from '@/utils/three_party'
+
+interface CellRenderProps<T> {
   cellData: T
   column: Column<T>
   columns: Column<T>[]
@@ -54,8 +20,8 @@ type CellRenderProps<T> = {
 const query = ref({
   page: 1,
   pageSize: 15,
-  status: 0
-});
+  status: 0,
+})
 
 const currentDraftId = ref<number>(0)
 const editTitle = ref('')
@@ -74,44 +40,44 @@ const columns = [
   {
     title: '时间',
     dataKey: 'create_time',
-    // @ts-ignore
     cellRenderer: ({ cellData: create_time }: CellRenderProps<Date>) => <ElText>{formatDate(create_time)}</ElText>,
-    align: "center",
+    align: 'center',
     width: 180,
     key: 'create_time',
   },
   {
     title: '标题',
     dataKey: 'title',
-    // @ts-ignore
-    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink onClick={() => jump(rowData)}>{title.length > 12 ? title.slice(0, 12) + '...' : title}</ElLink>
-    ,
-    align: "center",
+    // @ts-expect-error 不引入ElLint 丢失样式
+    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink onClick={() => jump(rowData)}>{title.length > 12 ? `${title.slice(0, 12)}...` : title}</ElLink>,
+    align: 'center',
     width: 200,
     key: 'title',
   },
   {
     title: '标签',
-    dataKey: "tags",
-    align: "center",
-    cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) => tags && tags.map(item => <ElTag style={{'backgroundColor': item.bg_color, 'color': item.color}}>{item.name}</ElTag>),
+    dataKey: 'tags',
+    align: 'center',
+    cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) => tags && tags.map(item => <ElTag style={{ backgroundColor: item.bg_color, color: item.color }}>{item.name}</ElTag>),
     width: 150,
     key: 'tags',
   },
   {
     title: '状态',
     dataKey: 'is_publish',
-    cellRenderer: ({ cellData: is_publish, rowData }: CellRenderProps<any>) => <>
-      <ElTag type={is_publish ? 'success' : 'primary'}>{is_publish ? '已发布' : '草稿'}</ElTag>
-      { rowData.is_privacy === 1 && <ElTag type='danger'>私密</ElTag>}
-      </>,
-    align: "center",
+    cellRenderer: ({ cellData: is_publish, rowData }: CellRenderProps<any>) => (
+      <>
+        <ElTag type={is_publish ? 'success' : 'primary'}>{is_publish ? '已发布' : '草稿'}</ElTag>
+        {rowData.is_privacy === 1 && <ElTag type="danger">私密</ElTag>}
+      </>
+    ),
+    align: 'center',
     width: 150,
     key: 'is_publish',
   },
   {
     title: '操作',
-    dataKey: "operate",
+    dataKey: 'operate',
     cellRenderer: ({ rowData }: CellRenderProps<any>) => (
       <>
         <ElButton size="small" onClick={() => edit(rowData.id)}>编辑</ElButton>
@@ -120,10 +86,10 @@ const columns = [
         </ElButton>
       </>
     ),
-    align: "center",
+    align: 'center',
     width: 150,
     key: 'operate',
-  }
+  },
 ]
 
 const bgImage = ref('')
@@ -134,13 +100,14 @@ setDialogWidth()
 getList()
 
 async function getList() {
-  const resultList: any[] = await getDraftList(query.value);
+  const resultList: any[] = await getDraftList(query.value)
 
   if (resultList.length === 0 && query.value.page > 1) {
-    ElMessage.warning("没有更多了！")
+    ElMessage.warning('没有更多了！')
     return
-  } else if (resultList.length === 0 && query.value.page === 1) {
-    ElMessage.warning("没有数据！")
+  }
+  else if (resultList.length === 0 && query.value.page === 1) {
+    ElMessage.warning('没有数据！')
     return
   }
 
@@ -155,8 +122,8 @@ async function edit(id: number) {
 
   currentDraftId.value = id
   editTitle.value = title
-  isPublish.value = is_publish === 1 ? true : false
-  isPrivacy.value = is_privacy === 1 ? true : false
+  isPublish.value = is_publish === 1
+  isPrivacy.value = is_privacy === 1
   bgImage.value = bg_image
 
   tags.value = []
@@ -172,7 +139,7 @@ function del(id: number) {
   ElMessageBox.confirm('此操作将永久删除该文章, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
+    type: 'warning',
   }).then(async () => {
     try {
       await deleteDraft(id)
@@ -180,7 +147,8 @@ function del(id: number) {
       list.value.splice(list.value.findIndex(item => item.id === id), 1)
 
       ElMessage.success('删除成功!')
-    } catch {
+    }
+    catch {
       ElMessage.error('删除失败!')
     }
   }).catch(() => {
@@ -193,9 +161,8 @@ async function getTags(id: number): Promise<any> {
 }
 
 async function submit() {
-  if (!currentDraftId.value) {
+  if (!currentDraftId.value)
     return
-  }
 
   bindTags(currentDraftId.value) // 绑定标签
   unbindTags(currentDraftId.value) // 解绑标签
@@ -205,8 +172,8 @@ async function submit() {
     title: editTitle.value, // 标题
     is_publish: isPublish.value ? 1 : 0, // 是否发布
     is_privacy: isPrivacy.value ? 1 : 0, // 是否私密
-    operated_type: 1, // 
-    bg_image: bgImage.value, // 背景图 
+    operated_type: 1, //
+    bg_image: bgImage.value, // 背景图
   }
 
   await saveDraft(data)
@@ -225,7 +192,7 @@ function bindTags(draftId: number) {
   if (newSelectedTags.length > 0) {
     bindTag2Draft({
       draft_id: draftId,
-      tags: newSelectedTags
+      tags: newSelectedTags,
     })
   }
 }
@@ -234,7 +201,7 @@ function unbindTags(draftId: number) {
   if (deleteSelectedTags.length > 0) {
     unbindTag2Draft({
       draft_id: draftId,
-      tags: deleteSelectedTags
+      tags: deleteSelectedTags,
     })
   }
 }
@@ -247,9 +214,8 @@ function tagsChange(data: any) {
 
 function jump(rowData: any) {
   const { id } = rowData
-  if (id) {
+  if (id)
     useNavigateToNewTag(`/viewer/${id}`)
-  }
 }
 
 function sync() {
@@ -273,21 +239,60 @@ function handleImageChange(url: string) {
   bgImage.value = url
 }
 
-function setDialogWidth(){
-  const checkMedia = window.matchMedia("only screen and (max-width: 1000px)").matches
-  if (checkMedia) {
+function setDialogWidth() {
+  const checkMedia = window.matchMedia('only screen and (max-width: 1000px)').matches
+  if (checkMedia)
     dialogWidth.value = '80%'
-  } else {
+  else
     dialogWidth.value = '30%'
-  }
 }
 
 addEventListener('resize', setDialogWidth)
 
 onUnmounted(() => {
-  removeEventListener("resize", setDialogWidth)
+  removeEventListener('resize', setDialogWidth)
 })
-</script> 
+</script>
+
+<template>
+  <div class="article">
+    <Table :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" @end-reached="endReached" />
+
+    <el-dialog v-model="dialogVisible" title="编辑" :width="dialogWidth" @close="dialogVisible = false">
+      <el-form label-width="80px" label-position="left">
+        <el-form-item label="标题">
+          <el-input v-model="editTitle" placeholder="请输入标题" clearable />
+        </el-form-item>
+        <el-form-item label="发布">
+          <el-switch v-model="isPublish" size="large" inline-prompt active-text="是" inactive-text="否" />
+        </el-form-item>
+        <el-form-item label="私密">
+          <el-switch v-model="isPrivacy" size="large" inline-prompt active-text="是" inactive-text="否" />
+        </el-form-item>
+        <el-form-item label="背景图">
+          <avatar-upload :width="128" :height="128" :img-url="bgImage" @change="handleImageChange" />
+        </el-form-item>
+      </el-form>
+
+      <TagsWrapper :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
+
+      <div class="btn-wrapper">
+        <ElButton type="primary" plain @click="goDrafts">
+          修改文章
+        </ElButton>
+      </div>
+
+      <template #footer>
+        <ElButton plain @click="dialogVisible = false">
+          取 消
+        </ElButton>
+        <ElButton plain type="primary" @click="submit">
+          确 定
+        </ElButton>
+      </template>
+    </el-dialog>
+  </div>
+</template>
 
 <style scoped lang="scss">
 .article {
@@ -307,7 +312,7 @@ onUnmounted(() => {
 }
 
 :deep(.el-link__inner) {
-  width: 100%; 
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

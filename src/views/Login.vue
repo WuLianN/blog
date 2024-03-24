@@ -1,35 +1,14 @@
-<template>
-  <div class="login">
-    <div class="form">
-      <el-form ref="formRef" :model="form" status-icon :rules="rules" :label-width="lableWidth">
-        <el-form-item label="账户" prop="account">
-          <el-input v-model="form.account" @keyup.enter="submitForm(formRef)" />
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password" @keyup.enter="submitForm(formRef)" />
-        </el-form-item>
-        <el-form-item v-if="loginStaus === 'register'" label="确认密码" prop="confirmPassword">
-          <el-input type="password" v-model="form.confirmPassword" @keyup.enter="submitForm(formRef)" />
-        </el-form-item>
-        <el-form-item>
-          <el-button plain type="primary" @click="submitForm(formRef)">{{ loginBtnText }}</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { login, register } from '@/api/user'
-import { LoginResult } from '@/api/model/userModel'
+import type { LoginResult } from '@/api/model/userModel'
 
 const form = reactive({
   account: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
 })
 
 const formRef = ref<FormInstance>()
@@ -39,12 +18,12 @@ const route = useRoute()
 
 enum LoginEnum {
   LOGIN = '登录',
-  REGISTER = '注册'
+  REGISTER = '注册',
 }
 
 enum LoginStatusEnum {
   LOGIN = 'login',
-  REGISTER = 'register'
+  REGISTER = 'register',
 }
 
 const loginStaus = ref(LoginStatusEnum.LOGIN)
@@ -64,15 +43,17 @@ if (type === 'register') {
   lableWidth.value = 80
 }
 
-const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
+function submitForm(formEl: FormInstance | undefined) {
+  if (!formEl)
+    return
   formEl.validate(async (valid) => {
     if (valid) {
       let userInfo
       if (loginStaus.value === LoginStatusEnum.LOGIN) {
         // 登录
         userInfo = await loginFunc()
-      } else {
+      }
+      else {
         // 注册
         userInfo = await registerFunc()
       }
@@ -82,53 +63,63 @@ const submitForm = (formEl: FormInstance | undefined) => {
       if (redirect) {
         // 重定向
         router.push(redirect as string)
-      } else {
+      }
+      else {
         // 跳转到首页
         router.push('/')
       }
-    } else {
-      console.log('error submit!')
+    }
+    else {
       return false
     }
   })
 }
 
-const validateAccount = (_rule: any, value: any, callback: any) => {
+function validateAccount(_rule: any, value: any, callback: any) {
   if (value === '') {
     callback(new Error('请输入账号'))
-  } else {
+  }
+  else {
     if (form.account !== '') {
-      if (!formRef.value) return
+      if (!formRef.value)
+        return
     }
+
     callback()
   }
 }
 
-const validatePass = (_rule: any, value: any, callback: any) => {
+function validatePass(_rule: any, value: any, callback: any) {
   // 注册情况下，校验确认密码
-  if (form.confirmPassword) {
-    formRef.value?.validateField("confirmPassword")
-  }
+  if (form.confirmPassword)
+    formRef.value?.validateField('confirmPassword')
 
   if (value === '') {
     callback(new Error('请输入密码'))
-  } else {
+  }
+  else {
     if (form.password !== '') {
-      if (!formRef.value) return
+      if (!formRef.value)
+        return
     }
+
     callback()
   }
 }
 
-const validateComfirmPass = (_rule: any, value: any, callback: any) => {
+function validateComfirmPass(_rule: any, value: any, callback: any) {
   if (value === '') {
     callback(new Error('请输入确认密码'))
-  } else if (value !== form.password) {
+  }
+  else if (value !== form.password) {
     callback(new Error('密码不一致'))
-  } else {
+  }
+  else {
     if (form.confirmPassword !== '') {
-      if (!formRef.value) return
+      if (!formRef.value)
+        return
     }
+
     callback()
   }
 }
@@ -136,7 +127,7 @@ const validateComfirmPass = (_rule: any, value: any, callback: any) => {
 const rules = reactive<FormRules<typeof form>>({
   account: [{ validator: validateAccount, trigger: 'blur' }],
   password: [{ validator: validatePass, trigger: 'blur' }],
-  confirmPassword: [{ validator: validateComfirmPass, trigger: 'blur' }]
+  confirmPassword: [{ validator: validateComfirmPass, trigger: 'blur' }],
 })
 
 async function loginFunc(): Promise<LoginResult> {
@@ -157,6 +148,29 @@ async function registerFunc(): Promise<LoginResult> {
   return userInfo
 }
 </script>
+
+<template>
+  <div class="login">
+    <div class="form">
+      <el-form ref="formRef" :model="form" status-icon :rules="rules" :label-width="lableWidth">
+        <el-form-item label="账户" prop="account">
+          <el-input v-model="form.account" @keyup.enter="submitForm(formRef)" />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" type="password" @keyup.enter="submitForm(formRef)" />
+        </el-form-item>
+        <el-form-item v-if="loginStaus === 'register'" label="确认密码" prop="confirmPassword">
+          <el-input v-model="form.confirmPassword" type="password" @keyup.enter="submitForm(formRef)" />
+        </el-form-item>
+        <el-form-item>
+          <el-button plain type="primary" @click="submitForm(formRef)">
+            {{ loginBtnText }}
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
+</template>
 
 <style scoped lang="scss">
 .login {
