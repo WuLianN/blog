@@ -227,10 +227,15 @@ onUnmounted(() => {
 <style scoped lang="scss">
 $BtnWidth: 100px;
 $BtnHeight: 32px;
-$MarginLeft: 10px;
+$Margin: 10px;
 
-:deep(.el-tag + .el-tag) {
-  margin-left: $MarginLeft;
+:deep(.el-tag) {
+  margin-bottom: $Margin;
+  margin-right: $Margin;
+}
+
+:deep(.el-input) {
+  margin-bottom: $Margin;
 }
 
 .button-tag {
@@ -238,18 +243,13 @@ $MarginLeft: 10px;
   height: $BtnHeight;
   padding-top: 0;
   padding-bottom: 0;
-  margin-left: $MarginLeft;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
 
 .input {
   width: $BtnWidth;
   height: $BtnHeight;
-  margin-left: $MarginLeft;
-}
-
-.el-tag+.button-tag,
-.el-tag+.el-input {
-  margin-left: 10px !important;
 }
 
 .dialog-tag-wrapper {

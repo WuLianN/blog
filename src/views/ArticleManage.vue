@@ -325,4 +325,8 @@ onUnmounted(() => {
 :deep(.el-tag) {
   border-color: transparent !important;
 }
+
+:deep(.tags-container .el-input:first-child) {
+  margin-left: 0 !important;
+}
 </style>

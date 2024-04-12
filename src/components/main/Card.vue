@@ -92,7 +92,6 @@ function imgClick(url: string, event: Event) {
   &-img-wrapper {
     width: 100px;
     height: 100px;
-    z-index: 1001;
   }
 
   &-img {
@@ -117,5 +116,9 @@ function imgClick(url: string, event: Event) {
 
 :deep(.el-tag) {
   border-color: transparent !important;
+}
+
+:deep(.el-image-viewer__wrapper) {
+  z-index: 9999 !important;
 }
 </style>
