@@ -5,6 +5,7 @@ interface HomeState {
   recommendList: Array<any>
   keyword: string
   menuList: Array<any>
+  tagIds: string
 }
 
 export const useHomeStore = defineStore({
@@ -14,6 +15,7 @@ export const useHomeStore = defineStore({
     recommendList: [],
     keyword: '',
     menuList: [],
+    tagIds: '',
   }),
   actions: {
     setLoginCardStatus(status: boolean) {
@@ -27,6 +29,9 @@ export const useHomeStore = defineStore({
     },
     setMenuList(list: any) {
       this.menuList = list
+    },
+    setTagIds(ids: string) {
+      this.tagIds = ids
     },
   },
 })

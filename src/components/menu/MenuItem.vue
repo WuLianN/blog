@@ -34,6 +34,7 @@ async function getTagList(item: MenuItemType) {
       tempList.push(ele.id)
     })
     query.tagIds = tempList.toString()
+    homeStore.setTagIds(query.tagIds)
   }
   else {
     ElMessage.error('当前分类暂未绑定标签')

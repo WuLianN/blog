@@ -35,6 +35,11 @@ watch(() => homeStore.keyword, (value) => {
   query.keyword = value
 })
 
+// 侦听store中的tagIds
+watch(() => homeStore.tagIds, (value) => {
+  query.tagIds = value
+})
+
 async function getList() {
   const list: RecommendDraft[] = []
 
