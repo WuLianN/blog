@@ -3,18 +3,6 @@ import type { PropType } from 'vue'
 import { toRefs } from 'vue'
 
 const props = defineProps({
-  tags: {
-    type: Array,
-    default: () => [],
-  },
-  dialogVisible: {
-    type: Boolean,
-    default: false,
-  },
-  isPost: {
-    type: Boolean,
-    default: false,
-  },
   // 原始标签数据
   originTags: {
     type: Array as PropType<any[]>,
@@ -47,7 +35,7 @@ function selectedTags(data: any[]) {
 
 <template>
   <div class="tags-container">
-    <Tags :tags="tags" :is-post="isPost" :dialog-visible="dialogVisible" @selected-tags="selectedTags" />
+    <Tags v-bind="$attrs" @selected-tags="selectedTags" />
   </div>
 </template>
 

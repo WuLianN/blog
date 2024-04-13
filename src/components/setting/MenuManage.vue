@@ -271,7 +271,7 @@ function handleImageChange(url: string) {
           <el-input v-model="dialogCategoryName" placeholder="请输入分类名称" />
         </div>
 
-        <TagsWrapper :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
+        <TagsWrapper :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
 
         <div class="upload-container">
           <avatar-upload :width="64" :height="64" :img-url="imgUrl" @change="handleImageChange" />
