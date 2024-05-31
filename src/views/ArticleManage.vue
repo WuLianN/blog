@@ -33,7 +33,7 @@ const originTags = ref<any[]>([])
 let newSelectedTags: any[] = [] // 选中的未创建的标签
 let deleteSelectedTags: any[] = [] // 需要删除(解绑)的标签
 const windowHeight = window.innerHeight
-const tableWidth = ref(830)
+const tableWidth = ref(930)
 const tableWidthHeight = ref(windowHeight)
 const list = ref<any[]>([])
 const columns = [
@@ -49,18 +49,19 @@ const columns = [
     title: '标题',
     dataKey: 'title',
     // @ts-expect-error 不引入ElLint 丢失样式
-    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink onClick={() => jump(rowData)}>{title.length > 12 ? `${title.slice(0, 12)}...` : title}</ElLink>,
+    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink title={title} onClick={() => jump(rowData)}>{title.length > 20 ? `${title.slice(0, 20)}...` : title}</ElLink>,
     align: 'center',
-    width: 200,
+    width: 300,
     key: 'title',
   },
   {
     title: '标签',
     dataKey: 'tags',
-    align: 'center',
+    align: 'left',
     cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) => tags && tags.map(item => <ElTag style={{ backgroundColor: item.bg_color, color: item.color }}>{item.name}</ElTag>),
     width: 150,
     key: 'tags',
+    class: 'tags-container',
   },
   {
     title: '状态',
@@ -301,6 +302,18 @@ onUnmounted(() => {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+}
+
+:deep(.tags-container) {
+  overflow: auto !important;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--el-color-primary-light-8);
+  }
 }
 
 :deep(.button-tag) {
