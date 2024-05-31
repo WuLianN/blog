@@ -79,12 +79,20 @@ async function binding(formEl: FormInstance | undefined) {
 async function unbind(id: number) {
   if (id) {
     try {
-      await unbindUser(id)
-      ElMessage.success('解绑成功')
-
-      const index = list.value.findIndex(item => item.id === id)
-      if (index !== -1)
-        list.value.splice(index, 1)
+      ElMessageBox.confirm('是否解绑该用户?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(async () => {
+        await unbindUser(id)
+        ElMessage.success('解绑成功')
+        const index = list.value.findIndex(item => item.id === id)
+        if (index !== -1)
+          list.value.splice(index, 1)
+      },
+      ).catch(() => {
+        ElMessage.info('已取消')
+      })
     }
     catch {
       ElMessage.error('解绑失败')
