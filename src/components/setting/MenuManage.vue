@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import {
   Delete,
@@ -18,7 +18,6 @@ interface Tree {
 let id = 1000
 
 const dialogVisible = ref(false)
-const dialogCategoryName = ref('')
 
 const tags = ref<any[]>([])
 const currentNode = ref<any>('')
@@ -27,9 +26,14 @@ const dataSource = ref<Tree[]>([])
 let newSelectedTags: Array<any> = [] // 选中的未创建的标签
 let deleteSelectedTags: Array<any> = [] // 需要删除(解绑)的标签
 const originTags = ref<any[]>([]) // 原有的标签
-const imgUrl = ref('')
 const showAddMenu = ref(true)
 let sortList: Array<MenuSort> = []
+const form = reactive({
+  title: '',
+  imgUrl: '',
+  isPrivacy: false,
+  isUse: true,
+})
 
 getTreeList()
 
@@ -75,7 +79,7 @@ async function getTreeList() {
 async function nodeClick(node: any, treeNode: any) {
   dialogVisible.value = true
 
-  dialogCategoryName.value = node.label
+  form.title = node.label
 
   tags.value = []
   originTags.value = []
@@ -90,7 +94,9 @@ async function nodeClick(node: any, treeNode: any) {
   currentNode.value = node
   currentTreeNode.value = treeNode
 
-  imgUrl.value = node?.meta?.icon
+  form.imgUrl = node?.meta?.icon
+  form.isPrivacy = node?.is_privacy === 1
+  form.isUse = node?.is_use === 1
 }
 
 async function getTags(id: number): Promise<any> {
@@ -121,10 +127,12 @@ async function dialogSubmit() {
   }
 
   const data = {
-    name: dialogCategoryName.value,
+    name: form.title,
     parent_id: parentId,
-    icon: imgUrl.value,
+    icon: form.imgUrl,
     id: currentNodeId,
+    is_privacy: form.isPrivacy ? 1 : 0,
+    is_use: form.isUse ? 1 : 0,
   }
 
   // 存在currentParentId，说明是已存在的分类
@@ -159,10 +167,11 @@ async function dialogSubmit() {
   }
 
   dialogVisible.value = false
-  dialogCategoryName.value = ''
 
   newSelectedTags = []
   deleteSelectedTags = []
+
+  getTreeList()
 }
 
 function tagsChange(data: any) {
@@ -195,7 +204,7 @@ function syncMenu(list: Array<any>, ids: number[], menuItem?: any) {
   if (node) {
     const length = ids.length
     if (ids[length - 1] === node.id) {
-      node.label = dialogCategoryName.value
+      node.label = form.title
 
       // 更换为后端返回的id, 方便给当前分类添加额外功能
       if (menuItem?.id >= 0)
@@ -223,7 +232,7 @@ function check() {
 }
 
 function handleImageChange(url: string) {
-  imgUrl.value = url
+  form.imgUrl = url
 }
 
 function nodeDragStart() {
@@ -309,15 +318,22 @@ async function cancelSort() {
 
     <div>
       <el-dialog v-model="dialogVisible" title="编辑" width="30%">
-        <div>
-          <el-input v-model="dialogCategoryName" placeholder="请输入菜单名称" />
-        </div>
+        <el-form label-width="80px" label-position="left">
+          <el-form-item label="菜单名称">
+            <el-input v-model="form.title" placeholder="请输入菜单名称" />
+          </el-form-item>
+          <el-form-item label="使用">
+            <el-switch v-model="form.isUse" size="large" inline-prompt active-text="是" inactive-text="否" />
+          </el-form-item>
+          <el-form-item label="私密">
+            <el-switch v-model="form.isPrivacy" size="large" inline-prompt active-text="是" inactive-text="否" />
+          </el-form-item>
+          <el-form-item label="图标">
+            <avatar-upload :width="64" :height="64" :img-url="form.imgUrl" @change="handleImageChange" />
+          </el-form-item>
+        </el-form>
 
         <TagsWrapper :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
-
-        <div class="upload-container">
-          <avatar-upload :width="64" :height="64" :img-url="imgUrl" @change="handleImageChange" />
-        </div>
 
         <template #footer>
           <el-button plain @click="dialogVisible = false">
@@ -372,9 +388,5 @@ async function cancelSort() {
 :deep(.el-tag+.button-tag,
   .el-tag+.el-input) {
   margin-left: 10px !important;
-}
-
-.upload-container {
-  margin-top: 20px;
 }
 </style>
