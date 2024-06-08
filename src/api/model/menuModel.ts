@@ -22,3 +22,9 @@ export interface MenuItem {
  * @description: Get menu return value
  */
 export type MenuListResultModel = MenuItem[]
+
+export interface MenuSort {
+  id: number
+  parent_id: number
+  sort: number
+}

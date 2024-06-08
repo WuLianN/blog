@@ -5,8 +5,9 @@ import {
   Delete,
   Plus,
 } from '@element-plus/icons-vue'
-import { addMenuItem, deleteMenuItem, getMenuList, updateMenuItem } from '@/api/menu'
+import { addMenuItem, deleteMenuItem, getMenuList, saveMenuSort, updateMenuItem } from '@/api/menu'
 import { bindTag2Menu, getMenuTagList, unbindTag2Menu } from '@/api/tags'
+import type { MenuSort } from '@/api/model/menuModel'
 
 interface Tree {
   id: number
@@ -27,13 +28,15 @@ let newSelectedTags: Array<any> = [] // 选中的未创建的标签
 let deleteSelectedTags: Array<any> = [] // 需要删除(解绑)的标签
 const originTags = ref<any[]>([]) // 原有的标签
 const imgUrl = ref('')
+const showAddMenu = ref(true)
+let sortList: Array<MenuSort> = []
 
 getTreeList()
 
 function append(data: Tree, event: Event) {
   event.stopPropagation()
 
-  const newChild = { id: id++, label: '标题', children: [] }
+  const newChild = { id: id++, label: `菜单${String(id).slice(3)}`, children: [] }
   if (!data.children)
     data.children = []
 
@@ -56,7 +59,7 @@ async function remove(node: Node, data: Tree, event: Event) {
 function appendTree() {
   const node = {
     id: id++,
-    label: `分类${String(id).slice(3)}`,
+    label: `菜单${String(id).slice(3)}`,
     children: [],
   }
   dataSource.value.push(node)
@@ -100,8 +103,6 @@ async function dialogSubmit() {
     return
 
   const { id: currentNodeId, parent_id: currentParentId } = currentNode.value // 点击的当前节点 +添加的节点没有parent_id 注：parent_id=0为一级节点
-  const level1Node = getLevel_1_Node(currentTreeNode.value) // level1节点 也就是当前节点的根节点
-  const { category_id: categoryId } = level1Node
   const { level: currentTreeNodeLevel } = currentTreeNode.value
 
   const ids = getIds(currentTreeNode.value, currentTreeNodeLevel).reverse() // 1 -> 2 -> 3
@@ -122,7 +123,6 @@ async function dialogSubmit() {
   const data = {
     name: dialogCategoryName.value,
     parent_id: parentId,
-    category_id: categoryId,
     icon: imgUrl.value,
     id: currentNodeId,
   }
@@ -171,13 +171,6 @@ function tagsChange(data: any) {
   deleteSelectedTags = oldTagsList
 }
 
-function getLevel_1_Node(node: any) {
-  if (node.level !== 1)
-    return getLevel_1_Node(node.parent)
-
-  return node
-}
-
 function getNodeByLevel(node: any, level: number) {
   if (node.level === level)
     return node
@@ -222,7 +215,7 @@ function check() {
   // level > 1, 不是初始的父级节点
   if (level > 1 && parentId === undefined) {
     dialogVisible.value = false
-    ElMessage.error('请先创建父级分类')
+    ElMessage.error('请先创建父级菜单')
     return false
   }
 
@@ -232,17 +225,56 @@ function check() {
 function handleImageChange(url: string) {
   imgUrl.value = url
 }
+
+function nodeDragStart() {
+  showAddMenu.value = false
+}
+
+function getSortList() {
+  sortList = []
+
+  dataSource.value.forEach((item: { id: any }) => {
+    const structData = { parent_id: 0, id: item.id, sort: 1 }
+    sortList.push(structData)
+
+    tagging(item)
+  })
+}
+
+function tagging(obj: any) {
+  if (obj.children && obj.children.length > 0) {
+    obj.children.forEach((item: { id: any }, index: number) => {
+      const structData = { parent_id: obj.id, id: item.id, sort: index + 1 }
+      sortList.push(structData)
+      return tagging(item)
+    })
+  }
+}
+
+function saveSort() {
+  getSortList()
+
+  saveMenuSort(sortList)
+
+  showAddMenu.value = true
+}
+
+async function cancelSort() {
+  await getTreeList()
+  showAddMenu.value = true
+}
 </script>
 
 <template>
   <div class="menu">
     <div class="custom-tree-container">
       <el-tree
-        :data="dataSource" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false"
+        :data="dataSource" node-key="id" default-expand-all :expand-on-click-node="false" :draggable="true"
+        @node-drag-start="nodeDragStart"
         @node-click="nodeClick"
       >
         <template #default="{ node, data }">
-          <span class="custom-tree-node">
+          <span v-if="showAddMenu" class="custom-tree-node">
             <span>{{ node.label }}</span>
             <span>
               <el-button plain type="primary" size="small" :icon="Plus" circle @click="append(data, $event)" />
@@ -253,22 +285,32 @@ function handleImageChange(url: string) {
 
         <template #empty>
           <el-button plain type="primary" @click="appendTree">
-            添加分类
+            添加菜单
           </el-button>
         </template>
       </el-tree>
     </div>
 
-    <div v-if="dataSource.length > 0">
-      <el-button plain type="primary" @click="appendTree">
-        添加分类
-      </el-button>
+    <div>
+      <template v-if="showAddMenu">
+        <el-button v-if="dataSource.length > 0" plain type="primary" @click="appendTree">
+          添加菜单
+        </el-button>
+      </template>
+      <template v-else>
+        <el-button plain type="primary" @click="saveSort">
+          保存
+        </el-button>
+        <el-button plain type="warning" @click="cancelSort">
+          取消
+        </el-button>
+      </template>
     </div>
 
     <div>
       <el-dialog v-model="dialogVisible" title="编辑" width="30%">
         <div>
-          <el-input v-model="dialogCategoryName" placeholder="请输入分类名称" />
+          <el-input v-model="dialogCategoryName" placeholder="请输入菜单名称" />
         </div>
 
         <TagsWrapper :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />

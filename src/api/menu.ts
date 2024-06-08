@@ -1,4 +1,4 @@
-import type { MenuListResultModel } from './model/menuModel'
+import type { MenuListResultModel, MenuSort } from './model/menuModel'
 import { defHttp } from '@/utils/http/axios'
 
 enum Api {
@@ -6,6 +6,7 @@ enum Api {
   AddMenuItem = '/addMenuItem',
   DeleteMenuItem = '/deleteMenuItem',
   UpdateMenuItem = '/updateMenuItem',
+  SaveMenuSort = '/saveMenuSort',
 }
 
 /**
@@ -26,4 +27,8 @@ export function deleteMenuItem(id: number) {
 
 export function updateMenuItem(data: any) {
   return defHttp.post<any>({ url: Api.UpdateMenuItem, data })
+}
+
+export function saveMenuSort(data: MenuSort[]) {
+  return defHttp.post<MenuSort[]>({ url: Api.SaveMenuSort, data })
 }
