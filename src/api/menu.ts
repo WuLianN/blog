@@ -13,8 +13,8 @@ enum Api {
  * @description: 获取菜单
  */
 
-export function getMenuList(id?: number | null) {
-  return defHttp.get<MenuListResultModel>({ url: Api.GetMenuList, params: { user_id: id } })
+export function getMenuList(id?: number | null, isUse?: number) {
+  return defHttp.get<MenuListResultModel>({ url: Api.GetMenuList, params: { user_id: id, is_use: isUse } })
 }
 
 export function addMenuItem(data: any) {

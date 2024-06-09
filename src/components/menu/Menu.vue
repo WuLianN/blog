@@ -23,7 +23,7 @@ const userId = getUserId()
 getList(userId)
 
 async function getList(id?: number | null) {
-  const result = await getMenuList(id)
+  const result = await getMenuList(id, 1)
 
   menuList.value = result
 
