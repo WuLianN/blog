@@ -53,4 +53,18 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vue: ['vue', 'vue-router'],
+          element: ['element-plus'],
+          axios: ['axios'],
+          lodash: ['lodash-es'],
+          vueuse: ['@vueuse/core', '@vueuse/components'],
+          remark: ['remark'],
+        },
+      },
+    },
+  },
 })
