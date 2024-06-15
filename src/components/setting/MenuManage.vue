@@ -242,8 +242,8 @@ function nodeDragStart() {
 function getSortList() {
   sortList = []
 
-  dataSource.value.forEach((item: { id: any }) => {
-    const structData = { parent_id: 0, id: item.id, sort: 1 }
+  dataSource.value.forEach((item: { id: any }, index: number) => {
+    const structData = { parent_id: 0, id: item.id, sort: index + 1 }
     sortList.push(structData)
 
     tagging(item)
