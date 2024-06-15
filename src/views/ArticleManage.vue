@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import { onUnmounted, ref } from 'vue'
-import { ElButton, ElTag, ElText } from 'element-plus'
-import type { Column } from 'element-plus'
+import { ElButton, ElTag, ElText, TableV2SortOrder } from 'element-plus'
+import type { Column, SortBy } from 'element-plus'
 import { deleteDraft, getDraftList, saveDraft } from '@/api/drafts'
 import { bindTag2Draft, getDraftTagList, unbindTag2Draft } from '@/api/tags'
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
-
+import { compareFn } from '@/utils/utils'
 import { formatDate } from '@/utils/three_party'
 
 interface CellRenderProps<T> {
@@ -44,6 +44,7 @@ const columns = [
     align: 'center',
     width: 180,
     key: 'create_time',
+    sortable: true,
   },
   {
     title: '标题',
@@ -92,6 +93,23 @@ const columns = [
     key: 'operate',
   },
 ]
+
+const sortState = ref<SortBy>()
+
+function onSort(sortBy: SortBy) {
+  if (!sortBy.order)
+    sortBy.order = TableV2SortOrder.DESC
+
+  sortState.value = sortBy
+
+  if (sortBy.key === 'create_time') {
+    if (sortBy.order === TableV2SortOrder.ASC)
+      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, true))
+
+    else
+      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, false))
+  }
+}
 
 const bgImage = ref('')
 
@@ -257,7 +275,7 @@ onUnmounted(() => {
 
 <template>
   <div class="article">
-    <Table :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" @end-reached="endReached" />
+    <Table :sort-by="sortState" :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" fixed @column-sort="onSort" @end-reached="endReached" />
 
     <el-dialog v-model="dialogVisible" title="编辑" :width="dialogWidth" @close="dialogVisible = false">
       <el-form label-width="80px" label-position="left">
