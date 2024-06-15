@@ -1,15 +1,5 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
-
 defineProps({
-  data: {
-    type: Array,
-    default: () => [],
-  },
-  columns: {
-    type: Array as PropType<any[]>,
-    default: () => [],
-  },
   width: {
     type: Number,
     default: 600,
@@ -19,17 +9,19 @@ defineProps({
     default: 400,
   },
 })
-
-const emit = defineEmits(['endReached'])
-
-function endReached() {
-  emit('endReached')
-}
 </script>
 
 <template>
   <div>
-    <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" fixed @end-reached="endReached" />
+    <el-table-v2 v-bind="$attrs" :width="width" :height="height">
+      <template #empty>
+        <Empty>
+          <el-button type="primary" plain @click="$router.back()">
+            返回首页
+          </el-button>
+        </Empty>
+      </template>
+    </el-table-v2>
   </div>
 </template>
 

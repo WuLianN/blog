@@ -22,10 +22,6 @@ async function getList() {
     ElMessage.warning('没有更多了！')
     return
   }
-  else if (resultList.length === 0 && query.value.page === 1) {
-    ElMessage.warning('没有数据！')
-    return
-  }
 
   list.value.push(...resultList)
 }
@@ -62,9 +58,16 @@ onUnmounted(() => {
 
 <template>
   <div class="draft-box">
-    <div class="draft-box-timeline">
+    <div v-if="list.length > 0" class="draft-box-timeline">
       <Timeline :list="list" @delete="deleteDraft" />
     </div>
+    <template v-else>
+      <Empty>
+        <el-button type="primary" plain @click="$router.back()">
+          返回首页
+        </el-button>
+      </Empty>
+    </template>
   </div>
 </template>
 

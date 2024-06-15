@@ -59,10 +59,6 @@ async function getList() {
     ElMessage.warning('没有更多了！')
     return
   }
-  else if (list.length === 0 && query.page === 1) {
-    ElMessage.warning('没有数据！')
-    return
-  }
 
   const buildList = buildRecommendList(list)
 
@@ -107,7 +103,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Card :list="recommendList" @tag-click="handleTagClick" />
+  <template v-if="recommendList.length > 0">
+    <Card :list="recommendList" @tag-click="handleTagClick" />
+  </template>
+  <template v-else>
+    <Empty />
+  </template>
 </template>
 
 <style scoped lang="scss"></style>
