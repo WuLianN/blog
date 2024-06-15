@@ -29,4 +29,10 @@ defineProps({
 :deep(.el-tag + .el-tag) {
   margin-left: 10px !important;
 }
+
+:deep(.el-scrollbar__thumb) {
+  width: 4px !important;
+  background-color: var(--el-color-primary-light-8) !important;
+  opacity: 1 !important;
+}
 </style>

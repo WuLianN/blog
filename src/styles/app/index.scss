@@ -1,6 +1,15 @@
 html {
   --app-bg-color: #f5f5f5;
   --app-header-bg-color: #ffffff;
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--el-color-primary-light-5);
+  }
 }
 
 html.dark {
