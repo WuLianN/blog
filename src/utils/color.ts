@@ -19,7 +19,7 @@ export function rgbaToHex(rgbaColor: string) {
 
 export function generateLightColor(baseColor: string, percentage: number): string {
   // 检查输入是否为有效的6位或8位十六进制颜色字符串
-  const isValidHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/i.test(baseColor)
+  const isValidHex = /^#([A-F0-9]{6}|[A-F0-9]{8})$/i.test(baseColor)
   if (!isValidHex) {
     console.error('Invalid hex color format')
     return baseColor // 或者返回一个默认颜色

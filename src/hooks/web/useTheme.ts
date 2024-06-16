@@ -44,7 +44,7 @@ export function useTheme(cssVarName = '--el-color-primary', selectedColor?: stri
   if (!color)
     return
 
-  const isValidHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/i.test(color)
+  const isValidHex = /^#([A-F0-9]{6}|[A-F0-9]{8})$/i.test(color)
 
   let hex
   if (isValidHex)

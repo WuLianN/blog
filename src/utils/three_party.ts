@@ -15,5 +15,5 @@ export function getExcerpt(value: string): string {
 }
 
 export function formatDate(date: Date, formatStr = 'YYYY-MM-DD HH:mm:ss', options = {}): string {
-  return useDateFormat(date, formatStr, options).value.replace(/\"+/, '')
+  return useDateFormat(date, formatStr, options).value.replace(/"+/, '')
 }
