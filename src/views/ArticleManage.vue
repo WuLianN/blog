@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { ElButton, ElTag, ElText, TableV2SortOrder } from 'element-plus'
 import type { Column, SortBy } from 'element-plus'
 import { deleteDraft, getDraftList, saveDraft } from '@/api/drafts'
@@ -95,21 +95,6 @@ const columns = [
 ]
 
 const sortState = ref<SortBy>()
-
-function onSort(sortBy: SortBy) {
-  if (!sortBy.order)
-    sortBy.order = TableV2SortOrder.DESC
-
-  sortState.value = sortBy
-
-  if (sortBy.key === 'create_time') {
-    if (sortBy.order === TableV2SortOrder.ASC)
-      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, true))
-
-    else
-      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, false))
-  }
-}
 
 const bgImage = ref('')
 
@@ -266,7 +251,24 @@ function setDialogWidth() {
     dialogWidth.value = '30%'
 }
 
-addEventListener('resize', setDialogWidth)
+function onSort(sortBy: SortBy) {
+  if (!sortBy.order)
+    sortBy.order = TableV2SortOrder.DESC
+
+  sortState.value = sortBy
+
+  if (sortBy.key === 'create_time') {
+    if (sortBy.order === TableV2SortOrder.ASC)
+      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, true))
+
+    else
+      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, false))
+  }
+}
+
+onMounted(() => {
+  addEventListener('resize', setDialogWidth)
+})
 
 onUnmounted(() => {
   removeEventListener('resize', setDialogWidth)
