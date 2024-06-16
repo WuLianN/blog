@@ -15,10 +15,9 @@ import 'bytemd/dist/index.css'
 import zh_Hans_highlight_theme from '@ziuchen/bytemd-plugin-highlight-theme/locales/zh_Hans.json'
 import zh_Hans_image_zoom from '@ziuchen/bytemd-plugin-image-zoom/locales/zh_Hans.json'
 import zh_Hans_algin from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
+// @ts-expect-error 打包会报错  'Editor' is declared but its value is never read.
 import { Viewer } from '@bytemd/vue-next'
 import theme from '../plugins/theme.ts'
-
-// @ts-expect-error 打包会报错  'Editor' is declared but its value is never read.
 
 defineProps({
   content: {
