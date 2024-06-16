@@ -90,8 +90,10 @@ async function upload(file: File) {
 
 <template>
   <header class="editor-header">
-    <div class="left-box" />
-    <input v-model="title" placeholder="输入文章标题..." spellcheck="false" maxlength="80" class="title-input">
+    <div class="left-box">
+      <input v-model="title" placeholder="输入文章标题..." spellcheck="false" maxlength="80" class="title-input">
+    </div>
+
     <div class="right-box">
       <div title="" class="status-text with-padding">
         {{ status }}
@@ -115,7 +117,7 @@ $header-height: 64px;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-
+  justify-content: space-between;
   padding: 0 27px;
   height: $header-height;
   background-color: #fff;
@@ -157,5 +159,14 @@ $header-height: 64px;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+@media screen and (max-width: 992px) {
+  .title-input {
+    width: 150px;
+  }
+  .status-text {
+    display: none;
+  }
 }
 </style>
