@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import App from './App.vue'
 import { setupRouter } from './router/index.ts'
 // import { setupRouterGuard } from '@/router/guard'
@@ -19,6 +21,10 @@ async function setup() {
 
   // 全局指令
   setupGlobDirectives(app)
+
+  app.use(ElementPlus, {
+    locale: zhCn,
+  })
 
   app.mount('#app')
 }
