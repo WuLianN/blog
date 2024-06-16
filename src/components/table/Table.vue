@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { PropType } from 'vue'
+
 defineProps({
   width: {
     type: Number,
@@ -8,12 +10,20 @@ defineProps({
     type: Number,
     default: 400,
   },
+  data: {
+    type: Array,
+    default: () => [],
+  },
+  columns: {
+    type: Array as PropType<any[]>,
+    default: () => [],
+  },
 })
 </script>
 
 <template>
   <div>
-    <el-table-v2 v-bind="$attrs" :width="width" :height="height">
+    <el-table-v2 v-bind="$attrs" :width="width" :height="height" :columns="columns" :data="data">
       <template #empty>
         <Empty>
           <el-button type="primary" plain @click="$router.back()">

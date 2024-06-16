@@ -58,7 +58,7 @@ const rules = reactive<FormRules<typeof form>>({
 async function binding(formEl: FormInstance | undefined) {
   if (!formEl)
     return
-  formRef.value?.validate(async (valid: boolean) => {
+  formRef.value?.validate(async (valid) => {
     if (valid) {
       try {
         await bingUser(form)
@@ -69,9 +69,6 @@ async function binding(formEl: FormInstance | undefined) {
       catch {
 
       }
-    }
-    else {
-      return false
     }
   })
 }

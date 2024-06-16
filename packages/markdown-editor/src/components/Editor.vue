@@ -21,6 +21,8 @@ import exportMD from '../plugins/exportMD.ts'
 import importMD from '../plugins/importMD.ts'
 import Dialog from './Dialog.vue'
 
+// @ts-expect-error 打包会报错  'Editor' is declared but its value is never read.
+
 const props = defineProps({
   content: {
     type: String,

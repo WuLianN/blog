@@ -18,6 +18,8 @@ import zh_Hans_algin from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
 import { Viewer } from '@bytemd/vue-next'
 import theme from '../plugins/theme.ts'
 
+// @ts-expect-error 打包会报错  'Editor' is declared but its value is never read.
+
 defineProps({
   content: {
     type: String,

@@ -33,9 +33,6 @@ function submit(formEl: FormInstance | undefined) {
 
       await loginFunc()
     }
-    else {
-      return false
-    }
   })
 }
 

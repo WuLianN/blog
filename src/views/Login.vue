@@ -69,9 +69,6 @@ function submitForm(formEl: FormInstance | undefined) {
         router.push('/')
       }
     }
-    else {
-      return false
-    }
   })
 }
 
