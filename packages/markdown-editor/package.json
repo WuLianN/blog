@@ -24,7 +24,7 @@
     "bytemd": "^1.21.0",
     "juejin-markdown-themes": "^1.32.1",
     "lodash-es": "^4.17.21",
-    "vue": "^3.3.10"
+    "vue": "^3.4.29"
   },
   "devDependencies": {
     "@types/node": "^20.10.3",
