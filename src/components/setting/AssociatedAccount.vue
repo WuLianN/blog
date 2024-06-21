@@ -129,6 +129,10 @@ function setDialogWidth() {
     dialogWidth.value = '30%'
 }
 
+function goVisit(id: number) {
+  window.open(`https://bearcub.club/user/${id}`, '_blank')
+}
+
 addEventListener('resize', setDialogWidth)
 
 onUnmounted(() => {
@@ -144,8 +148,12 @@ onUnmounted(() => {
         <el-text>{{ item.user_name }}</el-text>
       </div>
       <div class="list-row-right">
-        <el-button type="primary" plain @click="unbind(item.id)">
+        <el-button type="danger" plain @click="unbind(item.id)">
           解绑
+        </el-button>
+
+        <el-button type="primary" plain @click="goVisit(item.id)">
+          访问
         </el-button>
 
         <el-button type="success" plain @click="changeAccountFunc(item.id)">
