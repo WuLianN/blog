@@ -6,6 +6,7 @@ import { setupRouter } from './router/index.ts'
 // import { setupRouterGuard } from '@/router/guard'
 import { setupStore } from '@/store'
 import { setupGlobDirectives } from '@/directvies'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 
 const app = createApp(App)
 
