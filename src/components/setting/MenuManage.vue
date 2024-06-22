@@ -4,7 +4,9 @@ import type Node from 'element-plus/es/components/tree/src/model/node'
 import {
   Delete,
   Plus,
+  QuestionFilled,
 } from '@element-plus/icons-vue'
+import { useCssVar } from '@vueuse/core'
 import { addMenuItem, deleteMenuItem, getMenuList, saveMenuSort, updateMenuItem } from '@/api/menu'
 import { bindTag2Menu, getMenuTagList, unbindTag2Menu } from '@/api/tags'
 import type { MenuSort } from '@/api/model/menuModel'
@@ -34,6 +36,8 @@ const form = reactive({
   isPrivacy: false,
   isUse: true,
 })
+const primaryVarName = '--el-color-primary' // css变量名
+const iconColor = useCssVar(primaryVarName)
 
 getTreeList()
 
@@ -277,6 +281,13 @@ async function cancelSort() {
 <template>
   <div class="menu">
     <div class="custom-tree-container">
+      <div class="icon-wrapper">
+        <el-tooltip placement="top" content="支持拖拽排序">
+          <el-icon :color="iconColor">
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
+      </div>
       <el-tree
         :data="dataSource" node-key="id" default-expand-all :expand-on-click-node="false" :draggable="true"
         @node-drag-start="nodeDragStart"
@@ -388,5 +399,13 @@ async function cancelSort() {
 :deep(.el-tag+.button-tag,
   .el-tag+.el-input) {
   margin-left: 10px !important;
+}
+
+.icon-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0 10px 0;
 }
 </style>
