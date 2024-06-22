@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { onUnmounted, reactive, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { bingUser, changeAccount, getBindedUserList, unbindUser } from '@/api/user'
-import type { UserInfo } from '@/api/model/userModel'
+import Sortable from 'sortablejs'
+import { QuestionFilled } from '@element-plus/icons-vue'
+import { useCssVar } from '@vueuse/core'
+import type { SortableEvent } from 'sortablejs'
+import { bingUser, changeAccount, getBindedUserList, saveBindedUserSort, unbindUser } from '@/api/user'
+import type { AssociationUserInfo } from '@/api/model/userModel'
 import { useUserStore } from '@/store/modules/user'
 import { useNavigateReplace } from '@/hooks/web/useNavigate'
 
@@ -12,12 +16,16 @@ const form = reactive({
   password: '',
 })
 const formRef = ref<FormInstance>()
-const list = ref<UserInfo[]>([])
+const list = ref<AssociationUserInfo[]>([])
 const userStore = useUserStore()
 
 const defaultAvatar = 'https://api.bearcub.club/static/f59dba31b7e35b34915a46af75b037f2.png'
 
 const dialogWidth = ref('30%')
+const primaryVarName = '--el-color-primary' // css变量名
+const iconColor = useCssVar(primaryVarName)
+const isSortMode = ref(false)
+
 setDialogWidth()
 
 getList()
@@ -105,6 +113,11 @@ async function getList() {
     const result = await getBindedUserList(id)
     list.value = []
     list.value.push(...result)
+
+    // 拖拽
+    nextTick(() => {
+      initSortList()
+    })
   }
 }
 
@@ -133,7 +146,42 @@ function goVisit(id: number) {
   window.open(`https://bearcub.club/user/${id}`, '_blank')
 }
 
-addEventListener('resize', setDialogWidth)
+function initSortList() {
+  const list: HTMLElement | null = document.querySelector('.list')
+  if (list) {
+    Sortable.create(list, {
+      animation: 150,
+      onStart: handlerSortStart,
+      onEnd: handleSortEnd,
+    })
+  }
+}
+
+function handlerSortStart() {
+  isSortMode.value = true
+}
+
+function handleSortEnd({ oldIndex, newIndex }: SortableEvent) {
+  if (oldIndex !== undefined && newIndex !== undefined) {
+    const targetRow = list.value.splice(oldIndex, 1)[0]
+    list.value.splice(newIndex, 0, targetRow)
+  }
+}
+
+async function saveSort() {
+  const data = list.value.map((item, index: number) => ({
+    id: item.id,
+    sort: index + 1,
+  }))
+
+  await saveBindedUserSort(data)
+
+  isSortMode.value = false
+}
+
+onMounted(() => {
+  addEventListener('resize', setDialogWidth)
+})
 
 onUnmounted(() => {
   removeEventListener('resize', setDialogWidth)
@@ -141,8 +189,15 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <div class="icon-wrapper">
+    <el-tooltip placement="top" content="支持拖拽排序">
+      <el-icon :color="iconColor">
+        <QuestionFilled />
+      </el-icon>
+    </el-tooltip>
+  </div>
   <div v-if="list && list.length > 0" class="list">
-    <div v-for="(item, index) in list" :key="index" class="list-row">
+    <div v-for="(item) in list" :key="item.id" class="list-row">
       <div class="list-row-left">
         <el-avatar class="list-row-left-avatar" :width="64" :height="64" :src="item.avatar || defaultAvatar" />
         <el-text>{{ item.user_name }}</el-text>
@@ -164,8 +219,11 @@ onUnmounted(() => {
   </div>
 
   <div class="btn-wrapper">
-    <el-button plain type="primary" @click="dialogVisible = true">
+    <el-button v-if="!isSortMode" plain type="primary" @click="dialogVisible = true">
       添加关联
+    </el-button>
+    <el-button v-else plain type="primary" @click="saveSort">
+      保存
     </el-button>
   </div>
 
@@ -227,5 +285,13 @@ onUnmounted(() => {
 
 .btn-wrapper {
   margin-bottom: 50px;
+}
+
+.icon-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0 10px 0;
 }
 </style>

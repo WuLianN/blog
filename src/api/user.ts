@@ -13,6 +13,7 @@ enum Api {
   changeAccount = '/changeAccount',
   updateUserSetting = '/updateUserSetting',
   getUserSetting = '/getUserSetting',
+  saveBindedUserSort = '/saveBindedUserSort',
 }
 
 /**
@@ -60,4 +61,8 @@ export function updateUserSetting(data: any) {
 
 export function getUserSetting(id?: number | null) {
   return defHttp.get<any>({ url: Api.getUserSetting, params: { user_id: id } })
+}
+
+export function saveBindedUserSort(data: any) {
+  return defHttp.post<any>({ url: Api.saveBindedUserSort, data })
 }

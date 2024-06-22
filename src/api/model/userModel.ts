@@ -14,3 +14,7 @@ export interface UserInfo {
   user_name: string
   avatar: string
 }
+
+export interface AssociationUserInfo extends UserInfo {
+  sort: number
+}
