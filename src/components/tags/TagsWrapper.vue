@@ -22,7 +22,7 @@ function selectedTags(data: any[]) {
     return acc
   }, [])
   const oldSelectedTags = originTags.value.filter(item => !selectedIds.includes(item.id))
-  const newSelectedTags = data.filter(item => item.id === undefined)
+  const newSelectedTags = data.filter(item => item.id === undefined || item.isNew)
 
   const tagsInfo = {
     oldSelectedTags, // 旧标签 -> 解绑

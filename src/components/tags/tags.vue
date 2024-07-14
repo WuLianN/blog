@@ -2,6 +2,8 @@
 import type { PropType } from 'vue'
 import { nextTick, onUnmounted, reactive, ref, toRefs, watch } from 'vue'
 import { ElInput } from 'element-plus'
+import { Aim } from '@element-plus/icons-vue'
+import { UseDraggable } from '@vueuse/components'
 import { createTag, deleteTag, updateTag } from '@/api/tags'
 
 const props = defineProps({
@@ -42,20 +44,28 @@ const currentTag = reactive({
   bg_color: '',
 })
 const visible = ref(false)
+const isOpenSelector = ref(false)
 
 const dialogWidth = ref('30%')
 setDialogWidth()
 
-watch(tags, (value) => {
-  list.value = value
-}, { immediate: true })
+watch(
+  tags,
+  (value) => {
+    list.value = value
+  },
+  { immediate: true },
+)
 
-watch(dialogVisible, (val) => {
-  if (val)
-    inputVisible.value = false
-  else
-    inputVisible.value = true
-}, { immediate: true })
+watch(
+  dialogVisible,
+  (val) => {
+    if (val)
+      inputVisible.value = false
+    else inputVisible.value = true
+  },
+  { immediate: true },
+)
 
 function handleClose(tagId: number) {
   const index = list.value.findIndex(item => item.id === tagId)
@@ -140,7 +150,12 @@ async function submit() {
   }
 
   try {
-    await updateTag({ id: currentTag.id, name: currentTag.name, color: currentTag.color, bg_color: currentTag.bg_color })
+    await updateTag({
+      id: currentTag.id,
+      name: currentTag.name,
+      color: currentTag.color,
+      bg_color: currentTag.bg_color,
+    })
     ElMessage.success('修改成功')
     visible.value = false
 
@@ -160,11 +175,20 @@ function activeChangeText(value: any) {
 }
 
 function setDialogWidth() {
-  const checkMedia = window.matchMedia('only screen and (max-width: 1000px)').matches
+  const checkMedia = window.matchMedia(
+    'only screen and (max-width: 1000px)',
+  ).matches
   if (checkMedia)
     dialogWidth.value = '80%'
-  else
-    dialogWidth.value = '30%'
+  else dialogWidth.value = '30%'
+}
+
+function selectorSelectedTag(tag: any) {
+  const isExsit = list.value.some(item => item.id === tag.id)
+  if (!isExsit) {
+    list.value.push(tag)
+    exposeSelectedTags()
+  }
 }
 
 addEventListener('resize', setDialogWidth)
@@ -177,25 +201,53 @@ onUnmounted(() => {
 <template>
   <div>
     <el-tag
-      v-for="tag in list" :key="tag.id" size="large" closable :disable-transitions="false"
-      :style="{ backgroundColor: tag.bg_color, color: tag.color }" @close="handleClose(tag.id)" @click="handleClick(tag)"
+      v-for="tag in list"
+      :key="tag.id"
+      size="large"
+      closable
+      :disable-transitions="false"
+      :style="{ backgroundColor: tag.bg_color, color: tag.color }"
+      @close="handleClose(tag.id)"
+      @click="handleClick(tag)"
     >
       {{ tag.name }}
     </el-tag>
 
     <ElInput
-      v-if="inputVisible" ref="InputRef" v-model="inputValue" class="input" @keyup.enter="handleInputConfirm"
+      v-if="inputVisible"
+      ref="InputRef"
+      v-model="inputValue"
+      class="input"
+      @keyup.enter="handleInputConfirm"
       @blur="handleInputConfirm"
     />
     <el-button v-else class="button-tag" @click="showInput">
       + 新标签
     </el-button>
+
+    <el-button
+      :icon="Aim"
+      class="button-aim"
+      @click="isOpenSelector = true"
+    />
   </div>
 
-  <el-dialog v-model="visible" title="编辑" :width="dialogWidth" @close="visible = false">
+  <el-dialog
+    v-model="visible"
+    title="编辑"
+    :width="dialogWidth"
+    @close="visible = false"
+  >
     <el-form label-width="80px" label-position="left">
       <el-form-item label="预览">
-        <el-tag class="dialog-tag" :style="{ backgroundColor: currentTag.bg_color, color: currentTag.color }" size="large">
+        <el-tag
+          class="dialog-tag"
+          :style="{
+            backgroundColor: currentTag.bg_color,
+            color: currentTag.color,
+          }"
+          size="large"
+        >
           {{ currentTag.name }}
         </el-tag>
       </el-form-item>
@@ -205,11 +257,19 @@ onUnmounted(() => {
       </el-form-item>
 
       <el-form-item label="背景颜色">
-        <el-color-picker v-model="currentTag.bg_color" show-alpha @active-change="activeChangeBg" />
+        <el-color-picker
+          v-model="currentTag.bg_color"
+          show-alpha
+          @active-change="activeChangeBg"
+        />
       </el-form-item>
 
       <el-form-item label="字体颜色">
-        <el-color-picker v-model="currentTag.color" show-alpha @active-change="activeChangeText" />
+        <el-color-picker
+          v-model="currentTag.color"
+          show-alpha
+          @active-change="activeChangeText"
+        />
       </el-form-item>
     </el-form>
 
@@ -222,6 +282,19 @@ onUnmounted(() => {
       </el-button>
     </template>
   </el-dialog>
+
+  <UseDraggable
+    v-if="isOpenSelector"
+    :initial-value="{ x: 700, y: 15 }"
+    style="position: fixed"
+    storage-key="vueuse-draggable"
+    storage-type="session"
+  >
+    <TagSelector
+      @close="isOpenSelector = false"
+      @selected-tag="selectorSelectedTag"
+    />
+  </UseDraggable>
 </template>
 
 <style scoped lang="scss">
@@ -247,9 +320,15 @@ $Margin: 10px;
   margin-right: 10px;
 }
 
+.button-aim {
+  margin-bottom: 10px;
+  margin-left: 0;
+}
+
 .input {
   width: $BtnWidth;
   height: $BtnHeight;
+  margin-right: 10px;
 }
 
 .dialog-tag-wrapper {
