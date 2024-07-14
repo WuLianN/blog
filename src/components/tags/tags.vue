@@ -36,6 +36,11 @@ const list = ref<any[]>([])
 const inputValue = ref('')
 const inputVisible = ref(false)
 const InputRef = ref<InstanceType<typeof ElInput>>()
+const dragX = ref(0)
+const dragY = ref(0)
+
+dragX.value = window.innerWidth - 400
+dragY.value = window.innerHeight * 0.15
 
 const currentTag = reactive({
   id: 0,
@@ -285,7 +290,7 @@ onUnmounted(() => {
 
   <UseDraggable
     v-if="isOpenSelector"
-    :initial-value="{ x: 700, y: 15 }"
+    :initial-value="{ x: dragX, y: dragY }"
     style="position: fixed"
     storage-key="vueuse-draggable"
     storage-type="session"

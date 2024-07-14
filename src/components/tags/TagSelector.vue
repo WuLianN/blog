@@ -48,10 +48,11 @@ async function searchTag() {
 <style scoped lang="scss">
 .selector {
   width: 300px;
-  height: 300px;
+  height: auto;
   background-color: #fff;
   z-index: 1;
   padding: 15px;
+  border-radius: var(--el-dialog-border-radius);
 
   &-close {
     width: 100%;
