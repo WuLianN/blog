@@ -133,8 +133,7 @@ $header-height: 64px;
   border: none;
   outline: none;
   background: #fff;
-
-  flex: 1 1 auto;
+  width: 800px;
   height: 100%;
 }
 
