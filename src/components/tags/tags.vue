@@ -25,6 +25,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hasAim: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['selectedTags', 'click', 'update'])
@@ -231,6 +235,7 @@ onUnmounted(() => {
     </el-button>
 
     <el-button
+      v-if="hasAim"
       :icon="Aim"
       class="button-aim"
       @click="isOpenSelector = true"

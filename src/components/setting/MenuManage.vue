@@ -344,7 +344,7 @@ async function cancelSort() {
           </el-form-item>
         </el-form>
 
-        <TagsWrapper :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
+        <TagsWrapper :has-aim="true" :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
 
         <template #footer>
           <el-button plain @click="dialogVisible = false">

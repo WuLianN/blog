@@ -31,7 +31,7 @@ async function search() {
 </script>
 
 <template>
-  <el-input v-model="query.keyword" placeholder="搜索文章标题" :suffix-icon="Search" @change="search" />
+  <el-input v-model="query.keyword" placeholder="搜索文章标题" :suffix-icon="Search" :clearable="true" @change="search" />
 </template>
 
 <style scoped lang="scss"></style>

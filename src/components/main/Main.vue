@@ -7,6 +7,7 @@ import { useHomeStore } from '@/store/modules/home'
 import type { RecommendDraft } from '@/api/model/draftsModel'
 import { buildRecommendList } from '@/utils/blog'
 import { searchDrafts } from '@/api/drafts'
+import { scrollToTop } from '@/utils/utils'
 
 const userId = getUserId()
 const recommendList = ref<RecommendDraft[]>([])
@@ -28,16 +29,19 @@ getList()
 // 侦听store中的推荐列表 tip: 切换分类会更新store中的推荐列表
 watch(() => homeStore.recommendList, (value) => {
   recommendList.value = value
+  scrollToTop()
 })
 
 // 侦听store中的搜索关键字
 watch(() => homeStore.keyword, (value) => {
   query.keyword = value
+  scrollToTop()
 })
 
 // 侦听store中的tagIds
 watch(() => homeStore.tagIds, (value) => {
   query.tagIds = value
+  scrollToTop()
 })
 
 async function getList() {

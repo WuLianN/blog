@@ -43,3 +43,10 @@ export function compareFn<T>(a: T, b: T, key: keyof T, isAscending = true): numb
   else
     return isAscending ? Number(numA) - Number(numB) : Number(numB) - Number(numA)
 }
+
+export function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
+}

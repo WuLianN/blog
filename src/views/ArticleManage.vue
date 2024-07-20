@@ -295,7 +295,7 @@ onUnmounted(() => {
         </el-form-item>
       </el-form>
 
-      <TagsWrapper :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
+      <TagsWrapper :has-aim="true" :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
 
       <div class="btn-wrapper">
         <ElButton type="primary" plain @click="goDrafts">
