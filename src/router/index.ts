@@ -11,6 +11,7 @@ const Setting = () => import('@/views/Setting.vue')
 const Upload = () => import('@/views/Upload.vue')
 const ManageImages = () => import('@/views/ManageImages.vue')
 const NotFoundComponent = () => import('@/views/NotFound.vue')
+const LoginDesign = () => import('@/views/design/Login.vue')
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -23,6 +24,7 @@ const routes = [
   { path: '/setting', name: 'setting', component: Setting },
   { path: '/upload', name: 'upload', component: Upload },
   { path: '/manageImages', name: 'manageImages', component: ManageImages },
+  { path: '/design/login', name: 'loginDesign', component: LoginDesign },
   { path: '/:pathMatch(.*)', component: NotFoundComponent },
 ]
 
