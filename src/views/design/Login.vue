@@ -119,17 +119,25 @@ function handleClose() {
   drawer.value = false
 }
 
-function formBgColorChange(value: string) {
-  designer.form.backgroundColor = value
+function formBgColorChange(value: string | null) {
+  if (value) {
+    designer.form.backgroundColor = value
+  }
 }
-function formColorChange(value: string) {
-  designer.form.color = value
+function formColorChange(value: string | null) {
+  if (value) {
+    designer.form.color = value
+  }
 }
-function formInuptBgColorChange(value: string) {
-  designer.form.input.backgroundColor = value
+function formInuptBgColorChange(value: string | null) {
+  if (value) {
+    designer.form.input.backgroundColor = value
+  }
 }
-function formBorderColorChange(value: string) {
-  designer.form.border.color = value
+function formBorderColorChange(value: string | null) {
+  if (value) {
+    designer.form.border.color = value
+  }
 }
 
 function handleImageChange(url: string) {
@@ -138,8 +146,8 @@ function handleImageChange(url: string) {
 
 async function submit() {
   const copyDesigner = JSON.parse(JSON.stringify(designer))
-  copyDesigner.form.left = `${designer.form.left}px`
-  copyDesigner.form.top = `${designer.form.top}px`
+  copyDesigner.form.left = `${Number.parseInt(formX.value.toString(), 10)}px`
+  copyDesigner.form.top = `${Number.parseInt(formY.value.toString(), 10)}px`
   copyDesigner.image.left = `${designer.image.left}px`
   copyDesigner.image.top = `${designer.image.top}px`
 
