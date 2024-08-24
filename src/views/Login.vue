@@ -36,5 +36,9 @@ if (userSetting) {
 .login {
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
 }
 </style>
