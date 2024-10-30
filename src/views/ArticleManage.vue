@@ -50,8 +50,8 @@ const columns = [
     title: '标题',
     dataKey: 'title',
     // @ts-expect-error 不引入ElLint 丢失样式
-    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink title={title} onClick={() => jump(rowData)}>{title.length > 20 ? `${title.slice(0, 20)}...` : title}</ElLink>,
-    align: 'center',
+    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink title={title} underline={false} onClick={() => jump(rowData)}>{title}</ElLink>,
+    align: 'left',
     width: 300,
     key: 'title',
   },
@@ -73,7 +73,7 @@ const columns = [
         {rowData.is_privacy === 1 && <ElTag type="danger">私密</ElTag>}
       </>
     ),
-    align: 'center',
+    align: 'left',
     width: 150,
     key: 'is_publish',
   },
@@ -346,9 +346,11 @@ onUnmounted(() => {
 
 :deep(.el-link__inner) {
   width: 100%;
+  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  justify-content: flex-start
 }
 
 :deep(.el-link) {
