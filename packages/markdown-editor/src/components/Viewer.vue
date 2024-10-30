@@ -18,6 +18,7 @@ import zh_Hans_algin from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
 // @ts-expect-error 打包会报错  'Editor' is declared but its value is never read.
 import { Viewer } from '@bytemd/vue-next'
 import theme from '../plugins/theme.ts'
+import Toc from './Toc.vue'
 
 defineProps({
   content: {
@@ -82,6 +83,7 @@ const plugins = [
 
 <template>
   <Viewer :value="content" :plugins="plugins" />
+  <Toc :value="content" />
 </template>
 
 <style scoped lang="scss"></style>
