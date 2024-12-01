@@ -138,13 +138,17 @@ ul {
 
   li {
     cursor: pointer;
-    width: 150px;
+    width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 14px;
 
     &:not(:last-child) {
-      padding-bottom: 4px;
+      padding-bottom: 8px;
+    }
+    &:hover {
+      color: var(--el-color-primary-light-4);
     }
   }
 }
