@@ -17,6 +17,7 @@ const form = reactive({
 })
 const formRef = ref<FormInstance>()
 const list = ref<AssociationUserInfo[]>([])
+const originList = ref<AssociationUserInfo[]>([])
 const userStore = useUserStore()
 
 const defaultAvatar = 'https://api.bearcub.club/static/f59dba31b7e35b34915a46af75b037f2.png'
@@ -113,6 +114,7 @@ async function getList() {
     const result = await getBindedUserList(id)
     list.value = []
     list.value.push(...result)
+    originList.value = JSON.parse(JSON.stringify(result))
 
     // 拖拽
     nextTick(() => {
@@ -179,6 +181,11 @@ async function saveSort() {
   isSortMode.value = false
 }
 
+function cancelSort() {
+  list.value = JSON.parse(JSON.stringify(originList.value))
+  isSortMode.value = false
+}
+
 onMounted(() => {
   addEventListener('resize', setDialogWidth)
 })
@@ -222,9 +229,14 @@ onUnmounted(() => {
     <el-button v-if="!isSortMode" plain type="primary" @click="dialogVisible = true">
       添加关联
     </el-button>
-    <el-button v-else plain type="primary" @click="saveSort">
-      保存
-    </el-button>
+    <template v-else>
+      <el-button plain type="primary" @click="saveSort">
+        保存
+      </el-button>
+      <el-button plain type="warning" @click="cancelSort">
+        取消
+      </el-button>
+    </template>
   </div>
 
   <el-dialog v-model="dialogVisible" title="添加关联" :width="dialogWidth">
