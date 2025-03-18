@@ -8,8 +8,10 @@ import type { RecommendDraft } from '@/api/model/draftsModel'
 import { buildRecommendList } from '@/utils/blog'
 import { searchDrafts } from '@/api/drafts'
 import { scrollToTop } from '@/utils/utils'
+import { useUserStore } from '@/store/modules/user'
 
-const userId = getUserId()
+const userStore = useUserStore()
+const userId = getUserId() || userStore.userInfo.id || JSON.parse(localStorage.getItem('userInfo') || '{}')?.id
 const recommendList = ref<RecommendDraft[]>([])
 const homeStore = useHomeStore()
 
@@ -34,13 +36,16 @@ watch(() => homeStore.recommendList, (value) => {
 
 // 侦听store中的搜索关键字
 watch(() => homeStore.keyword, (value) => {
+  query.page = 1
   query.keyword = value
   scrollToTop()
 })
 
 // 侦听store中的tagIds
 watch(() => homeStore.tagIds, (value) => {
+  query.page = 1
   query.tagIds = value
+
   scrollToTop()
 })
 
