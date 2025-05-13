@@ -9,6 +9,7 @@ export default antfu(
     rules: {
       'regexp/no-unused-capturing-group': 'off',
       'regexp/strict': 'off',
+      'ts/no-unused-expressions': 'off',
     },
   },
 )

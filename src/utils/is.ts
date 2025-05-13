@@ -1,6 +1,6 @@
 const toString = Object.prototype.toString
 
-export function is(val: unknown, type: string) {
+export function is(val: unknown, type: string): boolean {
   return toString.call(val) === `[object ${type}]`
 }
 
@@ -57,7 +57,7 @@ export function isString(val: unknown): val is string {
   return is(val, 'String')
 }
 
-export function isFunction(val: unknown): val is Function {
+export function isFunction(val: unknown): val is (...args: any[]) => any {
   return typeof val === 'function'
 }
 
