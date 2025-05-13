@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@blog/markdown-editor": "workspace:*",
+    "@blog/toolkit": "workspace:*",
     "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/components": "^10.11.0",
     "@vueuse/core": "^10.11.0",

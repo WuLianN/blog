@@ -12,6 +12,8 @@ const Upload = () => import('@/views/Upload.vue')
 const ManageImages = () => import('@/views/ManageImages.vue')
 const NotFoundComponent = () => import('@/views/NotFound.vue')
 const LoginDesign = () => import('@/views/design/Login.vue')
+const Toolkit = () => import('@/views/toolkit/index.vue')
+const JsonEditor = () => import('@/views/toolkit/JsonEditor.vue')
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -25,6 +27,8 @@ const routes = [
   { path: '/upload', name: 'upload', component: Upload },
   { path: '/manageImages', name: 'manageImages', component: ManageImages },
   { path: '/design/login', name: 'loginDesign', component: LoginDesign },
+  { path: '/toolkit', name: 'toolkit', component: Toolkit },
+  { path: '/toolkit/json-editor', name: 'JsonEditor', component: JsonEditor },
   { path: '/:pathMatch(.*)', component: NotFoundComponent },
 ]
 

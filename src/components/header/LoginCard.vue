@@ -61,6 +61,9 @@ function imgClick(url: string) {
         <el-button plain type="primary" @click="go('/articleManage')">
           文章管理
         </el-button>
+        <el-button plain type="primary" @click="go('/toolkit')">
+          工具箱
+        </el-button>
       </div>
 
       <template #footer>
