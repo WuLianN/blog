@@ -104,10 +104,10 @@ export function getRawRoute(route: RouteLocationNormalized): RouteLocationNormal
     ...opt,
     matched: (matched
       ? matched.map(item => ({
-        meta: item.meta,
-        name: item.name,
-        path: item.path,
-      }))
+          meta: item.meta,
+          name: item.name,
+          path: item.path,
+        }))
       : undefined) as RouteRecordNormalized[],
   }
 }
