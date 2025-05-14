@@ -7,6 +7,7 @@ enum Api {
   createTag = '/createTag',
   deleteTag = '/deleteTag',
   updateTag = '/updateTag',
+  searchTags = '/searchTags',
   bindTag2Menu = '/bindTag2Menu',
   unbindTag2Menu = '/unbindTag2Menu',
   bindTag2Draft = '/bindTag2Draft',
@@ -35,6 +36,10 @@ export function deleteTag(data: any) {
 
 export function updateTag(data: any) {
   return defHttp.post<any>({ url: Api.updateTag, data })
+}
+
+export function searchTags(data: any) {
+  return defHttp.post<any>({ url: Api.searchTags, data })
 }
 
 export function bindTag2Menu(data: any) {

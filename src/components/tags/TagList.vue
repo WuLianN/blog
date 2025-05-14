@@ -12,13 +12,16 @@ defineEmits(['click'])
 </script>
 
 <template>
-  <div>
+  <div v-if="list.length > 0">
     <el-tag
       v-for="tag in list" :key="tag.id" size="large"
       :style="{ backgroundColor: tag.bg_color, color: tag.color }" @click.stop="$emit('click', tag)"
     >
       {{ tag.name }}
     </el-tag>
+  </div>
+  <div v-else>
+    <el-empty description="无。。。" />
   </div>
 </template>
 

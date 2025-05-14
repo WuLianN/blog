@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { CircleClose, Search } from '@element-plus/icons-vue'
-import { getTagList } from '@/api/tags'
+import { getTagList, searchTags } from '@/api/tags'
+import { findUserId } from '@/utils/blog'
 
 const emits = defineEmits(['close', 'selectedTag'])
 const tagList = reactive<any[]>([])
+let originTagList = reactive<any[]>([]) // 缓存原始数据
 const query = reactive({
   tagName: '',
 })
@@ -13,6 +15,8 @@ getList()
 async function getList(ids: string = '') {
   const list: any[] = await getTagList({ ids })
   tagList.push(...list)
+
+  originTagList = JSON.parse(JSON.stringify(tagList))
 }
 
 async function tagClick(tag: any) {
@@ -20,8 +24,22 @@ async function tagClick(tag: any) {
   emits('selectedTag', tag)
 }
 
-async function searchTag() {
+async function searchTag(wd: string | number) {
+  const userId = findUserId()
 
+  if (wd && userId) {
+    const data = {
+      user_id: userId,
+      name: wd,
+    }
+    const res = await searchTags(data)
+    if (res) {
+      tagList.splice(0, tagList.length, ...res)
+    }
+  }
+  if (!wd) {
+    tagList.splice(0, tagList.length, ...originTagList)
+  }
 }
 </script>
 
@@ -38,7 +56,9 @@ async function searchTag() {
         placeholder="请输入标签名"
         :clearable="true"
         :prefix-icon="Search"
-        @change="searchTag"
+        @clear="searchTag('')"
+        @blur="searchTag(query.tagName)"
+        @keyup.enter="searchTag(query.tagName)"
       />
     </div>
     <TagList :list="tagList" @click="tagClick" />

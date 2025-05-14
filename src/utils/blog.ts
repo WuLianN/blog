@@ -1,5 +1,9 @@
 import { getExcerpt } from './three_party'
 import type { RecommendDraft } from '@/api/model/draftsModel'
+import { getUserId } from '@/utils/auth'
+import { useUserStore } from '@/store/modules/user'
+
+const userStore = useUserStore()
 
 /**
  * 获取给定文本中的第一个图片链接
@@ -31,4 +35,16 @@ export function buildRecommendList(list: RecommendDraft[]) {
     }
   })
   return list
+}
+
+/**
+ * 获取用户ID
+ * 优先级 访客模式 > 登录模式
+ * 访客模式 getUserId() /user/1 -> 1
+ * 登录模式 store或localStorage中获取id
+ * @returns 返回用户ID，如果没有找到则返回null
+ */
+export function findUserId() {
+  const userId = getUserId() || userStore.userInfo.id || JSON.parse(localStorage.getItem('userInfo') || '{}')?.id
+  return userId
 }
