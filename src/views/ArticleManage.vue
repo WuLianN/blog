@@ -171,7 +171,7 @@ const columns = [
                   v-model={query.value.status}
                   collapse-tags
                   collapse-tags-tooltip
-                  onChange={(value: any) => draftStatusChange(value)}
+                  onChange={() => draftStatusChange()}
                   teleported={false}
                 >
                   {draftStatusOptions.map(item => (
