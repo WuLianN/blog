@@ -93,7 +93,7 @@ const columns = [
     title: '标题',
     dataKey: 'title',
     cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => (
-      <ElLink title={title} underline={false} onClick={() => jump(rowData)}>
+      <ElLink title={title} underline="hover" onClick={() => jump(rowData)}>
         {title}
       </ElLink>
     ),
