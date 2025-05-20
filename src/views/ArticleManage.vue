@@ -1,26 +1,27 @@
 <script setup lang="tsx">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { ElButton, ElTag, ElText, TableV2SortOrder } from 'element-plus'
-import type { Column, SortBy } from 'element-plus'
+import {
+  ElButton,
+  ElCol,
+  ElIcon,
+  ElPopover,
+  ElTag,
+  ElText,
+  TableV2SortOrder,
+} from 'element-plus'
+import type { CellRenderProps, HeaderRenderProps, SortBy } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
 import { deleteDraft, getDraftList, saveDraft } from '@/api/drafts'
 import { bindTag2Draft, getDraftTagList, unbindTag2Draft } from '@/api/tags'
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { compareFn } from '@/utils/utils'
 import { formatDate } from '@/utils/three_party'
 
-interface CellRenderProps<T> {
-  cellData: T
-  column: Column<T>
-  columns: Column<T>[]
-  columnIndex: number
-  rowData: any
-  rowIndex: number
-}
-
 const query = ref({
   page: 1,
   pageSize: 15,
   status: 0,
+  title: '',
 })
 
 const currentDraftId = ref<number>(0)
@@ -40,7 +41,9 @@ const columns = [
   {
     title: '时间',
     dataKey: 'create_time',
-    cellRenderer: ({ cellData: create_time }: CellRenderProps<Date>) => <ElText>{formatDate(create_time)}</ElText>,
+    cellRenderer: ({ cellData: create_time }: CellRenderProps<Date>) => (
+      <ElText>{formatDate(create_time)}</ElText>
+    ),
     align: 'center',
     width: 180,
     key: 'create_time',
@@ -50,7 +53,42 @@ const columns = [
     title: '标题',
     dataKey: 'title',
     // @ts-expect-error 不引入ElLint 丢失样式
-    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => <ElLink title={title} underline={false} onClick={() => jump(rowData)}>{title}</ElLink>,
+    cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => (
+      <ElLink title={title} underline={false} onClick={() => jump(rowData)}>
+        {title}
+      </ElLink>
+    ),
+    // @ts-expect-error 不引入ElRow 丢失样式
+    headerCellRenderer: ({ column }): HeaderRenderProps<any> => (
+      <ElRow align="middle" gutter={2}>
+        <ElCol span={10}>{column.title}</ElCol>
+        <ElCol span={10} style="display: flex;">
+          <ElPopover
+            placement="bottom"
+          >
+            {{
+              reference: () => (
+                <ElIcon>
+                  <Search />
+                </ElIcon>
+              ),
+              default: () => (
+                <ElInput
+                  v-model={query.value.title}
+                  placeholder="请输入标题"
+                  clearable
+                  onKeyup={(e: any) => {
+                    if (e.keyCode === 13) {
+                      getList('keyword')
+                    }
+                  }}
+                />
+              ),
+            }}
+          </ElPopover>
+        </ElCol>
+      </ElRow>
+    ),
     align: 'left',
     width: 300,
     key: 'title',
@@ -59,7 +97,13 @@ const columns = [
     title: '标签',
     dataKey: 'tags',
     align: 'left',
-    cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) => tags && tags.map(item => <ElTag style={{ backgroundColor: item.bg_color, color: item.color }}>{item.name}</ElTag>),
+    cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) =>
+      tags
+      && tags.map(item => (
+        <ElTag style={{ backgroundColor: item.bg_color, color: item.color }}>
+          {item.name}
+        </ElTag>
+      )),
     width: 150,
     key: 'tags',
     class: 'tags-container',
@@ -69,7 +113,9 @@ const columns = [
     dataKey: 'is_publish',
     cellRenderer: ({ cellData: is_publish, rowData }: CellRenderProps<any>) => (
       <>
-        <ElTag type={is_publish ? 'success' : 'primary'}>{is_publish ? '已发布' : '草稿'}</ElTag>
+        <ElTag type={is_publish ? 'success' : 'primary'}>
+          {is_publish ? '已发布' : '草稿'}
+        </ElTag>
         {rowData.is_privacy === 1 && <ElTag type="danger">私密</ElTag>}
       </>
     ),
@@ -82,7 +128,9 @@ const columns = [
     dataKey: 'operate',
     cellRenderer: ({ rowData }: CellRenderProps<any>) => (
       <>
-        <ElButton size="small" onClick={() => edit(rowData.id)}>编辑</ElButton>
+        <ElButton size="small" onClick={() => edit(rowData.id)}>
+          编辑
+        </ElButton>
         <ElButton size="small" type="danger" onClick={() => del(rowData.id)}>
           删除
         </ElButton>
@@ -103,7 +151,10 @@ setDialogWidth()
 
 getList()
 
-async function getList() {
+async function getList(mode: string | void = '') {
+  if (mode === 'keyword') {
+    query.value.page = 1
+  }
   const resultList: any[] = await getDraftList(query.value)
 
   if (resultList.length === 0 && query.value.page > 1) {
@@ -144,20 +195,25 @@ function del(id: number) {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
-  }).then(async () => {
-    try {
-      await deleteDraft(id)
-
-      list.value.splice(list.value.findIndex(item => item.id === id), 1)
-
-      ElMessage.success('删除成功!')
-    }
-    catch {
-      ElMessage.error('删除失败!')
-    }
-  }).catch(() => {
-    ElMessage.info('已取消删除')
   })
+    .then(async () => {
+      try {
+        await deleteDraft(id)
+
+        list.value.splice(
+          list.value.findIndex(item => item.id === id),
+          1,
+        )
+
+        ElMessage.success('删除成功!')
+      }
+      catch {
+        ElMessage.error('删除失败!')
+      }
+    })
+    .catch(() => {
+      ElMessage.info('已取消删除')
+    })
 }
 
 async function getTags(id: number): Promise<any> {
@@ -236,7 +292,8 @@ function endReached() {
 }
 
 function goDrafts() {
-  currentDraftId.value && useNavigateToNewTag(`/drafts/${currentDraftId.value}`)
+  currentDraftId.value
+  && useNavigateToNewTag(`/drafts/${currentDraftId.value}`)
 }
 
 function handleImageChange(url: string) {
@@ -244,11 +301,12 @@ function handleImageChange(url: string) {
 }
 
 function setDialogWidth() {
-  const checkMedia = window.matchMedia('only screen and (max-width: 1000px)').matches
+  const checkMedia = window.matchMedia(
+    'only screen and (max-width: 1000px)',
+  ).matches
   if (checkMedia)
     dialogWidth.value = '80%'
-  else
-    dialogWidth.value = '30%'
+  else dialogWidth.value = '30%'
 }
 
 function onSort(sortBy: SortBy) {
@@ -258,11 +316,16 @@ function onSort(sortBy: SortBy) {
   sortState.value = sortBy
 
   if (sortBy.key === 'create_time') {
-    if (sortBy.order === TableV2SortOrder.ASC)
-      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, true))
-
-    else
-      list.value = list.value.sort((a, b) => compareFn(a, b, sortBy.key as string, false))
+    if (sortBy.order === TableV2SortOrder.ASC) {
+      list.value = list.value.sort((a, b) =>
+        compareFn(a, b, sortBy.key as string, true),
+      )
+    }
+    else {
+      list.value = list.value.sort((a, b) =>
+        compareFn(a, b, sortBy.key as string, false),
+      )
+    }
   }
 }
 
@@ -277,25 +340,63 @@ onUnmounted(() => {
 
 <template>
   <div class="article">
-    <Table :sort-by="sortState" :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" fixed @column-sort="onSort" @end-reached="endReached" />
+    <Table
+      :sort-by="sortState"
+      :data="list"
+      :columns="columns"
+      :width="tableWidth"
+      :height="tableWidthHeight"
+      fixed
+      @column-sort="onSort"
+      @end-reached="endReached"
+    />
 
-    <el-dialog v-model="dialogVisible" title="编辑" :width="dialogWidth" @close="dialogVisible = false">
+    <el-dialog
+      v-model="dialogVisible"
+      title="编辑"
+      :width="dialogWidth"
+      @close="dialogVisible = false"
+    >
       <el-form label-width="80px" label-position="left">
         <el-form-item label="标题">
           <el-input v-model="editTitle" placeholder="请输入标题" clearable />
         </el-form-item>
         <el-form-item label="发布">
-          <el-switch v-model="isPublish" size="large" inline-prompt active-text="是" inactive-text="否" />
+          <el-switch
+            v-model="isPublish"
+            size="large"
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+          />
         </el-form-item>
         <el-form-item label="私密">
-          <el-switch v-model="isPrivacy" size="large" inline-prompt active-text="是" inactive-text="否" />
+          <el-switch
+            v-model="isPrivacy"
+            size="large"
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+          />
         </el-form-item>
         <el-form-item label="背景图">
-          <avatar-upload :width="128" :height="128" :img-url="bgImage" @change="handleImageChange" />
+          <avatar-upload
+            :width="128"
+            :height="128"
+            :img-url="bgImage"
+            @change="handleImageChange"
+          />
         </el-form-item>
       </el-form>
 
-      <TagsWrapper :has-aim="true" :is-post="false" :origin-tags="originTags" :tags="tags" :dialog-visible="dialogVisible" @change="tagsChange" />
+      <TagsWrapper
+        :has-aim="true"
+        :is-post="false"
+        :origin-tags="originTags"
+        :tags="tags"
+        :dialog-visible="dialogVisible"
+        @change="tagsChange"
+      />
 
       <div class="btn-wrapper">
         <ElButton type="primary" plain @click="goDrafts">
@@ -350,7 +451,7 @@ onUnmounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  justify-content: flex-start
+  justify-content: flex-start;
 }
 
 :deep(.el-link) {
