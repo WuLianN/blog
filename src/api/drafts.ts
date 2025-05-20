@@ -29,7 +29,7 @@ export function getUserDraft(data: any) {
 }
 
 export function getDraftList(data: any) {
-  return defHttp.get<any>({ url: Api.getDraftList, params: { status: data.status, page: data.page, page_size: data.pageSize } })
+  return defHttp.get<any>({ url: Api.getDraftList, params: { status: data.status, page: data.page, page_size: data.pageSize, title: data.title } })
 }
 
 export function deleteDraft(id: number) {

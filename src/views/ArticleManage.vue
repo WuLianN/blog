@@ -1,21 +1,43 @@
 <script setup lang="tsx">
 import { onMounted, onUnmounted, ref } from 'vue'
-import {
-  ElButton,
-  ElCol,
-  ElIcon,
-  ElPopover,
-  ElTag,
-  ElText,
-  TableV2SortOrder,
-} from 'element-plus'
-import type { CellRenderProps, HeaderRenderProps, SortBy } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
+import { TableV2SortOrder } from 'element-plus'
+import type { Column, SortBy } from 'element-plus'
+import { Filter, Search } from '@element-plus/icons-vue'
 import { deleteDraft, getDraftList, saveDraft } from '@/api/drafts'
 import { bindTag2Draft, getDraftTagList, unbindTag2Draft } from '@/api/tags'
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { compareFn } from '@/utils/utils'
 import { formatDate } from '@/utils/three_party'
+import type { Tag } from '@/api/model/tagsModel'
+
+interface CellRenderProps<T> {
+  cellData: T
+  column: Column<T>
+  columns: Column<T>[]
+  columnIndex: number
+  rowData: any
+  rowIndex: number
+}
+
+interface HeaderRenderProps<T> {
+  column: Column<T>
+  columns: Column<T>[]
+  columnIndex: number
+  headerIndex: number
+}
+
+// jsx 未找到的类型错误
+declare const ElLink: any
+declare const ElRow: any
+declare const ElInput: any
+declare const ElButton: any
+declare const ElCol: any
+declare const ElIcon: any
+declare const ElPopover: any
+declare const ElTag: any
+declare const ElText: any
+declare const ElSelect: any
+declare const ElOption: any
 
 const query = ref({
   page: 1,
@@ -37,6 +59,24 @@ const windowHeight = window.innerHeight
 const tableWidth = ref(930)
 const tableWidthHeight = ref(windowHeight)
 const list = ref<any[]>([])
+const draftStatusOptions = [
+  {
+    label: '全部',
+    value: 0,
+  },
+  {
+    label: '已发布',
+    value: 1,
+  },
+  {
+    label: '草稿',
+    value: 2,
+  },
+  {
+    label: '私密',
+    value: 3,
+  },
+]
 const columns = [
   {
     title: '时间',
@@ -52,20 +92,16 @@ const columns = [
   {
     title: '标题',
     dataKey: 'title',
-    // @ts-expect-error 不引入ElLint 丢失样式
     cellRenderer: ({ cellData: title, rowData }: CellRenderProps<any>) => (
       <ElLink title={title} underline={false} onClick={() => jump(rowData)}>
         {title}
       </ElLink>
     ),
-    // @ts-expect-error 不引入ElRow 丢失样式
-    headerCellRenderer: ({ column }): HeaderRenderProps<any> => (
-      <ElRow align="middle" gutter={2}>
-        <ElCol span={10}>{column.title}</ElCol>
-        <ElCol span={10} style="display: flex;">
-          <ElPopover
-            placement="bottom"
-          >
+    headerCellRenderer: ({ column }: HeaderRenderProps<any>) => (
+      <ElRow style="width: 300px;" align="middle" gutter={2}>
+        <ElCol span={3}>{column.title}</ElCol>
+        <ElCol span={19} style="display: flex;">
+          <ElPopover placement="bottom">
             {{
               reference: () => (
                 <ElIcon>
@@ -79,7 +115,7 @@ const columns = [
                   clearable
                   onKeyup={(e: any) => {
                     if (e.keyCode === 13) {
-                      getList('keyword')
+                      getList('search')
                     }
                   }}
                 />
@@ -99,7 +135,7 @@ const columns = [
     align: 'left',
     cellRenderer: ({ cellData: tags }: CellRenderProps<any[]>) =>
       tags
-      && tags.map(item => (
+      && tags?.map((item: Tag) => (
         <ElTag style={{ backgroundColor: item.bg_color, color: item.color }}>
           {item.name}
         </ElTag>
@@ -118,6 +154,39 @@ const columns = [
         </ElTag>
         {rowData.is_privacy === 1 && <ElTag type="danger">私密</ElTag>}
       </>
+    ),
+    headerCellRenderer: ({ column }: HeaderRenderProps<any>) => (
+      <ElRow style="width: 150px;" align="middle" gutter={2}>
+        <ElCol span={6}>{column.title}</ElCol>
+        <ElCol span={16} style="display: flex;">
+          <ElPopover placement="bottom">
+            {{
+              reference: () => (
+                <ElIcon>
+                  <Filter />
+                </ElIcon>
+              ),
+              default: () => (
+                <ElSelect
+                  v-model={query.value.status}
+                  collapse-tags
+                  collapse-tags-tooltip
+                  onChange={(value: any) => draftStatusChange(value)}
+                  teleported={false}
+                >
+                  {draftStatusOptions.map(item => (
+                    <ElOption
+                      key={item.value}
+                      label={item.label}
+                      value={item.value}
+                    />
+                  ))}
+                </ElSelect>
+              ),
+            }}
+          </ElPopover>
+        </ElCol>
+      </ElRow>
     ),
     align: 'left',
     width: 150,
@@ -152,8 +221,9 @@ setDialogWidth()
 getList()
 
 async function getList(mode: string | void = '') {
-  if (mode === 'keyword') {
+  if (mode === 'search') {
     query.value.page = 1
+    list.value = []
   }
   const resultList: any[] = await getDraftList(query.value)
 
@@ -329,6 +399,10 @@ function onSort(sortBy: SortBy) {
   }
 }
 
+function draftStatusChange() {
+  getList('search')
+}
+
 onMounted(() => {
   addEventListener('resize', setDialogWidth)
 })
@@ -359,7 +433,7 @@ onUnmounted(() => {
     >
       <el-form label-width="80px" label-position="left">
         <el-form-item label="标题">
-          <el-input v-model="editTitle" placeholder="请输入标题" clearable />
+          <ElInput v-model="editTitle" placeholder="请输入标题" clearable />
         </el-form-item>
         <el-form-item label="发布">
           <el-switch
