@@ -18,8 +18,14 @@ const draftId = getDraftId()
 if (draftId)
   getDraftDetail()
 
-watch([title, content], () => {
-  debounceSave(title.value, content.value)
+watch([title, content], (_value, oldValue) => {
+  if (!content.value) {
+    const oldContentValue = oldValue[1]
+    saveBefore(title.value, content.value, oldContentValue)
+  }
+  else {
+    debounceSave(title.value, content.value)
+  }
 })
 
 function getDraftId() {
@@ -39,6 +45,20 @@ async function getDraftDetail() {
     const { title: titleAlia, content: contentAlia } = await getUserDraft({ id: Number.parseInt(draftId, 10) })
     title.value = titleAlia
     content.value = contentAlia
+  }
+}
+
+function saveBefore(title: string, emptyContent: string, oldContentValue: string) {
+  if (!emptyContent) {
+    ElMessageBox.confirm('是否清空文章内容，无法找回！！！', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }).then(() => {
+      save(title, emptyContent)
+    }).catch(() => {
+      content.value = oldContentValue
+    })
   }
 }
 
