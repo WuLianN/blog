@@ -18,10 +18,13 @@ const draftId = getDraftId()
 if (draftId)
   getDraftDetail()
 
-watch([title, content], (_value, oldValue) => {
+watch(title, () => {
+  debounceSave(title.value, content.value)
+})
+
+watch(content, (_value, oldValue) => {
   if (!content.value) {
-    const oldContentValue = oldValue[1]
-    saveBefore(title.value, content.value, oldContentValue)
+    saveBefore(title.value, content.value, oldValue)
   }
   else {
     debounceSave(title.value, content.value)
