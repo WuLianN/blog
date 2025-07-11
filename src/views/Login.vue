@@ -6,10 +6,10 @@ const imageStyles = ref({
 })
 const formStyles = ref({})
 
-const userSetting = localStorage.getItem('user_setting')
+const login_designer = localStorage.getItem('login_designer')
 
-if (userSetting) {
-  const { login_designer: loginDesigner } = JSON.parse(userSetting)
+if (login_designer) {
+  const loginDesigner = JSON.parse(login_designer)
 
   if (loginDesigner) {
     const { form, image } = JSON.parse(loginDesigner)

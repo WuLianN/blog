@@ -39,6 +39,9 @@ async function queryUserSetting(userId?: number | null) {
   const result = await getUserSetting(userId)
   if (result) {
     localStorage.setItem('user_setting', JSON.stringify(result))
+    if (!userId) {
+      localStorage.setItem('login_designer', JSON.stringify(result.login_designer))
+    }
     userStore.setUserSetting(result)
 
     setupTheme()
