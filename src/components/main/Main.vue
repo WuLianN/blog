@@ -14,6 +14,7 @@ const userStore = useUserStore()
 const userId = getUserId() || userStore.userInfo.id || JSON.parse(localStorage.getItem('userInfo') || '{}')?.id
 const recommendList = ref<RecommendDraft[]>([])
 const homeStore = useHomeStore()
+let shouldLoadMore = true
 
 const query = reactive(
   {
@@ -31,6 +32,7 @@ getList()
 // 侦听store中的推荐列表 tip: 切换分类会更新store中的推荐列表
 watch(() => homeStore.recommendList, (value) => {
   recommendList.value = value
+  shouldLoadMore = false
   scrollToTop()
 })
 
@@ -38,6 +40,7 @@ watch(() => homeStore.recommendList, (value) => {
 watch(() => homeStore.keyword, (value) => {
   query.page = 1
   query.keyword = value
+  shouldLoadMore = false
   scrollToTop()
 })
 
@@ -45,7 +48,7 @@ watch(() => homeStore.keyword, (value) => {
 watch(() => homeStore.tagIds, (value) => {
   query.page = 1
   query.tagIds = value
-
+  shouldLoadMore = false
   scrollToTop()
 })
 
@@ -89,6 +92,11 @@ async function handleTagClick(tagId: number) {
 }
 
 async function handleScroll() {
+  if (!shouldLoadMore) {
+    shouldLoadMore = true
+    return
+  }
+
   const scrollTop = Math.floor(document.documentElement.scrollTop)
   const scrollHeight = Math.floor(document.documentElement.scrollHeight)
   const clientHeight = Math.floor(document.documentElement.clientHeight)
