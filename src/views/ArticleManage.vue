@@ -4,7 +4,7 @@ import { TableV2SortOrder } from 'element-plus'
 import type { Column, SortBy } from 'element-plus'
 import { Filter, Search } from '@element-plus/icons-vue'
 import { deleteDraft, getDraftList, saveDraft } from '@/api/drafts'
-import { bindTag2Draft, getDraftTagList, unbindTag2Draft } from '@/api/tags'
+import { bindTag2Draft, getDraftTagList, getTagList, unbindTag2Draft } from '@/api/tags'
 import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { compareFn } from '@/utils/utils'
 import { formatDate } from '@/utils/three_party'
@@ -44,8 +44,9 @@ const query = ref({
   pageSize: 15,
   status: 0,
   title: '',
+  tagIds: '',
 })
-
+let tagsSelector: any[] = []
 const currentDraftId = ref<number>(0)
 const editTitle = ref('')
 const isPublish = ref(false)
@@ -140,6 +141,41 @@ const columns = [
           {item.name}
         </ElTag>
       )),
+    headerCellRenderer: ({ column }: HeaderRenderProps<any>) => (
+      <ElRow style="width: 150px;" align="middle" gutter={2}>
+        <ElCol span={6}>{column.title}</ElCol>
+        <ElCol span={16} style="display: flex;">
+          <ElPopover placement="bottom" onShow={getTagsSelector} width="200">
+            {{
+              reference: () => (
+                <ElIcon>
+                  <Filter />
+                </ElIcon>
+              ),
+              default: () => (
+                <ElSelect
+                  v-model={query.value.tagIds}
+                  collapse-tags
+                  collapse-tags-tooltip
+                  filterable
+                  multiple
+                  onChange={() => tagsSelectorChange()}
+                  teleported={false}
+                >
+                  {tagsSelector.map(item => (
+                    <ElOption
+                      key={item.id}
+                      label={item.name}
+                      value={item.id}
+                    />
+                  ))}
+                </ElSelect>
+              ),
+            }}
+          </ElPopover>
+        </ElCol>
+      </ElRow>
+    ),
     width: 150,
     key: 'tags',
     class: 'tags-container',
@@ -290,6 +326,15 @@ async function getTags(id: number): Promise<any> {
   return await getDraftTagList({ draft_id: id })
 }
 
+async function getTagsSelector() {
+  if (tagsSelector.length === 0) {
+    const list = await getTagList()
+    if (list && list.length > 0) {
+      tagsSelector = list
+    }
+  }
+}
+
 async function submit() {
   if (!currentDraftId.value)
     return
@@ -397,6 +442,10 @@ function onSort(sortBy: SortBy) {
       )
     }
   }
+}
+
+function tagsSelectorChange() {
+  getList('search')
 }
 
 function draftStatusChange() {
