@@ -7,6 +7,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { createHtmlPlugin } from 'vite-plugin-html'
+import compression from 'vite-plugin-compression'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -42,6 +43,10 @@ export default defineConfig({
     vueJsx(),
     createHtmlPlugin({
       minify: true, // 是否启用HTML压缩，默认为true
+    }),
+    compression({
+      algorithm: 'gzip', // 或 brotliCompress
+      ext: '.gz',
     }),
   ],
   server: {
