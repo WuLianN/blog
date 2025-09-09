@@ -81,11 +81,11 @@ function goDraftBox() {
   useNavigateTo('/draftBox')
 }
 
-async function publish() {
+async function publish(isPrivacy: number) {
   if (draftId) {
     const id = Number.parseInt(draftId, 10)
     try {
-      await publishDraft(id)
+      await publishDraft(id, isPrivacy)
       ElMessage.success('发布成功！')
       useNavigateTo('/')
     }
@@ -124,7 +124,10 @@ async function upload(file: File) {
       <el-button plain type="primary" @click="goDraftBox">
         草稿箱
       </el-button>
-      <el-button plain type="success" @click="publish">
+      <el-button plain type="danger" @click="publish(1)">
+        私密发布
+      </el-button>
+      <el-button plain type="success" @click="publish(0)">
         发布
       </el-button>
     </div>

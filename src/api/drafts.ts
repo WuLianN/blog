@@ -36,8 +36,8 @@ export function deleteDraft(id: number) {
   return defHttp.post<any>({ url: Api.deleteDraft, data: { id } })
 }
 
-export function publishDraft(id: number) {
-  return defHttp.post<any>({ url: Api.publishDraft, data: { id } })
+export function publishDraft(id: number, isPrivacy: number) {
+  return defHttp.post<any>({ url: Api.publishDraft, data: { id, is_privacy: isPrivacy } })
 }
 
 export function searchDrafts(data: any) {
