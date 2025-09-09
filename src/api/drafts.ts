@@ -41,5 +41,5 @@ export function publishDraft(id: number, isPrivacy: number) {
 }
 
 export function searchDrafts(data: any) {
-  return defHttp.get<RecommendDraft[]>({ url: Api.searchDrafts, params: { keyword: data.keyword, page: data.page, page_size: data.pageSize, user_id: data.userId } })
+  return defHttp.get<RecommendDraft[]>({ url: Api.searchDrafts, params: { keyword: data.keyword, page: data.page, page_size: data.pageSize, user_id: data.userId, search_type: data.searchType } })
 }
