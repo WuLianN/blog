@@ -38,6 +38,13 @@ watch(contentRef, (val) => {
   }
 })
 
+// 限制文本长度的函数
+function limitTextLength(text: string, maxLength: number = 20): string {
+  if (!text)
+    return ''
+  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
+}
+
 function showToc() {
   isTocVisible.value = true
 
@@ -115,7 +122,11 @@ const handleScroll = throttle(() => {
   }
 
   tocAutoHideTimer = window.setTimeout(() => {
-    hideToc()
+    // 只有当鼠标不在目录上时才隐藏
+    const tocElement = document.querySelector('.toc-container')
+    if (tocElement && !tocElement.matches(':hover')) {
+      hideToc()
+    }
   }, 1000)
 }, 300)
 
@@ -251,12 +262,12 @@ onUnmounted(() => {
         <li
           v-for="(item, index) in items"
           :key="index"
-          :style="{ paddingLeft: `${(item.level - minLevel) * 16}px` }"
+          :style="{ paddingLeft: `${(item.level - minLevel) * 16 + (index === currentHeadingIndex ? 12 : 0)}px` }"
           :title="item.text"
           :class="{ active: index === currentHeadingIndex }"
           @click="skipContent(index)"
         >
-          {{ item.text }}
+          {{ limitTextLength(item.text, 25) }}
         </li>
       </ul>
     </div>
@@ -361,6 +372,7 @@ onUnmounted(() => {
       li {
         cursor: pointer;
         width: 100%;
+        max-width: 180px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -370,9 +382,38 @@ onUnmounted(() => {
         margin-bottom: 5px;
         color: var(--el-text-color-primary);
         transition: all 0.2s ease;
+        line-height: 1.5;
+        position: relative;
+
+        // 为不同级别的标题添加不同的样式
+        &[style*="padding-left: 0px"] {
+          font-weight: 600;
+          font-size: 14px;
+        }
+
+        &[style*="padding-left: 16px"] {
+          font-weight: 500;
+          font-size: 13.5px;
+        }
+
+        &[style*="padding-left: 32px"] {
+          font-size: 13px;
+        }
+
+        &[style*="padding-left: 48px"] {
+          font-size: 12.5px;
+        }
+
+        &[style*="padding-left: 64px"] {
+          font-size: 12px;
+        }
+
+        &[style*="padding-left: 80px"] {
+          font-size: 11.5px;
+        }
 
         &:not(:last-child) {
-          padding-bottom: 8px;
+          margin-bottom: 2px;
         }
 
         &:hover {
@@ -382,6 +423,17 @@ onUnmounted(() => {
         &.active {
           color: var(--el-color-primary);
           background-color: var(--el-color-primary-light-9);
+          font-weight: 500;
+
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--el-color-primary);
+          }
         }
       }
     }
