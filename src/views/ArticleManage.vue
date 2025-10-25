@@ -46,6 +46,19 @@ const query = ref({
   title: '',
   tagIds: '',
 })
+
+// 计算适合的pageSize，基于屏幕高度
+function calculatePageSize() {
+  // 假设每行高度大约为50px，根据表格实际行高调整
+  const rowHeight = 50
+  // 表格需要留出一些空间，避免刚好填满屏幕无法触发滚动
+  const reservedSpace = 20
+  // 计算可显示的行数
+  const visibleRows = Math.ceil((window.innerHeight - reservedSpace) / rowHeight)
+  // 最少显示10行，避免数据过少，最多显示50行，避免一次性加载过多数据
+  return Math.min(Math.max(visibleRows, 10), 50)
+}
+
 let tagsSelector: any[] = []
 const currentDraftId = ref<number>(0)
 const editTitle = ref('')
@@ -257,6 +270,9 @@ setDialogWidth()
 getList()
 
 async function getList(mode: string | void = '') {
+  // 每次获取数据前都重新计算pageSize
+  query.value.pageSize = calculatePageSize()
+
   if (mode === 'search') {
     query.value.page = 1
     list.value = []
@@ -452,12 +468,21 @@ function draftStatusChange() {
   getList('search')
 }
 
+function handleResize() {
+  // 窗口大小变化时重新计算pageSize
+  query.value.pageSize = calculatePageSize()
+  // 如果当前数据量小于pageSize，获取更多数据
+  if (list.value.length < query.value.pageSize) {
+    getList()
+  }
+}
+
 onMounted(() => {
-  addEventListener('resize', setDialogWidth)
+  addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
-  removeEventListener('resize', setDialogWidth)
+  removeEventListener('resize', handleResize)
 })
 </script>
 
