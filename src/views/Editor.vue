@@ -148,6 +148,11 @@ $header-height: 64px;
   height: $header-height;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
+
+  @at-root html.dark & {
+    background-color: var(--el-bg-color-overlay);
+    border-bottom: 1px solid var(--el-border-color);
+  }
 }
 
 .title-input {
@@ -161,6 +166,11 @@ $header-height: 64px;
   background: #fff;
   width: 800px;
   height: 100%;
+
+  @at-root html.dark & {
+    color: var(--el-text-color-primary);
+    background: var(--el-bg-color-overlay);
+  }
 }
 
 .right-box {
@@ -184,6 +194,10 @@ $header-height: 64px;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+  @at-root html.dark & {
+    color: var(--el-text-color-secondary);
+  }
 }
 
 @media screen and (max-width: 992px) {
