@@ -19,7 +19,44 @@ let observer: IntersectionObserver
 const isTocVisible = ref(true)
 
 // 锚点位置
-const tocTop = ref(window.innerHeight / 3)
+const tocTop = ref(0)
+
+// 初始化TOC位置
+function initTocPosition() {
+  // 从本地存储获取位置信息
+  const savedPosition = localStorage.getItem('tocPosition')
+  if (savedPosition) {
+    try {
+      const position = JSON.parse(savedPosition)
+      // 检查是否为有效的数字
+      if (typeof position === 'number' && !Number.isNaN(position)) {
+        tocTop.value = position
+      }
+      else {
+        // 如果存储的位置无效，则使用默认位置
+        tocTop.value = window.innerHeight / 3
+      }
+    }
+    catch {
+      // 解析失败时使用默认位置
+      tocTop.value = window.innerHeight / 3
+    }
+  }
+  else {
+    // 没有存储位置时使用默认位置
+    tocTop.value = window.innerHeight / 3
+  }
+
+  // 确保TOC不会超出窗口范围
+  validatePosition()
+}
+
+// 验证并调整位置确保在有效范围内
+function validatePosition() {
+  const minHeight = 100
+  const maxHeight = window.innerHeight - 100
+  tocTop.value = Math.max(minHeight, Math.min(maxHeight, tocTop.value))
+}
 
 // 锚点自动隐藏定时器
 let tocAutoHideTimer: number | null = null
@@ -90,6 +127,9 @@ function startDrag(e: MouseEvent) {
 function stopDrag() {
   isDragging.value = false
 
+  // 保存位置到本地存储
+  savePosition()
+
   // 移除全局事件监听器
   document.removeEventListener('mousemove', onDrag)
   document.removeEventListener('mouseup', stopDrag)
@@ -110,6 +150,11 @@ function onDrag(e: MouseEvent) {
   newTop = Math.max(minHeight, Math.min(maxHeight, newTop))
 
   tocTop.value = newTop
+}
+
+// 保存位置到本地存储
+function savePosition() {
+  localStorage.setItem('tocPosition', JSON.stringify(tocTop.value))
 }
 
 // 滚动事件处理函数
@@ -203,15 +248,15 @@ function unObserve() {
 
 // 监听窗口大小变化
 function handleResize() {
-  // 确保锚点不会超出窗口范围
-  const maxHeight = window.innerHeight - 100
-  if (tocTop.value > maxHeight) {
-    tocTop.value = maxHeight
-  }
+  // 重新验证位置
+  validatePosition()
+  // 保存新位置
+  savePosition()
 }
 
 // 组件挂载时添加事件监听器
 onMounted(() => {
+  initTocPosition()
   // 添加窗口大小变化监听器
   window.addEventListener('resize', handleResize)
 

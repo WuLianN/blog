@@ -11,7 +11,44 @@ const props = defineProps<{
 const isDragging = ref(false)
 const dragStartY = ref(0)
 const dragStartTop = ref(0)
-const buttonTop = ref(window.innerHeight / 3)
+const buttonTop = ref(0)
+
+// 初始化按钮位置
+function initButtonPosition() {
+  // 从本地存储获取位置信息
+  const savedPosition = localStorage.getItem('editButtonPosition')
+  if (savedPosition) {
+    try {
+      const position = JSON.parse(savedPosition)
+      // 检查是否为有效的数字
+      if (typeof position === 'number' && !Number.isNaN(position)) {
+        buttonTop.value = position
+      }
+      else {
+        // 如果存储的位置无效，则使用默认位置
+        buttonTop.value = window.innerHeight / 3 + 100 // 与TOC错开100px
+      }
+    }
+    catch {
+      // 解析失败时使用默认位置
+      buttonTop.value = window.innerHeight / 3 + 100
+    }
+  }
+  else {
+    // 没有存储位置时使用默认位置
+    buttonTop.value = window.innerHeight / 3 + 100 // 与TOC错开100px
+  }
+
+  // 确保按钮不会超出窗口范围
+  validatePosition()
+}
+
+// 验证并调整位置确保在有效范围内
+function validatePosition() {
+  const minHeight = 100
+  const maxHeight = window.innerHeight - 100
+  buttonTop.value = Math.max(minHeight, Math.min(maxHeight, buttonTop.value))
+}
 
 function edit() {
   props.draftId && useNavigateTo(`/drafts/${props.draftId}`)
@@ -35,6 +72,9 @@ function startDrag(e: MouseEvent) {
 function stopDrag() {
   isDragging.value = false
 
+  // 保存位置到本地存储
+  savePosition()
+
   // 移除全局事件监听器
   document.removeEventListener('mousemove', onDrag)
   document.removeEventListener('mouseup', stopDrag)
@@ -57,17 +97,22 @@ function onDrag(e: MouseEvent) {
   buttonTop.value = newTop
 }
 
+// 保存位置到本地存储
+function savePosition() {
+  localStorage.setItem('editButtonPosition', JSON.stringify(buttonTop.value))
+}
+
 // 监听窗口大小变化
 function handleResize() {
-  // 确保按钮不会超出窗口范围
-  const maxHeight = window.innerHeight - 100
-  if (buttonTop.value > maxHeight) {
-    buttonTop.value = maxHeight
-  }
+  // 重新验证位置
+  validatePosition()
+  // 保存新位置
+  savePosition()
 }
 
 // 组件挂载时添加事件监听器
 onMounted(() => {
+  initButtonPosition()
   // 添加窗口大小变化监听器
   window.addEventListener('resize', handleResize)
 })
@@ -149,13 +194,7 @@ onUnmounted(() => {
     }
   }
 
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .editor-btn-container {
+  @media screen and (max-width: 768px) {
     display: none;
   }
 }
