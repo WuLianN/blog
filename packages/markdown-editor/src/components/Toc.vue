@@ -348,6 +348,11 @@ onUnmounted(() => {
     max-height: 70vh;
     overflow-y: auto;
 
+    @at-root html.dark & {
+      background-color: var(--el-bg-color-overlay);
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+    }
+
     &.visible {
       opacity: 1;
       visibility: visible;
@@ -362,6 +367,10 @@ onUnmounted(() => {
       border-bottom: 1px solid #eee;
       margin-bottom: 10px;
       color: var(--el-text-color-primary);
+
+      @at-root html.dark & {
+        border-bottom: 1px solid var(--el-border-color);
+      }
     }
 
     ul {
@@ -418,12 +427,20 @@ onUnmounted(() => {
 
         &:hover {
           background-color: var(--el-color-primary-light-8);
+
+          @at-root html.dark & {
+            background-color: var(--el-color-primary-light-3);
+          }
         }
 
         &.active {
           color: var(--el-color-primary);
           background-color: var(--el-color-primary-light-9);
           font-weight: 500;
+
+          @at-root html.dark & {
+            background-color: var(--el-color-primary-dark-8);
+          }
 
           &::before {
             content: '';
