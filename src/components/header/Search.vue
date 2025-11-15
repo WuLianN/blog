@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { searchDrafts } from '@/api/drafts'
 import type { RecommendDraft } from '@/api/model/draftsModel'
@@ -29,6 +29,9 @@ const searchOptions = [
 ]
 
 async function search() {
+  // 重置页码为第一页
+  query.page = 1
+
   const list: RecommendDraft[] = await searchDrafts(query)
   homeStore.setKeyword(query.keyword) // 存储搜索关键字
 
@@ -40,6 +43,17 @@ async function search() {
     ElMessage.error('未搜索到相关文章')
   }
 }
+
+// 监听搜索类型的变更
+watch(
+  () => query.searchType,
+  () => {
+    // 当搜索关键词不为空时，重新搜索
+    if (query.keyword) {
+      search()
+    }
+  },
+)
 </script>
 
 <template>
