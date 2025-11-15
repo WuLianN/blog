@@ -9,7 +9,7 @@
 - [x] 关联账号
 
 ## 后端项目
-* [go-toy](https://github.com/WuLianN/go-toy)
+* [go-blog-service](https://github.com/WuLianN/go-blog-service)
 
 ## 使用 gray-matter 的注意点
 
