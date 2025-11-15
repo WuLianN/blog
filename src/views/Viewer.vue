@@ -3,21 +3,12 @@ import { ref } from 'vue'
 import Viewer from '@blog/markdown-editor/src/components/Viewer.vue'
 import { useRoute } from 'vue-router'
 import { useDark } from '@vueuse/core'
-import { Edit } from '@element-plus/icons-vue'
-import { UseDraggable } from '@vueuse/components'
-import { useNavigateTo } from '@/hooks/web/useNavigate'
+import EditButton from '@/components/EditButton.vue'
 import { getDraft } from '@/api/drafts'
 
 const content = ref('')
 const draftId = getDraftId()
 const userId = ref<number>(0)
-
-const screenWidth = window.innerWidth
-
-const dragX = ref<number>(screenWidth - 80 - 100) // 80是div的宽度
-
-if (screenWidth < 1000)
-  dragX.value = screenWidth - 80 - 20
 
 useDark()
 
@@ -39,10 +30,6 @@ async function getDraftDetail() {
     userId.value = user_id
   }
 }
-
-function edit() {
-  draftId && useNavigateTo(`/drafts/${draftId}`)
-}
 </script>
 
 <template>
@@ -54,14 +41,7 @@ function edit() {
     <back-top />
   </div>
 
-  <UseDraggable
-    v-is-author="userId" :initial-value="{ x: dragX, y: 300 }" style="position: fixed;"
-    storage-key="vueuse-draggable" storage-type="session"
-  >
-    <div class="btn-wrapper">
-      <el-button type="primary" circle :icon="Edit" size="large" @click="edit" />
-    </div>
-  </UseDraggable>
+  <EditButton v-is-author="userId" :draft-id="draftId" />
 </template>
 
 <style scoped lang="scss">
