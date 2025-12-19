@@ -10,6 +10,7 @@ const query = ref({
 })
 
 const debounceScrollFn = debounce(handleScroll, 300)
+const isEmpty = ref(false)
 
 const list = ref<any[]>([])
 
@@ -24,6 +25,13 @@ async function getList() {
   }
 
   list.value.push(...resultList)
+
+  if (list.value.length === 0) {
+    isEmpty.value = true
+  }
+  else {
+    isEmpty.value = false
+  }
 }
 
 async function handleScroll() {
@@ -61,7 +69,7 @@ onUnmounted(() => {
     <div v-if="list.length > 0" class="draft-box-timeline">
       <Timeline :list="list" @delete="deleteDraft" />
     </div>
-    <template v-else>
+    <template v-if="isEmpty">
       <Empty>
         <el-button type="primary" plain @click="$router.back()">
           返回首页

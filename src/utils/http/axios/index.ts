@@ -15,6 +15,9 @@ import { isEmpty, isNull, isString, isUnDef } from '@/utils/is'
 import { getToken } from '@/utils/auth'
 import { deepMerge, setObjToUrlParams } from '@/utils'
 import { AxiosRetry } from '@/utils/http/axios/axiosRetry'
+import { useLoading } from '@/hooks/web/useLoading'
+
+const { showLoading, hideLoading } = useLoading({ delay: 300 })
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix
@@ -156,6 +159,12 @@ const transform: AxiosTransform = {
         ? `${options.authenticationScheme} ${token}`
         : token
     }
+
+    // 显示loading
+    if ((config as Recordable)?.requestOptions?.isLoading !== false) {
+      showLoading()
+    }
+
     return config
   },
 
@@ -163,6 +172,8 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
+    // 隐藏loading
+    hideLoading()
     return res
   },
 
@@ -170,6 +181,9 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (axiosInstance: AxiosInstance, error: any) => {
+    // 隐藏loading
+    hideLoading()
+
     const { response, code, message, config } = error || {}
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none'
     const msg: string = response?.data?.error?.message ?? ''
@@ -257,6 +271,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           ignoreCancelToken: true,
           // 是否携带token
           withToken: true,
+          // 是否显示loading
+          isLoading: true,
           retryRequest: {
             isOpenRetry: false,
             count: 5,

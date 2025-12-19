@@ -15,6 +15,7 @@ const userId = getUserId() || userStore.userInfo.id || JSON.parse(localStorage.g
 const recommendList = ref<RecommendDraft[]>([])
 const homeStore = useHomeStore()
 let shouldLoadMore = true
+const isEmpty = ref(false)
 
 const query = reactive(
   {
@@ -75,6 +76,13 @@ async function getList() {
   const buildList = buildRecommendList(list)
 
   recommendList.value.push(...buildList)
+
+  if (list.length === 0) {
+    isEmpty.value = true
+  }
+  else {
+    isEmpty.value = false
+  }
 }
 
 function resetQuery() {
@@ -123,7 +131,7 @@ onUnmounted(() => {
   <template v-if="recommendList.length > 0">
     <Card :list="recommendList" @tag-click="handleTagClick" />
   </template>
-  <template v-else>
+  <template v-if="isEmpty">
     <Empty />
   </template>
 </template>
