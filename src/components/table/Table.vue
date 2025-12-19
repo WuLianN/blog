@@ -22,7 +22,7 @@ defineProps({
 </script>
 
 <template>
-  <div>
+  <div v-if="data && data.length > 0">
     <el-table-v2 v-bind="$attrs" :width="width" :height="height" :columns="columns" :data="data">
       <template #empty>
         <Empty>

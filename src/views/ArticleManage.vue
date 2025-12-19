@@ -9,6 +9,7 @@ import { useNavigateToNewTag } from '@/hooks/web/useNavigate'
 import { compareFn } from '@/utils/utils'
 import { formatDate } from '@/utils/three_party'
 import type { Tag } from '@/api/model/tagsModel'
+import { useLoading } from '@/hooks/web/useLoading'
 
 interface CellRenderProps<T> {
   cellData: T
@@ -73,6 +74,8 @@ const windowHeight = window.innerHeight
 const tableWidth = ref(930)
 const tableWidthHeight = ref(windowHeight)
 const list = ref<any[]>([])
+const { showLoading, hideLoading } = useLoading({ delay: 300 })
+
 const draftStatusOptions = [
   {
     label: '全部',
@@ -272,6 +275,7 @@ getList()
 async function getList(mode: string | void = '') {
   // 每次获取数据前都重新计算pageSize
   query.value.pageSize = calculatePageSize()
+  showLoading()
 
   if (mode === 'search') {
     query.value.page = 1
@@ -287,6 +291,8 @@ async function getList(mode: string | void = '') {
     ElMessage.warning('没有数据！')
     return
   }
+
+  hideLoading()
 
   list.value.push(...resultList)
 }
@@ -489,61 +495,29 @@ onUnmounted(() => {
 <template>
   <div class="article">
     <Table
-      :sort-by="sortState"
-      :data="list"
-      :columns="columns"
-      :width="tableWidth"
-      :height="tableWidthHeight"
-      fixed
-      @column-sort="onSort"
-      @end-reached="endReached"
+      :sort-by="sortState" :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" fixed
+      @column-sort="onSort" @end-reached="endReached"
     />
 
-    <el-dialog
-      v-model="dialogVisible"
-      title="编辑"
-      :width="dialogWidth"
-      @close="dialogVisible = false"
-    >
+    <el-dialog v-model="dialogVisible" title="编辑" :width="dialogWidth" @close="dialogVisible = false">
       <el-form label-width="80px" label-position="left">
         <el-form-item label="标题">
           <ElInput v-model="editTitle" placeholder="请输入标题" clearable />
         </el-form-item>
         <el-form-item label="发布">
-          <el-switch
-            v-model="isPublish"
-            size="large"
-            inline-prompt
-            active-text="是"
-            inactive-text="否"
-          />
+          <el-switch v-model="isPublish" size="large" inline-prompt active-text="是" inactive-text="否" />
         </el-form-item>
         <el-form-item label="私密">
-          <el-switch
-            v-model="isPrivacy"
-            size="large"
-            inline-prompt
-            active-text="是"
-            inactive-text="否"
-          />
+          <el-switch v-model="isPrivacy" size="large" inline-prompt active-text="是" inactive-text="否" />
         </el-form-item>
         <el-form-item label="背景图">
-          <avatar-upload
-            :width="128"
-            :height="128"
-            :img-url="bgImage"
-            @change="handleImageChange"
-          />
+          <avatar-upload :width="128" :height="128" :img-url="bgImage" @change="handleImageChange" />
         </el-form-item>
       </el-form>
 
       <TagsWrapper
-        :has-aim="true"
-        :is-post="false"
-        :origin-tags="originTags"
-        :tags="tags"
-        :dialog-visible="dialogVisible"
-        @change="tagsChange"
+        :has-aim="true" :is-post="false" :origin-tags="originTags" :tags="tags"
+        :dialog-visible="dialogVisible" @change="tagsChange"
       />
 
       <div class="btn-wrapper">
@@ -580,6 +554,7 @@ onUnmounted(() => {
     width: 4px;
     height: 4px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: var(--el-color-primary-light-8);
   }
