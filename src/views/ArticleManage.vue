@@ -74,6 +74,7 @@ const windowHeight = window.innerHeight
 const tableWidth = ref(930)
 const tableWidthHeight = ref(windowHeight)
 const list = ref<any[]>([])
+const loading = ref(false)
 const { showLoading, hideLoading } = useLoading({ delay: 300 })
 
 const draftStatusOptions = [
@@ -276,25 +277,34 @@ async function getList(mode: string | void = '') {
   // 每次获取数据前都重新计算pageSize
   query.value.pageSize = calculatePageSize()
   showLoading()
+  loading.value = true
 
   if (mode === 'search') {
     query.value.page = 1
     list.value = []
   }
-  const resultList: any[] = await getDraftList(query.value)
+  try {
+    const resultList: any[] = await getDraftList(query.value)
 
-  if (resultList.length === 0 && query.value.page > 1) {
-    ElMessage.warning('没有更多了！')
-    return
+    if (resultList.length === 0 && query.value.page > 1) {
+      ElMessage.warning('没有更多了！')
+      return
+    }
+    else if (resultList.length === 0 && query.value.page === 1) {
+      ElMessage.warning('没有数据！')
+      return
+    }
+
+    list.value.push(...resultList)
   }
-  else if (resultList.length === 0 && query.value.page === 1) {
-    ElMessage.warning('没有数据！')
-    return
+  catch (error) {
+    console.error(error)
+    ElMessage.error('数据加载失败')
   }
-
-  hideLoading()
-
-  list.value.push(...resultList)
+  finally {
+    hideLoading()
+    loading.value = false
+  }
 }
 
 async function edit(id: number) {
@@ -495,8 +505,8 @@ onUnmounted(() => {
 <template>
   <div class="article">
     <Table
-      :sort-by="sortState" :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight" fixed
-      @column-sort="onSort" @end-reached="endReached"
+      :sort-by="sortState" :data="list" :columns="columns" :width="tableWidth" :height="tableWidthHeight"
+      :loading="loading" fixed @column-sort="onSort" @end-reached="endReached"
     />
 
     <el-dialog v-model="dialogVisible" title="编辑" :width="dialogWidth" @close="dialogVisible = false">

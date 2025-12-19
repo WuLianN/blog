@@ -18,18 +18,27 @@ defineProps({
     type: Array as PropType<any[]>,
     default: () => [],
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
 <template>
-  <div v-if="data && data.length > 0">
+  <div>
     <el-table-v2 v-bind="$attrs" :width="width" :height="height" :columns="columns" :data="data">
       <template #empty>
-        <Empty>
+        <!-- 只有在非加载状态下且确实没有数据时才显示空状态 -->
+        <Empty v-if="!loading && data && data.length === 0">
           <el-button type="primary" plain @click="$router.back()">
             返回首页
           </el-button>
         </Empty>
+        <!-- 加载状态下不显示空状态 -->
+        <div v-else-if="loading">
+          <!-- 加载占位符，可以留空 -->
+        </div>
       </template>
     </el-table-v2>
   </div>
