@@ -26,6 +26,8 @@ export interface RequestOptions {
   ignoreCancelToken?: boolean
   // Whether to send token in header
   withToken?: boolean
+  // 是否显示loading
+  isLoading?: boolean
   // 请求重试机制
   retryRequest?: RetryRequest
 }
