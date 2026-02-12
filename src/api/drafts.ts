@@ -1,5 +1,6 @@
 import type { RecommendDraft } from './model/draftsModel'
 import { defHttp } from '@/utils/http/axios'
+import type { RequestOptions } from '/#/axios'
 
 enum Api {
   createDraft = '/createDraft',
@@ -16,8 +17,8 @@ export function createDraft() {
   return defHttp.get<any>({ url: Api.createDraft })
 }
 
-export function saveDraft(data: any) {
-  return defHttp.post<any>({ url: Api.saveDraft, data })
+export function saveDraft(data: any, options?: RequestOptions) {
+  return defHttp.post<any>({ url: Api.saveDraft, data }, options)
 }
 
 export function getDraft(data: any) {

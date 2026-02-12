@@ -68,7 +68,7 @@ function saveBefore(title: string, emptyContent: string, oldContentValue: string
 async function save(title: string, content: string) {
   if (draftId) {
     try {
-      await saveDraft({ title, content, id: Number.parseInt(draftId, 10) })
+      await saveDraft({ title, content, id: Number.parseInt(draftId, 10) }, { isLoading: false })
       status.value = '保存成功'
     }
     catch {
